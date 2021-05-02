@@ -1,12 +1,5 @@
-﻿using Cinemachine.Utility;
-using NUnit.Framework;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.ConstrainedExecution;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Animations;
-using UnityEngine.Rendering;
 
 public class AnimalMovement : MonoBehaviour
 {

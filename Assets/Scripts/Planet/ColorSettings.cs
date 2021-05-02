@@ -6,7 +6,7 @@ using UnityEngine;
 public class ColorSettings : ScriptableObject
 {
     public Material planetMaterial;
-    public BiomeColorSettings biomeColorSettings;
+    public BiomeColorSettings biomeColorSettings = new BiomeColorSettings();
     public Gradient oceanColor;
 
     [System.Serializable]
@@ -24,8 +24,22 @@ public class ColorSettings : ScriptableObject
         {
             public Gradient gradient;
             public Color tint;
-            public float startHeight; // Range from 0-1
-            public float tintPercent; // Range from 0-1
+            public float startHeight = 0; // Range from 0-1
+            public float tintPercent = 0; // Range from 0-1
+        }
+
+        public void InitBiomeArr(int size, Gradient gradient)
+        {
+            biomes = new Biome[size];
+            for (int i = 0; i < size; i++)
+            {
+                biomes[i] = new Biome();
+                biomes[i].gradient = gradient;
+            }
+
+            // Also init noise layer, only one is needed
+            noise = new NoiseSettings();
+            noise.filterType = NoiseSettings.FilterType.Simple;
         }
     }
 }

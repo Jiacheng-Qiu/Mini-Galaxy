@@ -20,8 +20,8 @@ MonoBehaviour:
       filterType: 0
       strength: 0.1
       roughness: 2.2
-      baseRoughness: 1.07
-      center: {x: 0, y: 0, z: 0}
+      baseRoughness: 1
+      center: {x: 3.99, y: 0, z: 0}
       numLayers: 4
       persistence: 0.5
       minVal: 0.9
@@ -33,7 +33,7 @@ MonoBehaviour:
       strength: 0.3
       roughness: 2.62
       baseRoughness: 1
-      center: {x: 0, y: -0.45, z: 0}
+      center: {x: 0, y: 0, z: 0}
       numLayers: 3
       persistence: 0.4
       minVal: 0.6

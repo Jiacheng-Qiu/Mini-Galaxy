@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
@@ -46,7 +44,6 @@ public class Planet : MonoBehaviour
                 // Using standard shader as renderer
                 meshObj.AddComponent<MeshRenderer>();
                 meshFilters[i] = meshObj.AddComponent<MeshFilter>();
-                meshFilters[i].sharedMesh = new Mesh();
             }
             if (meshFilters[i].sharedMesh == null)
             {
@@ -66,9 +63,12 @@ public class Planet : MonoBehaviour
     // Call to generate everything
     public void GeneratePlanet()
     {
-        Initialize();
-        GenerateMesh();
-        GenerateColor();
+        if (shapeSetting != null && colorSetting != null)
+        {
+            Initialize();
+            GenerateMesh();
+            GenerateColor();
+        }
     }
 
     // When shape update, just update the mesh

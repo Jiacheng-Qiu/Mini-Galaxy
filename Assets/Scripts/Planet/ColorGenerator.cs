@@ -12,13 +12,18 @@ public class ColorGenerator
     public void UpdateSettings(ColorSettings settings)
     {
         this.settings = settings;
-        int height = settings.biomeColorSettings.biomes.Length;
-        if (texture == null || texture.height != height)
-            // Width: color change based on terrain height; Height: color change based on latitude
-            // texture resolution * 2 makes first half the gradient of ocean, and second half the terrain
-            texture = new Texture2D(textureResolution * 2, height, TextureFormat.RGBA32, false);
-
-        biomeNoiseFilter = NoiseFilterFactory.CreateNoiseFilter(settings.biomeColorSettings.noise);
+        try {
+            int height = settings.biomeColorSettings.biomes.Length;
+            if (texture == null || texture.height != height)
+                // Width: color change based on terrain height; Height: color change based on latitude
+                // texture resolution * 2 makes first half the gradient of ocean, and second half the terrain
+                texture = new Texture2D(textureResolution * 2, height, TextureFormat.RGBA32, false);
+            biomeNoiseFilter = NoiseFilterFactory.CreateNoiseFilter(settings.biomeColorSettings.noise);
+        }
+        catch
+        {
+            Debug.LogError("The biome layer for current planet is of length 0!");
+        }
     }
 
     public void UpdateElevation(MinMaxColor terrainElevation)

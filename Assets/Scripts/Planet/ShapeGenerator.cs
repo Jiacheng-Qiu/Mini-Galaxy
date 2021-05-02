@@ -1,6 +1,7 @@
-﻿using System.Collections;
+﻿using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
+using System.Linq.Expressions;
 using UnityEngine;
 
 // Used for generating the points on sphere based on radius and noise layer
@@ -12,12 +13,18 @@ public class ShapeGenerator
     public void UpdateSettings(ShapeSettings setting)
     {
         this.setting = setting;
-        this.noiseFilters = new INoiseFilter[setting.noiseLayers.Length];
-        for (int i = 0; i < noiseFilters.Length; i++)
+        try
         {
-            noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(setting.noiseLayers[i].noiseSettings);
+            this.noiseFilters = new INoiseFilter[setting.noiseLayers.Length];
+            for (int i = 0; i < noiseFilters.Length; i++)
+            {
+                noiseFilters[i] = NoiseFilterFactory.CreateNoiseFilter(setting.noiseLayers[i].noiseSettings);
+            }
+            terrainElevation = new MinMaxColor();
         }
-        terrainElevation = new MinMaxColor();
+        catch {
+            Debug.LogError("The shape layer for current planet is of length 0!");
+        }
     }
 
     // Calculate unscaled point on planet based on point on sphere
