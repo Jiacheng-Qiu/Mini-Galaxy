@@ -134,4 +134,9 @@ public class Planet : MonoBehaviour
         if (groundCollider.sharedMaterial != curMesh)
             groundCollider.sharedMesh = curMesh;
     }
+
+    public TerrainFace[] getTerrainFaces()
+    {
+        return terrainFaces;
+    }
 }

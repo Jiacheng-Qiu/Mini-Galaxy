@@ -7,6 +7,7 @@ public class PlanetGeneration : MonoBehaviour
 {
     public Gradient ocean;
     public Gradient land;
+    public GameObject tree;
     public Material planetMaterial;
     private float starSize;
     public GameObject[] planets;
@@ -48,6 +49,7 @@ public class PlanetGeneration : MonoBehaviour
             // Add terrain generation code
             Planet script = planet.AddComponent<Planet>();
             script.faceRenderMask = Planet.FaceRenderMask.All;
+            script.resolution = 64;
             
             ShapeSettings shape = ScriptableObject.CreateInstance<ShapeSettings>();
             ColorSettings color = ScriptableObject.CreateInstance<ColorSettings>();
@@ -77,6 +79,11 @@ public class PlanetGeneration : MonoBehaviour
             revolution.orbitRadius = (float)Math.Sqrt(Math.Pow(xPos, 2) + Math.Pow(zPos, 2));
             rotation.Init();
             revolution.Init();
+
+            // Add all bio randomization
+            /*BioRandomize bio = planet.AddComponent<BioRandomize>();
+            bio.tree1 = tree;
+            bio.Init();*/
 
             // Add moon randomize script to random amount of planets
             /*if (isMoon)

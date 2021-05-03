@@ -31,7 +31,7 @@ public class ColorGenerator
         settings.planetMaterial.SetVector("_terrainElevation", new Vector4(terrainElevation.Min, terrainElevation.Max));
     }
 
-    // Calculate the current biome the point is within TODO: can be used as player position calculation!!
+    // Calculate the current biome the point is within
     public float BiomePercentFromPoint(Vector3 pointPos)
     {
         float heightPercent = (pointPos.y + 1) / 2f;
