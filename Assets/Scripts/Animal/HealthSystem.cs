@@ -53,7 +53,7 @@ public class HealthSystem : MonoBehaviour
             currentHealth = (maxHealth - currentHealth > hpHeal) ? currentHealth + hpHeal : maxHealth;
     }
 
-    public bool Hurt(GameObject attacker, int damage)
+    public bool Hurt(GameObject attacker, float damage)
     {
         if (immunity)
             return false;

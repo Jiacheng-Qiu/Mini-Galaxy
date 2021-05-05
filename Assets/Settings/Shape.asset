@@ -30,11 +30,11 @@ MonoBehaviour:
     useMask: 1
     noiseSettings:
       filterType: 1
-      strength: 0.3
+      strength: 0.5
       roughness: 2.62
       baseRoughness: 1
       center: {x: 0, y: 0, z: 0}
       numLayers: 3
-      persistence: 0.4
-      minVal: 0.6
-      rigidWeightMultiplier: 0.8
+      persistence: 0.6
+      minVal: 0.2
+      rigidWeightMultiplier: 1

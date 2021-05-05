@@ -8,10 +8,11 @@ public class TinyObjGravity : MonoBehaviour
     public bool locked = false;
     private Rigidbody rb;
     public GameObject planet;
-    void Start()
+    public void Init(Transform planet)
     {
+        this.planet = planet.gameObject;
         this.rb = this.gameObject.GetComponent<Rigidbody>();
-        this.gameObject.transform.parent = planet.transform.Find("Orb").transform;
+        this.gameObject.transform.parent = planet.Find("Orb").transform;
     }
 
     void FixedUpdate()

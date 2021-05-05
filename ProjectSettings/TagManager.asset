@@ -12,6 +12,7 @@ TagManager:
   - Interactable
   - Star
   - Plant
+  - Stone
   layers:
   - Default
   - TransparentFX
