@@ -1,10 +1,11 @@
 ﻿using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public Image oxygenBar;
-
+    // GUI telling player this can interact
+    public GameObject informer;
     // Mouse sensitivity
     public float sensX = 2;
     public float sensY = 2;
@@ -35,6 +36,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        // Hide informer on init
+        informer.SetActive(false);
         // Hide mouse on player init
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -48,11 +51,17 @@ public class PlayerMovement : MonoBehaviour
 
         // TODO: Only for testing, will delete in future: 
         material.GetComponent<TinyObjGravity>().planet = planet;
-        //placeable.GetComponent<TinyObjGravity>().planet = planet;
-        gameObject.GetComponent<MaterialSpawn>().changePlanet(planet);
+        // gameObject.GetComponent<MaterialSpawn>().changePlanet(planet);
     }
     void Update()
     {
+        // Hide gui if no interacting object
+        if (aimObject == null)
+        {
+            informer.SetActive(false);
+        }
+        // Tell attack script if shooting disabled
+        gameObject.GetComponent<PlayerAttack>().disabled = onFocus;
         // check if the player is on ground
         // Physics.Raycast(transform.position, -transform.up, out hit, 10);
         // gDirection = hit.normal;
@@ -86,12 +95,15 @@ public class PlayerMovement : MonoBehaviour
 
             // TODO: Only for testing, will delete in future: 
             material.GetComponent<TinyObjGravity>().planet = planet;
-            gameObject.GetComponent<MaterialSpawn>().changePlanet(planet);
+            //gameObject.GetComponent<MaterialSpawn>().changePlanet(planet);
         }
         // Add new objects in aiming range according to distance, so player is always interacting with the one in front
         if (collision.tag == "Material" || collision.tag == "Interactable")
         {
             aimObject = collision;
+            // Also display the name on UI
+            informer.transform.Find("Item").Find("ItemName").GetComponent<Text>().text = collision.name;
+            informer.SetActive(true);
         }
     }
     
@@ -156,7 +168,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (gameObject.GetComponent<PlayerHealthSystem>().run(true))
                 {
-                    Debug.Log("player run");
                     x *= runSpeed / speed;
                     z *= runSpeed / speed;
                 }

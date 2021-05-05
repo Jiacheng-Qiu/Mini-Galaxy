@@ -1,19 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public GameObject laser;
-
-    // Update is called once per frame
+    public GameObject beacon;
+    public Weapon weapon;
+    public bool disabled = false;
     void Update()
     {
+        if (disabled)
+            return;
         if (Input.GetMouseButtonDown(0))
         {
-            GameObject go = GameObject.Instantiate(laser, transform.position, transform.Find("Main Camera").rotation) as GameObject;
-            Destroy(go, 3f);
+            weapon.Shoot();
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            weapon.Reload();
+        }
+        if (Input.GetMouseButtonDown(2))
+        {
+            GameObject beac = Instantiate(beacon, transform.position, transform.rotation) as GameObject;
+            beac.GetComponent<Beacon>().player = gameObject;
+            beac.GetComponent<Beacon>().SetColor(Color.red);
         }
     }
 }

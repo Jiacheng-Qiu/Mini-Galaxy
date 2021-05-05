@@ -80,9 +80,8 @@ public class HealthSystem : MonoBehaviour
         Debug.Log(this.gameObject.name + "is dead!");
         MaterialProperty property= this.gameObject.AddComponent<MaterialProperty>();
         // TODO: assign material property read from json
-        property.materialName = "Meat";
+        property.materialName = "Copper";
         this.gameObject.tag = "Material";
-        Destroy(this.gameObject.GetComponent<AnimalGravity>());
         Destroy(this.gameObject.GetComponent<AnimalMovement>());
         Destroy(this.gameObject.GetComponent<AttackSystem>());
         Destroy(this);
