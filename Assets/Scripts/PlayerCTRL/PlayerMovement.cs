@@ -1,7 +1,10 @@
-﻿using UnityEngine;
+﻿using Microsoft.Unity.VisualStudio.Editor;
+using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public Image oxygenBar;
+
     // Mouse sensitivity
     public float sensX = 2;
     public float sensY = 2;
@@ -11,12 +14,12 @@ public class PlayerMovement : MonoBehaviour
     public bool onFocus = false;
     public GameObject onShip;
 
-    public float speed = 6f;
+    public float speed = 10f;
+    public float runSpeed = 20f;
     public float jump = 10f;
     
     public bool isGround = true;
 
-    private GameObject player;
     private PlayerInventory inventory;
     public Camera cam;
     
@@ -32,17 +35,21 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        // Hide mouse on player init
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         // TODO: code dependency
         GameObject.Find("ShipConsole").GetComponent<Canvas>().enabled = false;
+
         //hit = new RaycastHit();
-        player = this.gameObject;
-        player.transform.parent = planet.transform;
-        inventory = player.GetComponent<PlayerInventory>();
+        transform.parent = planet.transform;
+        inventory = gameObject.GetComponent<PlayerInventory>();
 
         // TODO: Only for testing, will delete in future: 
         material.GetComponent<TinyObjGravity>().planet = planet;
         //placeable.GetComponent<TinyObjGravity>().planet = planet;
-        player.GetComponent<MaterialSpawn>().changePlanet(planet);
+        gameObject.GetComponent<MaterialSpawn>().changePlanet(planet);
     }
     void Update()
     {
@@ -74,12 +81,12 @@ public class PlayerMovement : MonoBehaviour
             // Add player as child of planet if not on ship (shouldn't happen in actual gameplay)
             if (onShip == null)
             {
-                player.transform.parent = planet.transform;
+                transform.parent = planet.transform;
             }
 
             // TODO: Only for testing, will delete in future: 
             material.GetComponent<TinyObjGravity>().planet = planet;
-            player.GetComponent<MaterialSpawn>().changePlanet(planet);
+            gameObject.GetComponent<MaterialSpawn>().changePlanet(planet);
         }
         // Add new objects in aiming range according to distance, so player is always interacting with the one in front
         if (collision.tag == "Material" || collision.tag == "Interactable")
@@ -145,6 +152,20 @@ public class PlayerMovement : MonoBehaviour
         {
             float x = Input.GetAxisRaw("Horizontal") * Time.deltaTime * speed;
             float z = Input.GetAxisRaw("Vertical") * Time.deltaTime * speed;
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                if (gameObject.GetComponent<PlayerHealthSystem>().run(true))
+                {
+                    Debug.Log("player run");
+                    x *= runSpeed / speed;
+                    z *= runSpeed / speed;
+                }
+            }
+            else
+            {
+                gameObject.GetComponent<PlayerHealthSystem>().run(false);
+            }
+            
             transform.Translate(x, 0, z);
             // Apply gravity
             Vector3 grav = (transform.position - planet.transform.position).normalized;
@@ -170,8 +191,8 @@ public class PlayerMovement : MonoBehaviour
         {
             onShip.GetComponent<Control>().SpaceshipMove();
             // FIX player onto the ship
-            player.transform.position = onShip.transform.position;
-            player.transform.rotation = onShip.transform.rotation;
+            gameObject.transform.position = onShip.transform.position;
+            gameObject.transform.rotation = onShip.transform.rotation;
         }
     }
 
@@ -190,7 +211,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && inventory.getOut())
         {
             Debug.Log("Throwing material!");
-            Instantiate(material, player.transform.position, Quaternion.identity);
+            Instantiate(material, gameObject.transform.position, Quaternion.identity);
         }
     }
 
@@ -201,52 +222,9 @@ public class PlayerMovement : MonoBehaviour
         {
             // TODO: Current placeable item is set to spaceship, change the planet its associated
             placeable.GetComponent<Control>().planet = this.planet;
-            Instantiate(placeable, this.gameObject.transform.position, Quaternion.identity);
+            Instantiate(placeable, gameObject.transform.position, Quaternion.identity);
         }
     }
-
-    // Whenever a collision happen, detect if player want to interact with the object.
-    /*void Interact()
-    {
-        // If F pressed, detect the colliders in range, interact with the closest one
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            // Old code executing interaction with the closest object in range without aiming.
-            Collider[] inRange = Physics.OverlapSphere(player.transform.position, 10);
-            Collider closest = null;
-            float minDist = 0;
-            foreach(Collider collid in inRange)
-            {
-                if (collid.gameObject.tag == "Material") {
-                    // Detect and choose the closest one to interact with.
-                    if (closest == null)
-                    {
-                        closest = collid;
-                        minDist = Vector3.Distance(collid.gameObject.transform.position, player.transform.position);
-                    }
-                    float curDist = Vector3.Distance(collid.gameObject.transform.position, player.transform.position);
-                    if (curDist < minDist)
-                    {
-                        closest = collid;
-                        minDist = curDist;
-                    }
-                }
-            }
-            // Interact with the closest one
-            if (closest != null)
-            {
-                MaterialProperty mat = closest.gameObject.GetComponent<MaterialProperty>();
-                string name = mat.getName();
-                int amount = mat.Interacted();
-
-                bool putCheck = inventory.putIn(name, amount);
-                if (putCheck)
-                    Debug.Log("Received material: " + name + ". Current amount in backpack: " + inventory.getAmount(name));
-                else
-                    Debug.Log("Fail to add to inventory!");
-            }
-        }
-    }*/
 
     /*private void OnCollisionEnter(Collision collision)
 {

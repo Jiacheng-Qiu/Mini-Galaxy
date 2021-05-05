@@ -36,13 +36,11 @@ public class AnimalMovement : MonoBehaviour
             // Carnivores chase attacker, herbivores run away
             if (isCarnivore)
             {
-                Debug.Log(this.gameObject.name + "is chasing attacker!");
                 target = health.lastAttacker;
                 Hunt();
             }
             else
             {
-                Debug.Log(this.gameObject.name + "is running away from attacker!");
                 // Rotate and run towards the target
                 Vector3 targetDirection = (this.transform.position - health.lastAttacker.transform.position).normalized;
                 // targetDirection = new Vector3(targetDirection.x, transform.rotation.x, targetDirection.z);
@@ -57,7 +55,6 @@ public class AnimalMovement : MonoBehaviour
             // Will stop running if lastAttacker is out of range
             if (Vector3.Distance(this.transform.position, health.lastAttacker.transform.position) > 2 * visionRange)
             {
-                Debug.Log(this.gameObject.name + "lost track of attacker!");
                 health.lastAttacker = null;
             }
         }
@@ -92,7 +89,6 @@ public class AnimalMovement : MonoBehaviour
             StartCoroutine(WaitTime(Random.Range(1, 2)));
             return;
         }
-        Debug.Log(this.gameObject.name + " is chasing target!");
         // Rotate and run towards the target
         Vector3 targetDirection = (target.transform.position - this.transform.position).normalized;
         transform.rotation = Quaternion.FromToRotation(transform.forward, targetDirection) * transform.rotation;
@@ -127,7 +123,6 @@ public class AnimalMovement : MonoBehaviour
     // Just standing there doing nothing for a random amount of time
     private void Idle()
     {
-        Debug.Log(this.gameObject.name + " is idling!");
         StartCoroutine(WaitTime(Random.Range(3, 10)));
         return;
     }
@@ -135,7 +130,6 @@ public class AnimalMovement : MonoBehaviour
     // Eat behavior when target reached, destroy target gameobject
     private void Eat()
     {
-        Debug.Log(this.gameObject.name + " is eating!");
         // Destroy the target after eat
         Destroy(target);
         lastEat = Time.time;

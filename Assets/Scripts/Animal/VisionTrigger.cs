@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class VisionTrigger : MonoBehaviour
 {
@@ -30,6 +27,11 @@ public class VisionTrigger : MonoBehaviour
     // Record new target if currently don't have one
     private void OnTriggerEnter(Collider other)
     {
+        // Triggers happeneing before the class init is self, which won't count
+        if (movement == null)
+        {
+            return;
+        }
         // Herbivore feed on plants, carnivore feed on animals
         GameObject hitObject = other.gameObject;
         // Always prioritize player if player enters range
@@ -37,7 +39,8 @@ public class VisionTrigger : MonoBehaviour
         {
             movement.target = hitObject;
         }
-        else if (other.gameObject != this.gameObject && movement.target == null && hitObject.tag == foodTag)
+        // Check if hungry and target is food
+        else if (hitObject != transform.parent.gameObject && movement.target == null && hitObject.tag == foodTag)
         {
             movement.target = hitObject;
         }

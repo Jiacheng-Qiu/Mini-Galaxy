@@ -20,7 +20,6 @@ public class AttackSystem : MonoBehaviour
         {
             return false;
         }
-        Debug.Log(this.gameObject.name + " attacked target!");
         target.GetComponent<HealthSystem>().Hurt(this.gameObject, attack);
         lastAttack = Time.time;
         return true;

@@ -62,6 +62,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -145,7 +146,7 @@ MonoBehaviour:
   rb: {fileID: 3648729673969551593}
   planet: {fileID: 3648729673969551602}
   material: {fileID: 8044328024401931864, guid: a62eb222aa6578343b2904a536c250a5, type: 3}
-  placeable: {fileID: 3186664699062294536, guid: a001e525cf1f7594e8313bb26948f041, type: 3}
+  placeable: {fileID: 814000278694806998, guid: e50a5e21d9881a3489bf96851bab0605, type: 3}
 --- !u!114 &3648729673969551599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,12 +229,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxShield: 100
+  currentShield: 0
   maxHealth: 100
-  shieldHeal: 5
+  currentHealth: 0
+  shieldHeal: 10
   hpHeal: 1
   armor: 10
   immunity: 0
   lastAttacker: {fileID: 0}
+  health: {fileID: 0}
+  shield: {fileID: 0}
 --- !u!1 &3648729673999204077
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,7 +296,6 @@ GameObject:
   - component: {fileID: 3648729675337028898}
   - component: {fileID: 3648729675337028897}
   - component: {fileID: 3648729675337028896}
-  - component: {fileID: 3648729675337028903}
   - component: {fileID: 3648729675337028902}
   m_Layer: 0
   m_Name: Main Camera
@@ -339,7 +343,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000000
+  far clip plane: 100000000
   field of view: 26.991467
   orthographic: 0
   orthographic size: 5
@@ -379,15 +383,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensitivity: 17
---- !u!45 &3648729675337028903
-Skybox:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3648729675337028900}
-  m_Enabled: 1
-  m_CustomSkybox: {fileID: 2100000, guid: 860a66ca4259b384f9ec01b687f71c3c, type: 2}
 --- !u!114 &3648729675337028902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,6 +411,7 @@ MonoBehaviour:
   m_StopNaN: 0
   m_Dithering: 0
   m_ClearDepth: 1
+  m_AllowXRRendering: 1
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2

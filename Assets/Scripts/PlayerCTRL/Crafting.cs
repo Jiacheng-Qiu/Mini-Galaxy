@@ -20,11 +20,15 @@ public class Crafting : MonoBehaviour
             // Set on focus
             ctrl.onFocus = true;
             craftCanvas.enabled = true;
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
         }
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             ctrl.onFocus = false;
             craftCanvas.enabled = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
     }
     private bool ItemChecker(string[] items, int[] amount)

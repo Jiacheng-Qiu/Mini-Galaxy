@@ -25,7 +25,6 @@ public class ShipConsole : MonoBehaviour
 
     public void moveAimer(Vector2 position)
     {
-        
         console.enabled = true;
         position.x = Mathf.Clamp(position.x, -2 * border, 2 * border);
         position.y = Mathf.Clamp(position.y, -2 * border, 2 * border);

@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 public class HealthSystem : MonoBehaviour
@@ -10,11 +7,11 @@ public class HealthSystem : MonoBehaviour
     Rigidbody rb;
     // TODO: later implementation will read health from json
     // Shield takes full damage, HP takes reduced damage based on defense
-    public int maxShield = 0;
-    private int currentShield;
-    public int maxHealth = 100;
-    private int currentHealth;
-    public int shieldHeal = 5;
+    public float maxShield = 0;
+    public float currentShield;
+    public float maxHealth = 100;
+    public float currentHealth;
+    public int shieldHeal = 15;
     public int hpHeal = 1;
     public int armor = 10;
     public bool immunity = false;
@@ -37,11 +34,21 @@ public class HealthSystem : MonoBehaviour
         }
     }
 
-    // Heal if damaged, called every second
-    private void Recover()
+    void FixedUpdate()
     {
         if (currentShield < maxShield)
-            currentShield = (maxShield - currentShield > shieldHeal) ? currentShield + shieldHeal : maxShield;
+        {
+            currentShield = currentShield + shieldHeal * Time.deltaTime;
+        }
+        if (currentShield > maxShield)
+        {
+            currentShield = maxShield;
+        }
+    }
+
+        // Heal if damaged, called every second
+    private void Recover()
+    {
         if (currentHealth < maxHealth)
             currentHealth = (maxHealth - currentHealth > hpHeal) ? currentHealth + hpHeal : maxHealth;
     }
