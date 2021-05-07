@@ -34,6 +34,10 @@ public class EnvironmentComponent : MonoBehaviour
         for (int i = 0; i < max; i++)
         {
             GameObject gen = (GameObject)Instantiate(product, transform.position + transform.up * 2, Quaternion.identity);
+            if (gen.GetComponent<Rigidbody>() == null)
+            {
+                gen.AddComponent<Rigidbody>().useGravity = false;
+            }
             // Long as all env comps are within subfolders of the planet, this will work
             gen.AddComponent<TinyObjGravity>().Init(transform.parent.parent);
             MaterialProperty prop = gen.AddComponent<MaterialProperty>();
@@ -43,6 +47,8 @@ public class EnvironmentComponent : MonoBehaviour
             prop.maxProduct = 4;
             gen.tag = "Material";
             gen.transform.parent = transform.parent.parent.Find("Material");
+
+            
             // Remove the material if not picked up after an amount of time for optimization
             Destroy(gen, 60f);
         }
