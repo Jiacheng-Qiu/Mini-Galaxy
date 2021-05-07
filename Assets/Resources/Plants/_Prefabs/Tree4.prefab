@@ -12,9 +12,11 @@ GameObject:
   - component: {fileID: 6684772291655115572}
   - component: {fileID: 6684772291654148596}
   - component: {fileID: 9122093173669833588}
+  - component: {fileID: -5629088897305853858}
+  - component: {fileID: 6622815615801537397}
   m_Layer: 0
   m_Name: Tree4
-  m_TagString: Plant
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,3 +99,36 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: e27c287717052ac4b903c9f886180c78, type: 3}
+--- !u!114 &-5629088897305853858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6684772291651960628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9246db9b225ad7c43a07315176544ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 80
+  name: Tree
+  productName: Wood
+  product: {fileID: 0}
+  productAmount: {x: 2, y: 4}
+--- !u!54 &6622815615801537397
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6684772291651960628}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 1

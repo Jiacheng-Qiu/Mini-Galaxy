@@ -1,5 +1,4 @@
-﻿using Microsoft.Unity.VisualStudio.Editor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
@@ -140,13 +139,13 @@ public class PlayerMovement : MonoBehaviour
                         MaterialProperty mat = aimObject.gameObject.GetComponent<MaterialProperty>();
                         var materialName = mat.getName();
                         int amount = mat.Interacted();
-
                         bool putCheck = inventory.putIn(materialName, amount);
                         if (putCheck)
                             Debug.Log("Received material: " + materialName + ". Current amount in backpack: " + inventory.getAmount(materialName));
                         else
                             Debug.Log("Fail to add to inventory!");
                     break;
+                // TODO
                 case "Interactable":
                         Debug.Log("Player on ship");
                         onShip = aimObject.transform.gameObject;

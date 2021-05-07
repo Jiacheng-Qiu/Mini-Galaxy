@@ -49,4 +49,9 @@ public class Weapon : MonoBehaviour
         UpdateText();
     }
 
+    public void AddAmmo(int amount)
+    {
+        maxAmmo += amount;
+    }
+
 }

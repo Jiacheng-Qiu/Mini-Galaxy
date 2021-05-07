@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8307322894757079013}
   - component: {fileID: 8307322894754887974}
   - component: {fileID: -3142557112594199993}
-  - component: {fileID: 6124570110470661102}
   m_Layer: 0
   m_Name: Gem2
   m_TagString: Material
@@ -115,17 +114,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6124570110470661102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8307322894754887973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dd519b0d79da634da78594da570cfe1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  locked: 0
-  planet: {fileID: 0}

@@ -19,9 +19,9 @@ public class ShotBehavior : MonoBehaviour
 			other.GetComponent<HealthSystem>().Hurt(player, damage);
 			Destroy(gameObject);
 		}
-		else if (other.tag == "Stone")
+		else if (other.tag == "Environment")
 		{
-			other.GetComponent<MineHealth>().Hit(damage);
+			other.GetComponent<EnvironmentComponent>().Hit(damage);
 			Destroy(gameObject);
 		}
 	}

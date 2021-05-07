@@ -11,8 +11,7 @@ TagManager:
   - Laser
   - Interactable
   - Star
-  - Plant
-  - Stone
+  - Environment
   layers:
   - Default
   - TransparentFX

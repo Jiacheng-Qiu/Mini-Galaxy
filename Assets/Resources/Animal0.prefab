@@ -144,8 +144,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7a3606f36c9522498a0a8ac076203eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  durability: 100
+  name: Carnivore
+  productName: Meat
+  product: {fileID: 0}
+  productAmount: {x: 2, y: 4}
   maxShield: 0
+  currentShield: 0
   maxHealth: 100
+  currentHealth: 0
   shieldHeal: 5
   hpHeal: 1
   armor: 10
