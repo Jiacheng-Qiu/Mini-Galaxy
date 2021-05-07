@@ -12,9 +12,6 @@ public class PlayerInventory : MonoBehaviour
 
     // UI display part
     public GameObject[] slots;
-    public GameObject itemButton;
-    public GameObject itemButton2;
-    public GameObject itemButton3;
     private string[] slotFull;
     private int nextEmptySlot = 0;
     public int selectedSlot = 0;
@@ -93,14 +90,10 @@ public class PlayerInventory : MonoBehaviour
             // Add new obj into inventory UI
 
             // TODO: The IF check here is just for testing use
-            if (obj == "Iron")
-                Instantiate(itemButton, slots[nextEmptySlot].transform);
-            else if (obj == "Copper")
-                Instantiate(itemButton2, slots[nextEmptySlot].transform);
-            else if (obj == "Steel")
-                Instantiate(itemButton3, slots[nextEmptySlot].transform);
-            else if (obj == "Machine")
-                Instantiate(itemButton3, slots[nextEmptySlot].transform);
+            GameObject imgIcon = new GameObject("item");
+            imgIcon.AddComponent<Image>().sprite = Resources.Load<Sprite>("Icons/" + obj);
+            imgIcon.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+            Instantiate(imgIcon, slots[nextEmptySlot].transform);
 
             slotFull[nextEmptySlot] = obj;
             GameObject amountCount = slots[nextEmptySlot].transform.Find("Amount").gameObject;

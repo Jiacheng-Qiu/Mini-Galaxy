@@ -30,7 +30,6 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 gDirection;
     private Collider aimObject;
 
-    public GameObject material; //TODO: Testing use
     public GameObject placeable; //Testing use
 
     void Start()
@@ -48,8 +47,6 @@ public class PlayerMovement : MonoBehaviour
         transform.parent = planet.transform;
         inventory = gameObject.GetComponent<PlayerInventory>();
 
-        // TODO: Only for testing, will delete in future: 
-        material.GetComponent<TinyObjGravity>().planet = planet;
         // gameObject.GetComponent<MaterialSpawn>().changePlanet(planet);
     }
     void Update()
@@ -92,9 +89,6 @@ public class PlayerMovement : MonoBehaviour
                 transform.parent = planet.transform;
             }
 
-            // TODO: Only for testing, will delete in future: 
-            material.GetComponent<TinyObjGravity>().planet = planet;
-            //gameObject.GetComponent<MaterialSpawn>().changePlanet(planet);
         }
         // Add new objects in aiming range according to distance, so player is always interacting with the one in front
         if (collision.tag == "Material" || collision.tag == "Interactable")
@@ -105,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
             informer.SetActive(true);
         }
     }
-    
+
     private void OnTriggerExit(Collider collision)
     {
         if (collision.transform.tag == "Planet")
@@ -199,6 +193,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            informer.SetActive(false);
             onShip.GetComponent<Control>().SpaceshipMove();
             // FIX player onto the ship
             gameObject.transform.position = onShip.transform.position;
@@ -221,7 +216,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && inventory.getOut())
         {
             Debug.Log("Throwing material!");
-            Instantiate(material, gameObject.transform.position, Quaternion.identity);
+            //Instantiate(material, gameObject.transform.position, Quaternion.identity);
         }
     }
 
