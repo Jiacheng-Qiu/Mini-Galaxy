@@ -7857,9 +7857,9 @@ MonoBehaviour:
   grassAmount: 3
   treeAmount: 5
   rockAmount: 2
-  stoneAmount: 1
+  oreAmount: 5
   enableGrass: 0
-  enableRock: 0
+  enableRock: 1
 --- !u!135 &899396775
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -16955,10 +16955,6 @@ PrefabInstance:
       propertyPath: craftCanvas
       value: 
       objectReference: {fileID: 723100278}
-    - target: {fileID: 3648729673969551598, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3648729673969551599, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
       propertyPath: slots.Array.data[0]
       value: 

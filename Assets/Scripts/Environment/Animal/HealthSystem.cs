@@ -20,7 +20,7 @@ public class HealthSystem : EnvironmentComponent
     public GameObject lastAttacker = null;
     void Start()
     {
-        product = Resources.Load("Meat/Prefabs/" + productName);
+        product = Resources.Load("Prefabs/" + productName);
 
         rb = gameObject.GetComponent<Rigidbody>();
         //TODO: Read properties from JSON

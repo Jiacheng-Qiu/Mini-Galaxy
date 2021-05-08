@@ -4,6 +4,6 @@ public class PlantBehavior : EnvironmentComponent
 {
     void Start()
     {
-        product = Resources.Load("Wood/Prefabs/" + productName);
+        product = Resources.Load("Prefabs/" + productName);
     }
 }

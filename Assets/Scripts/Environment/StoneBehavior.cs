@@ -5,6 +5,6 @@ public class StoneBehavior : EnvironmentComponent
     
     void Start()
     {
-        product = Resources.Load("MineOres/Prefabs/" + productName);
+        product = Resources.Load("Prefabs/" + productName);
     }
 }

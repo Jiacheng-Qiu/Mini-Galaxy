@@ -84,16 +84,17 @@ public class PlayerInventory : MonoBehaviour
         {
             if (currentItemCount >= itemLimit)
             {
+                // In this case, the object material has already been fetched and dissappear TODO
                 return false;
             }
             inventory.Add(obj, amount);
-            // Add new obj into inventory UI
 
-            // TODO: The IF check here is just for testing use
+            // Add new obj into inventory UI
             GameObject imgIcon = new GameObject("item");
             imgIcon.AddComponent<Image>().sprite = Resources.Load<Sprite>("Icons/" + obj);
             imgIcon.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
-            Instantiate(imgIcon, slots[nextEmptySlot].transform);
+            imgIcon.transform.parent = slots[nextEmptySlot].transform;
+            imgIcon.transform.localPosition = new Vector3(0, 0, 0);
 
             slotFull[nextEmptySlot] = obj;
             GameObject amountCount = slots[nextEmptySlot].transform.Find("Amount").gameObject;
@@ -151,20 +152,22 @@ public class PlayerInventory : MonoBehaviour
         return false;
     }
 
-    // return false if there is not such obj in inventory
-    public bool getOut()
+    // return null if there is not such obj in inventory
+    public GameObject getOut()
     {
         string obj = slotFull[selectedSlot];
         if (obj == "0")
         {
-            return false;
+            return null;
         }
         // Make the slot blank
         slotFull[selectedSlot] = "0";
+        int amount = 0;
         foreach (Transform child in slots[selectedSlot].GetComponent<Transform>())
         {
             if (child.name == "Amount")
             {
+                amount = int.Parse(child.gameObject.GetComponent<Text>().text);
                 // No need to reset amount as it will init to new val each time
                 child.gameObject.SetActive(false);
             }
@@ -176,7 +179,24 @@ public class PlayerInventory : MonoBehaviour
         inventory.Remove(obj);
         currentItemCount--;
         emptyChecker();
-        return true;
+
+        // Create gameobject with properties from inventory, and return output
+        GameObject gen = (GameObject)Instantiate(Resources.Load("Prefabs/" + obj), transform.position + transform.forward * 2, Quaternion.identity);
+        gen.SetActive(false);
+        if (gen.GetComponent<Rigidbody>() == null)
+        {
+            gen.AddComponent<Rigidbody>().useGravity = false;
+        }
+        gen.AddComponent<TinyObjGravity>().Init(transform.parent);
+        MaterialProperty prop = gen.AddComponent<MaterialProperty>();
+        prop.remainInteract = 1;
+        prop.materialName = obj;
+        prop.minProduct = amount;
+        prop.maxProduct = amount;
+        gen.tag = "Material";
+        gen.transform.parent = transform.parent.Find("Material");
+
+        return gen;
     }
 
     private void emptyChecker()
@@ -192,14 +212,14 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    // Check if selected item is placeable
-    public bool placeable()
+    // Check if selected item is placeable TODO
+    public bool Placeable()
     {
         return slotFull[selectedSlot].Equals("Machine");
     }
 
     // check amount of one obj in inventory
-    public int getAmount(string obj)
+    public int GetAmount(string obj)
     {
         return (int)inventory[obj];
     }

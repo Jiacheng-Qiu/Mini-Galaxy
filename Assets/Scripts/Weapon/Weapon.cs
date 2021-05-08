@@ -23,7 +23,7 @@ public class Weapon : MonoBehaviour
         if (curMag <= 0)
             return;
         curMag--;
-        GameObject shot = Instantiate(laser, user.transform.Find("Main Camera").position, user.transform.Find("Main Camera").rotation) as GameObject;
+        GameObject shot = Instantiate(laser, user.transform.Find("Main Camera").Find("HandGun").position, user.transform.Find("Main Camera").rotation) as GameObject;
         shot.GetComponent<ShotBehavior>().player = user;
         Destroy(shot, 3f);
         UpdateText();

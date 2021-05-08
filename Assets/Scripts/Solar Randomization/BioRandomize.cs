@@ -5,7 +5,7 @@ public class BioRandomize : MonoBehaviour
     public int grassAmount = 3;
     public int treeAmount = 5;
     public int rockAmount = 2;
-    public int stoneAmount = 1;
+    public int oreAmount = 5;
     public bool enableGrass = true;
     public bool enableRock = true;
     private Object[] animals;
@@ -57,12 +57,13 @@ public class BioRandomize : MonoBehaviour
 
         // Initiate Mine ores
         Transform orbFolder = transform.Find("Orb");
-        oreStones = new Object[stoneAmount];
-        for (int i = 0; i < stoneAmount; i++)
+        oreStones = new Object[oreAmount];
+        Debug.Log(oreStones.Length);
+        for (int i = 0; i < oreAmount; i++)
         {
-            oreStones[i] = Resources.Load("MineOres/Prefabs/Mine" + i);
+            oreStones[i] = Resources.Load("MineOres/Prefabs/MetalOre" + i);
         }
-        GenerateType(orbFolder, oreStones, 200, new Vector2(0,0), new Vector2(1, 2), 3);
+        GenerateType(orbFolder, oreStones, 500, new Vector2(0,0), new Vector2(1, 2), 3);
     }
 
     // Build any type of creatures based on needs
@@ -77,7 +78,7 @@ public class BioRandomize : MonoBehaviour
             // Avoid choosing vertices on lakes or sea level
             while (Vector3.Distance(position, transform.position) <= (script.shapeSetting.planetRadius + 1))
             {
-                position = faces[0].mesh.vertices[Random.Range(0, vertAmount)] + transform.position;
+                position = faces[onFace].mesh.vertices[Random.Range(0, vertAmount)] + transform.position;
             }
             for (int j = 0; j < Random.Range(groupSize.x, groupSize.y); j++)
             {

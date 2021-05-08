@@ -135,7 +135,7 @@ public class PlayerMovement : MonoBehaviour
                         int amount = mat.Interacted();
                         bool putCheck = inventory.putIn(materialName, amount);
                         if (putCheck)
-                            Debug.Log("Received material: " + materialName + ". Current amount in backpack: " + inventory.getAmount(materialName));
+                            Debug.Log("Received material: " + materialName + ". Current amount in backpack: " + inventory.GetAmount(materialName));
                         else
                             Debug.Log("Fail to add to inventory!");
                     break;
@@ -213,18 +213,31 @@ public class PlayerMovement : MonoBehaviour
     // Throw material out
     void Throw()
     {
-        if (Input.GetKeyDown(KeyCode.E) && inventory.getOut())
+        
+        if (Input.GetKeyDown(KeyCode.E))
         {
             Debug.Log("Throwing material!");
-            //Instantiate(material, gameObject.transform.position, Quaternion.identity);
+            GameObject obj = inventory.getOut();
+            if (obj != null)
+            {
+                obj.SetActive(true);
+                // Throw in the front direction
+                obj.GetComponent<Rigidbody>().AddForce(transform.forward * 500);
+            }
+                
         }
     }
 
     // Put placeable items onto ground
     void Place()
     {
-        if (Input.GetKeyDown(KeyCode.F) && (inventory.placeable() && inventory.getOut()))
+        
+        if (Input.GetKeyDown(KeyCode.F) && inventory.Placeable())
         {
+            GameObject obj = inventory.getOut();
+            if (obj == null)
+                return;
+            Destroy(obj);
             // TODO: Current placeable item is set to spaceship, change the planet its associated
             placeable.GetComponent<Control>().planet = this.planet;
             Instantiate(placeable, gameObject.transform.position, Quaternion.identity);

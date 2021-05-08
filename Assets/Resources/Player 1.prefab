@@ -73,7 +73,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0d42482b4de70094a80ae8b9fed1fa1a, type: 2}
+  - {fileID: 2100000, guid: 39fbad40cddaec94196b2768dba204a5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -137,6 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb05c73314bf3164591b9c6efa98e64d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  informer: {fileID: 0}
   sensX: 2
   sensY: 2
   onFocus: 0
@@ -148,7 +149,6 @@ MonoBehaviour:
   cam: {fileID: 3648729675337028898}
   rb: {fileID: 3648729673969551593}
   planet: {fileID: 3648729673969551602}
-  material: {fileID: 8044328024401931864, guid: a62eb222aa6578343b2904a536c250a5, type: 3}
   placeable: {fileID: 814000278694806998, guid: e50a5e21d9881a3489bf96851bab0605, type: 3}
 --- !u!114 &3648729673969551599
 MonoBehaviour:
@@ -169,9 +169,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  itemButton: {fileID: 2746000880517585656, guid: 5528d4dfdbdd69f4fab4206d0c021cfc, type: 3}
-  itemButton2: {fileID: 2739767160946272352, guid: aa48b93d06950704d80651cb3270f2ea, type: 3}
-  itemButton3: {fileID: 2739767160946272352, guid: df922ef21f7a51241a5cdb277517e2ef, type: 3}
   selectedSlot: 0
 --- !u!114 &3648729673969551598
 MonoBehaviour:
@@ -180,7 +177,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3648729673969551602}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 480baddf00178774cb6e72944dafb41f, type: 3}
   m_Name: 
@@ -231,6 +228,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6891553489a45045aa364e62878d8e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  durability: 100
+  name: 
+  productName: Iron
+  product: {fileID: 0}
+  productAmount: {x: 2, y: 4}
   maxShield: 100
   currentShield: 0
   maxHealth: 100
@@ -280,6 +282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beacon: {fileID: 7519300999579546485, guid: 0e37f0526e882644e944b93d023ea5e1, type: 3}
   weapon: {fileID: 1346284280}
+  disabled: 0
 --- !u!1 &3648729673999204077
 GameObject:
   m_ObjectHideFlags: 0
