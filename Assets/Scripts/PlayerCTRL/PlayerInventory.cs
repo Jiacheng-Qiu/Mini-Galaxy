@@ -93,7 +93,7 @@ public class PlayerInventory : MonoBehaviour
             GameObject imgIcon = new GameObject("item");
             imgIcon.AddComponent<Image>().sprite = Resources.Load<Sprite>("Icons/" + obj);
             imgIcon.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
-            imgIcon.transform.parent = slots[nextEmptySlot].transform;
+            imgIcon.transform.SetParent(slots[nextEmptySlot].transform, false);
             imgIcon.transform.localPosition = new Vector3(0, 0, 0);
 
             slotFull[nextEmptySlot] = obj;
@@ -181,7 +181,16 @@ public class PlayerInventory : MonoBehaviour
         emptyChecker();
 
         // Create gameobject with properties from inventory, and return output
-        GameObject gen = (GameObject)Instantiate(Resources.Load("Prefabs/" + obj), transform.position + transform.forward * 2, Quaternion.identity);
+        GameObject gen = null;
+        try
+        {
+            gen = (GameObject)Instantiate(Resources.Load("Prefabs/" + obj), transform.Find("Main Camera").position, Quaternion.identity);
+        }
+        catch
+        {
+            // If generation failed, this means the stuff generated is Interactable instead of material
+            return new GameObject();
+        }
         gen.SetActive(false);
         if (gen.GetComponent<Rigidbody>() == null)
         {
@@ -195,7 +204,6 @@ public class PlayerInventory : MonoBehaviour
         prop.maxProduct = amount;
         gen.tag = "Material";
         gen.transform.parent = transform.parent.Find("Material");
-
         return gen;
     }
 

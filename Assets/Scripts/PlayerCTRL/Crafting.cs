@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Crafting : MonoBehaviour
 {
@@ -55,16 +53,17 @@ public class Crafting : MonoBehaviour
     }
     public void CraftItem()
     {
+        // TODO
         string[] i = { "Iron", "Copper" };
         int[] a = { 5, 3 };
         if (ItemChecker(i, a))
-            inventory.putIn("Steel", 2);
+            inventory.putIn("SteelIngot", 2);
     }
 
     public void InstantiateItem()
     {
         // TODO: add object to bag, let user place it onto ground
-        string[] i = { "Copper", "Steel" };
+        string[] i = { "Copper", "SteelIngot" };
         int[] a = { 3, 2 };
         if (ItemChecker(i, a))
         {

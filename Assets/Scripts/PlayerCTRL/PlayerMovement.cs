@@ -221,17 +221,17 @@ public class PlayerMovement : MonoBehaviour
             if (obj != null)
             {
                 obj.SetActive(true);
-                // Throw in the front direction
-                obj.GetComponent<Rigidbody>().AddForce(transform.forward * 500);
+                // Throw in the front direction after activate
+                obj.GetComponent<Rigidbody>().AddForce(transform.Find("Main Camera").forward * 500);
+
             }
                 
         }
     }
 
-    // Put placeable items onto ground
+    // TODO Put placeable items onto ground
     void Place()
     {
-        
         if (Input.GetKeyDown(KeyCode.F) && inventory.Placeable())
         {
             GameObject obj = inventory.getOut();
@@ -240,7 +240,7 @@ public class PlayerMovement : MonoBehaviour
             Destroy(obj);
             // TODO: Current placeable item is set to spaceship, change the planet its associated
             placeable.GetComponent<Control>().planet = this.planet;
-            Instantiate(placeable, gameObject.transform.position, Quaternion.identity);
+            Instantiate(placeable, transform.position + transform.forward * 5, Quaternion.identity);
         }
     }
 
