@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1425017840970431290}
   - component: {fileID: 6453612316093619214}
   - component: {fileID: 2935127635780641282}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SteelIngot
   m_TagString: Untagged
   m_Icon: {fileID: 0}

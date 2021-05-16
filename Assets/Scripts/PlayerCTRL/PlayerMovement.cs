@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.WSA;
+using Cursor = UnityEngine.Cursor;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -13,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     // POV wont move if on menu focus
     public bool onFocus = false;
     public GameObject onShip;
+    public int interactRange = 5;
 
     public float speed = 10f;
     public float runSpeed = 20f;
@@ -31,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     private Collider aimObject;
 
     public GameObject placeable; //Testing use
+    public bool spawned = false;
 
     void Start()
     {
@@ -46,21 +50,15 @@ public class PlayerMovement : MonoBehaviour
         //hit = new RaycastHit();
         transform.parent = planet.transform;
         inventory = gameObject.GetComponent<PlayerInventory>();
-
-        // gameObject.GetComponent<MaterialSpawn>().changePlanet(planet);
     }
     void Update()
     {
-        // Hide gui if no interacting object
-        if (aimObject == null)
-        {
-            informer.SetActive(false);
-        }
         // Tell attack script if shooting disabled
         gameObject.GetComponent<PlayerAttack>().disabled = onFocus;
         // check if the player is on ground
         // Physics.Raycast(transform.position, -transform.up, out hit, 10);
         // gDirection = hit.normal;
+
         // Ask planet to assign mesh collider, only happen when there is one planet
         gDirection = transform.position - planet.transform.position;
         if (planet != null && planet.GetComponent<Planet>() != null)
@@ -77,6 +75,48 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        Vector3 rayOrigin = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+
+        // TODO: add interactable in the following
+        if (Physics.Raycast(rayOrigin, cam.transform.forward, out hit, interactRange, LayerMask.GetMask("Material")))
+        {
+            if (!hit.collider.isTrigger && hit.collider.tag == "Material" || hit.collider.tag == "Interactable")
+            {
+                aimObject = hit.collider;
+                // Also display the name on UI
+                informer.transform.Find("Item").Find("ItemName").GetComponent<Text>().text = hit.collider.name;
+
+                informer.SetActive(true);
+                return;
+            }
+        }
+        // If above didn't match, then there is no aimObj
+        aimObject = null;
+        informer.SetActive(false);
+
+
+        /*// For construction use, giving a preview
+        if (Physics.Raycast(rayOrigin, cam.transform.forward, out hit, 30, LayerMask.GetMask("Terrain")))
+        {
+            Debug.Log(hit.point);
+            if (!hit.collider.isTrigger && !spawned)
+            {
+                placeable = Instantiate(placeable, hit.point, Quaternion.identity);
+                spawned = true;
+            }
+        }
+
+        if (spawned)
+        {
+            placeable.transform.position = hit.point;
+        }
+
+        */
+    }
+
     // Change planet if colliding with another planet trigger
     private void OnTriggerEnter(Collider collision)
     {
@@ -90,14 +130,6 @@ public class PlayerMovement : MonoBehaviour
             }
 
         }
-        // Add new objects in aiming range according to distance, so player is always interacting with the one in front
-        if (collision.tag == "Material" || collision.tag == "Interactable")
-        {
-            aimObject = collision;
-            // Also display the name on UI
-            informer.transform.Find("Item").Find("ItemName").GetComponent<Text>().text = collision.name;
-            informer.SetActive(true);
-        }
     }
 
     private void OnTriggerExit(Collider collision)
@@ -105,10 +137,6 @@ public class PlayerMovement : MonoBehaviour
         if (collision.transform.tag == "Planet")
         {
             Debug.Log("Exiting planet");
-        }
-        else if (collision == aimObject)
-        {
-            aimObject = null;
         }
     }
 
@@ -120,7 +148,7 @@ public class PlayerMovement : MonoBehaviour
             transform.parent = planet.transform;
             onShip = null;
         }
-        else if (!onShip && Input.GetKeyDown(KeyCode.F))
+        else if (!onShip && Input.GetKey(KeyCode.F))
         {
             // First check if the obj to interact with is destroyed already or not
             if (aimObject == null)

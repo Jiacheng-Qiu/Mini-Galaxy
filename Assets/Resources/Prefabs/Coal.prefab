@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8307322894757079013}
   - component: {fileID: 8307322894754887974}
   - component: {fileID: -3142557112594199993}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Coal
   m_TagString: Material
   m_Icon: {fileID: 0}

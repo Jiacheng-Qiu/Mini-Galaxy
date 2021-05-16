@@ -1,11 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Rotation : MonoBehaviour
 {
     public float rotateSpeed;
     private int rotateDir;
+    public bool selfStart = false;
+
+    public void Start()
+    {
+        // If no parent calls (on menu), init self
+        if (selfStart)
+            Init();
+    }
+
     public void Init()
     {
         rotateDir = (Random.value > 0.5) ? 1 : -1;

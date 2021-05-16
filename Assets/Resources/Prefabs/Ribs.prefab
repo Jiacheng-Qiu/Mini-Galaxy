@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 23228679212843102}
   - component: {fileID: -56690916962972128}
   - component: {fileID: -1989899940253852953}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ribs
   m_TagString: Material
   m_Icon: {fileID: 0}

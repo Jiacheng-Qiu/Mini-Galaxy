@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 23461429440884316}
   - component: {fileID: -296909134788962227}
   - component: {fileID: -1258349613232401968}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Steak
   m_TagString: Material
   m_Icon: {fileID: 0}
