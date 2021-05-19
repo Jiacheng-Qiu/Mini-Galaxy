@@ -13,7 +13,7 @@ public class Crafting : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.I))
+        if (Input.GetKeyUp(KeyCode.C))
         {
             // Set on focus
             ctrl.onFocus = true;

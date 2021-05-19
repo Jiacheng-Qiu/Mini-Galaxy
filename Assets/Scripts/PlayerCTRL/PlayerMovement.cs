@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.WSA;
 using Cursor = UnityEngine.Cursor;
 
 public class PlayerMovement : MonoBehaviour
@@ -40,17 +39,24 @@ public class PlayerMovement : MonoBehaviour
     {
         // Hide informer on init
         informer.SetActive(false);
-        // Hide mouse on player init
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
 
         // TODO: code dependency
         GameObject.Find("ShipConsole").GetComponent<Canvas>().enabled = false;
-
+        onFocus = true;
         //hit = new RaycastHit();
         transform.parent = planet.transform;
         inventory = gameObject.GetComponent<PlayerInventory>();
     }
+
+    // TODO this method is called after starting game, player need to first read info
+    public void InitInfo()
+    {
+        onFocus = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+
     void Update()
     {
         // Tell attack script if shooting disabled
@@ -69,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
         Move();
         if (!onShip)
         {
-            Jump();
+            //Jump();
             Throw();
             Place();
         }
@@ -86,8 +92,9 @@ public class PlayerMovement : MonoBehaviour
             if (!hit.collider.isTrigger && hit.collider.tag == "Material" || hit.collider.tag == "Interactable")
             {
                 aimObject = hit.collider;
-                // Also display the name on UI
-                informer.transform.Find("Item").Find("ItemName").GetComponent<Text>().text = hit.collider.name;
+                // Also display the name on UI, delete clone text
+
+                informer.transform.Find("Item").Find("ItemName").GetComponent<Text>().text = hit.collider.name.Replace("(Clone)", "");
 
                 informer.SetActive(true);
                 return;
@@ -161,11 +168,7 @@ public class PlayerMovement : MonoBehaviour
                         MaterialProperty mat = aimObject.gameObject.GetComponent<MaterialProperty>();
                         var materialName = mat.getName();
                         int amount = mat.Interacted();
-                        bool putCheck = inventory.putIn(materialName, amount);
-                        if (putCheck)
-                            Debug.Log("Received material: " + materialName + ". Current amount in backpack: " + inventory.GetAmount(materialName));
-                        else
-                            Debug.Log("Fail to add to inventory!");
+                        inventory.putIn(materialName, amount);
                     break;
                 // TODO
                 case "Interactable":
@@ -242,7 +245,7 @@ public class PlayerMovement : MonoBehaviour
     void Throw()
     {
         
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             Debug.Log("Throwing material!");
             GameObject obj = inventory.getOut();
@@ -260,7 +263,7 @@ public class PlayerMovement : MonoBehaviour
     // TODO Put placeable items onto ground
     void Place()
     {
-        if (Input.GetKeyDown(KeyCode.F) && inventory.Placeable())
+        if (Input.GetKeyDown(KeyCode.F) && false)
         {
             GameObject obj = inventory.getOut();
             if (obj == null)

@@ -80,6 +80,9 @@ public class PlanetGeneration : MonoBehaviour
             rotation.Init();
             revolution.Init();
 
+
+            // TODO temp file for dealing with collision
+            planet.AddComponent<TempReaction>();
             // Add all bio randomization
             /*BioRandomize bio = planet.AddComponent<BioRandomize>();
             bio.tree1 = tree;
