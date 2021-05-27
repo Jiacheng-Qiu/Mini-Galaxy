@@ -32,11 +32,20 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 gDirection;
     private Collider aimObject;
 
-    public GameObject placeable; //Testing use
-    public bool spawned = false;
+    public GameObject flashlight;
+    private bool flashSwitch;
+
+    private bool onPreview = false; // Assign preview when placing items
+    private GameObject previewObject;
+
 
     void Start()
     {
+        /*// Read settings from json file
+        Settings set = JsonUtility.FromJson<Settings>(settings.text);
+        sensX = set.VerticalSensitivity;
+        sensY = set.HorizontalSensitivity;*/
+
         // Hide informer on init
         informer.SetActive(false);
 
@@ -46,6 +55,12 @@ public class PlayerMovement : MonoBehaviour
         //hit = new RaycastHit();
         transform.parent = planet.transform;
         inventory = gameObject.GetComponent<PlayerInventory>();
+    }
+
+    public void Set(float x, float y)
+    {
+        sensX = y;
+        sensY = x;
     }
 
     // TODO this method is called after starting game, player need to first read info
@@ -59,11 +74,25 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // Place object on ground in placing
+        // When player tab left mouse button to place, exit preview state
+        if (onPreview && Input.GetMouseButton(0))
+        {
+            Debug.Log("Placing;");
+            onPreview = false;
+            previewObject.transform.parent = transform.parent;
+            previewObject = null;
+        }
+
+        // Get input for flashlight
+        if (Input.GetKeyUp(KeyCode.L))
+        {
+            flashlight.SetActive(flashSwitch);
+            flashSwitch = !flashSwitch;
+        }
+
         // Tell attack script if shooting disabled
         gameObject.GetComponent<PlayerAttack>().disabled = onFocus;
-        // check if the player is on ground
-        // Physics.Raycast(transform.position, -transform.up, out hit, 10);
-        // gDirection = hit.normal;
 
         // Ask planet to assign mesh collider, only happen when there is one planet
         gDirection = transform.position - planet.transform.position;
@@ -75,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
         Move();
         if (!onShip)
         {
-            //Jump();
+            Jump();
             Throw();
             Place();
         }
@@ -89,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
         // TODO: add interactable in the following
         if (Physics.Raycast(rayOrigin, cam.transform.forward, out hit, interactRange, LayerMask.GetMask("Material")))
         {
-            if (!hit.collider.isTrigger && hit.collider.tag == "Material" || hit.collider.tag == "Interactable")
+            if (!hit.collider.isTrigger && hit.collider.tag == "Material" || hit.collider.tag == "Interactable" || hit.collider.tag == "Spaceship")
             {
                 aimObject = hit.collider;
                 // Also display the name on UI, delete clone text
@@ -105,23 +134,25 @@ public class PlayerMovement : MonoBehaviour
         informer.SetActive(false);
 
 
-        /*// For construction use, giving a preview
+        if (onPreview)
+            Preview();
+    }
+
+    // Give preview of placing placable items
+    private void Preview()
+    {
+        // TODO: sometimes machine dissappear??
+        if (previewObject == null)
+        {
+            onPreview = false;
+            return;
+        }
+        Vector3 rayOrigin = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
         if (Physics.Raycast(rayOrigin, cam.transform.forward, out hit, 30, LayerMask.GetMask("Terrain")))
-        {
-            Debug.Log(hit.point);
-            if (!hit.collider.isTrigger && !spawned)
-            {
-                placeable = Instantiate(placeable, hit.point, Quaternion.identity);
-                spawned = true;
-            }
+        { 
+            previewObject.transform.position = hit.point;
         }
-
-        if (spawned)
-        {
-            placeable.transform.position = hit.point;
-        }
-
-        */
     }
 
     // Change planet if colliding with another planet trigger
@@ -135,7 +166,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 transform.parent = planet.transform;
             }
-
         }
     }
 
@@ -165,16 +195,26 @@ public class PlayerMovement : MonoBehaviour
             switch (aimObject.tag)
             {
                 case "Material":
-                        MaterialProperty mat = aimObject.gameObject.GetComponent<MaterialProperty>();
-                        var materialName = mat.getName();
-                        int amount = mat.Interacted();
-                        inventory.putIn(materialName, amount);
+                    MaterialProperty mat = aimObject.gameObject.GetComponent<MaterialProperty>();
+                    var materialName = mat.getName();
+                    int amount = mat.Interacted();
+                    inventory.putIn(materialName, amount);
                     break;
                 // TODO
+                case "Spaceship":
+                    onShip = aimObject.transform.gameObject;
+                    transform.parent = onShip.transform;
+                    // Reset camera
+                    cam.transform.localRotation = new Quaternion();
+                    gameObject.transform.position = onShip.transform.position;
+                    // TODO: Temporary setup for posiution
+                    transform.localPosition = new Vector3(0, -0.2f, 1.5f);
+                    gameObject.transform.rotation = onShip.transform.rotation;
+                    break;
+                // All machines can be taken back into backpack
                 case "Interactable":
-                        Debug.Log("Player on ship");
-                        onShip = aimObject.transform.gameObject;
-                        transform.parent = onShip.transform;
+                    inventory.putIn(aimObject.GetComponent<Machine>().machineName, 1);
+                    Destroy(aimObject.gameObject);
                     break;
             }
         }
@@ -226,70 +266,61 @@ public class PlayerMovement : MonoBehaviour
         {
             informer.SetActive(false);
             onShip.GetComponent<Control>().SpaceshipMove();
-            // FIX player onto the ship
             gameObject.transform.position = onShip.transform.position;
-            gameObject.transform.rotation = onShip.transform.rotation;
+            // TODO: Temporary setup for posiution
+            transform.localPosition = new Vector3(0, -0.2f, 1.5f);
         }
     }
 
     void Jump()
     {
+        // Check if is on ground
+        isGround = Physics.Raycast(transform.position, -transform.up, 1.3f, LayerMask.GetMask("Terrain"));
         if (isGround && Input.GetKeyDown(KeyCode.Space))
         {
             isGround = false;
-            rb.AddForce(transform.up * 40000 * jump * Time.deltaTime);
+            rb.AddForce(transform.up * jump);
         }
     }
 
     // Throw material out
     void Throw()
     {
-        
         if (Input.GetKeyDown(KeyCode.G))
         {
-            Debug.Log("Throwing material!");
-            GameObject obj = inventory.getOut();
-            if (obj != null)
+            // Check material tag before actual throwing
+            string tag = inventory.CheckTag();
+            if (tag != "Material")
             {
-                obj.SetActive(true);
-                // Throw in the front direction after activate
-                obj.GetComponent<Rigidbody>().AddForce(transform.Find("Main Camera").forward * 500);
-
+                return;
             }
-                
+            GameObject obj = inventory.getOut();
+            obj.AddComponent<TinyObjGravity>().Init(transform.parent);
+            obj.SetActive(true);
+            // Throw in the front direction after activate
+            obj.GetComponent<Rigidbody>().AddForce(transform.Find("Main Camera").forward * 500);
         }
     }
 
-    // TODO Put placeable items onto ground
+    // Put placeable items onto ground only when no interactives on aiming
     void Place()
     {
-        if (Input.GetKeyDown(KeyCode.F) && false)
+        if (aimObject == null && Input.GetKeyDown(KeyCode.F))
         {
-            GameObject obj = inventory.getOut();
-            if (obj == null)
+            string tag = inventory.CheckTag();
+            // First check the tag of the output, if it is Interactable or Spaceship, then direct to preview scene
+            if (tag != "Interactable" && tag != "Spaceship")
+            {
                 return;
-            Destroy(obj);
-            // TODO: Current placeable item is set to spaceship, change the planet its associated
-            placeable.GetComponent<Control>().planet = this.planet;
-            Instantiate(placeable, transform.position + transform.forward * 5, Quaternion.identity);
+            }
+            GameObject obj = inventory.getOut();
+            if (tag == "Interactable")
+            {
+                obj.GetComponent<Machine>().player = gameObject;
+            }
+            onPreview = true;
+            previewObject = obj;
+            previewObject.SetActive(true);
         }
     }
-
-    /*private void OnCollisionEnter(Collision collision)
-{
-    foreach (ContactPoint contact in collision.contacts)
-    {
-        var name = contact.thisCollider.name;
-        switch (name)
-        {
-            case "Feet":
-                if (collision.transform.tag == "Ground")
-                {
-                    Debug.Log("Landing on ground");
-                    isGround = true;
-                }
-            break;
-        }
-    }
-}*/
 }

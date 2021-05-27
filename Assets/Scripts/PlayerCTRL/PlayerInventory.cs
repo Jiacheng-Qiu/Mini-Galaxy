@@ -63,23 +63,31 @@ public class PlayerInventory : MonoBehaviour
     }
 
     // Check an amount of some materials in the inventory
-    public bool check(string obj, int amount)
+    public bool Check(string obj, int amount)
     {
-        return backpack.check(obj, amount);
+        return backpack.Check(obj, amount);
     }
 
     // Use an amount of some materials in the inventory
     public bool use(string obj, int amount)
     {
-        return backpack.use(obj, amount);
+        return backpack.Use(obj, amount);
+    }
+
+    public string CheckTag()
+    {
+        return backpack.CheckTag(selectedSlot);
     }
 
     // return null if there is not such obj in inventory
     public GameObject getOut()
     {
         GameObject output = backpack.GetOut(selectedSlot);
+        if (output == null)
+        {
+            return null;
+        }
         output.transform.position = transform.Find("Main Camera").position;
-        output.AddComponent<TinyObjGravity>().Init(transform.parent);
         output.transform.parent = transform.parent.Find("Material");
         return output;
     }

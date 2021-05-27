@@ -1,33 +1,15 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public class ShipConsole : MonoBehaviour
 {
-    public Canvas console;
-    private Transform aimer;
-    private float border;
-    void Start()
-    {
-        console = GameObject.Find("ShipConsole").GetComponent<Canvas>();
-        aimer = console.transform.Find("Aimer");
-        border = console.transform.Find("Console").GetComponent<RectTransform>().rect.width / 2;
+    public Transform aimer;
+    public float border = 0.1f;
+    public float sensitivity = 50;
 
-    }
-
-    void Update()
+    public void MoveAimer(Vector2 position)
     {
-        if (console.enabled && Input.GetKeyDown(KeyCode.Escape))
-        {
-            console.enabled = false;
-        }
-    }
-
-    public void moveAimer(Vector2 position)
-    {
-        console.enabled = true;
-        position.x = Mathf.Clamp(position.x, -2 * border, 2 * border);
-        position.y = Mathf.Clamp(position.y, -2 * border, 2 * border);
+        position.x = Mathf.Clamp(position.x / sensitivity, -border, border);
+        position.y = Mathf.Clamp(position.y / sensitivity, -border, border);
         aimer.localPosition = position;
     }
 }

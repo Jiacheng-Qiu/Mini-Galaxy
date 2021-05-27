@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Beacon : MonoBehaviour
+public class Beacon : Machine
 {
     // Defines the length of beacon relative to player
     public GameObject player;

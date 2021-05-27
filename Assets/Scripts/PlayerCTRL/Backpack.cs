@@ -89,7 +89,7 @@ public class Backpack : MonoBehaviour
             int pos;
             for (pos = 0; pos < itemLimit; pos++)
             {
-                if (slotItems[pos].Equals(obj))
+                if (slotItems[pos] != null && slotItems[pos].Equals(obj))
                 {
                     break;
                 }
@@ -127,12 +127,12 @@ public class Backpack : MonoBehaviour
     }
 
     // Check an amount of some materials in the inventory
-    public bool check(string obj, int amount)
+    public bool Check(string obj, int amount)
     {
         // Return false if the obj isn't in inventory
         for (int i = 0; i < itemLimit; i++)
         {
-            if (slotItems[i].Equals(obj) && (int)inventory[obj] >= amount)
+            if (slotItems[i] == obj && (int)inventory[obj] >= amount)
             {
                 return true;
             }
@@ -155,12 +155,12 @@ public class Backpack : MonoBehaviour
 
     // Use an amount of some materials in the inventory
     // TODO update on inv bar
-    public bool use(string obj, int amount)
+    public bool Use(string obj, int amount)
     {
         // Return false if the obj isn't in inventory
         for (int i = 0; i < itemLimit; i++)
         {
-            if (slotItems[i].Equals(obj))
+            if (slotItems[i] != null && slotItems[i].Equals(obj))
             {
                 // Examine if the player have required amount
                 if ((int)inventory[obj] == amount)
@@ -181,6 +181,18 @@ public class Backpack : MonoBehaviour
             }
         }
         return false;
+    }
+
+    // Checker method for determining the tag of the selected item in slot
+    public string CheckTag(int barPos)
+    {
+        int selectedSlot = onBar[barPos];
+        if (selectedSlot == -1)
+        {
+            return "";
+        }
+        string obj = slotItems[selectedSlot];
+        return ((GameObject)Resources.Load("Prefabs/" + obj)).tag;
     }
 
     // return null if there is not such obj in inventory
@@ -240,12 +252,16 @@ public class Backpack : MonoBehaviour
         {
             gen.AddComponent<Rigidbody>().useGravity = false;
         }
-        MaterialProperty prop = gen.AddComponent<MaterialProperty>();
-        prop.remainInteract = 1;
-        prop.materialName = obj;
-        prop.minProduct = amount;
-        prop.maxProduct = amount;
-        gen.tag = "Material";
+        // Only assign material property when its material
+        if (gen.tag == "Material")
+        {
+            MaterialProperty prop = gen.AddComponent<MaterialProperty>();
+            prop.remainInteract = 1;
+            prop.materialName = obj;
+            prop.minProduct = amount;
+            prop.maxProduct = amount;
+        }
+        
         return gen;
     }
 

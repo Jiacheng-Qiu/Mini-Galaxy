@@ -22,7 +22,7 @@ public class PlanetGeneration : MonoBehaviour
         starSize = this.gameObject.transform.localScale.x;
         for (int i = 0; i < createAmount; i++)
         {
-            int sizeConst = (isMoon ? Random.Range(100, 150) : Random.Range(300 + 75 * i, 450 + 150 * i));
+            int sizeConst = (isMoon ? Random.Range(100, 150) : Random.Range(400 + 100 * i, 650 + 200 * i));
 
             //Generate random planet
             GameObject planet = new GameObject("Planet " + i);

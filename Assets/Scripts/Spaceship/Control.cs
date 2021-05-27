@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Rendering;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Control : MonoBehaviour
 {
@@ -11,7 +8,6 @@ public class Control : MonoBehaviour
     private bool inSpace = false;
 
     public Rigidbody rb;
-    private RaycastHit hit;
     public GameObject planet;
     private Vector3 gDirection;
 
@@ -28,7 +24,6 @@ public class Control : MonoBehaviour
     {
         console = gameObject.GetComponent<ShipConsole>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
-        this.gameObject.transform.parent = planet.transform.Find("Animal").transform;
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -92,14 +87,13 @@ public class Control : MonoBehaviour
         // Flying state has a init flying speed which wont be adjusted
         float z = (Input.GetAxisRaw("Vertical") * speed + (fly ? flySpeed : 0)) * Time.deltaTime;
         // Creates a smooth ship direction control with mouse
-        targetY += 2 * Input.GetAxis("Mouse X");
-        targetX -= 2 * Input.GetAxis("Mouse Y");
+        targetY += Input.GetAxis("Mouse X");
+        targetX -= Input.GetAxis("Mouse Y");
         float adjustX = Mathf.Clamp((targetX - currentX) * 0.1f, -0.2f, 0.2f);
         float adjustY = Mathf.Clamp((targetY - currentY) * 0.1f, -0.2f, 0.2f);
         currentX += adjustX;
         currentY += adjustY;
-        Debug.Log(targetY + " " + currentY + " " + targetX + " " + currentX);
-        console.moveAimer(new Vector2((targetY - currentY), -(targetX - currentX)));
+        console.MoveAimer(new Vector2((targetY - currentY), -(targetX - currentX)));
         transform.Rotate(adjustX, adjustY, 0);
         transform.Translate(0, 0, z);
     }

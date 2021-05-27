@@ -12,6 +12,7 @@ TagManager:
   - Interactable
   - Star
   - Environment
+  - Spaceship
   layers:
   - Default
   - TransparentFX

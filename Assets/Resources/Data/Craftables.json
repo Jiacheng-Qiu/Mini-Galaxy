@@ -1,0 +1,42 @@
+{
+    "Recipe":
+    [
+        {
+            "name": "Furnace",
+            "items": 
+            [
+                "Coal",
+                "Wood"
+            ],
+            "amounts":
+            [
+                4,
+                6
+            ]
+        },
+        {
+            "name": "Crafttable",
+            "items": 
+            [
+                "Wood"
+            ],
+            "amounts":
+            [
+                10
+            ]
+        },
+        {
+            "name": "Spaceship",
+            "items": 
+            [
+                "IronIngot",
+                "AluminumIngot"
+            ],
+            "amounts":
+            [
+                10,
+                6
+            ]
+        }
+    ]
+}

@@ -2,7 +2,6 @@
 
 public class BioRandomize : MonoBehaviour
 {
-    public int grassAmount = 3;
     public int treeAmount = 5;
     public int rockAmount = 2;
     public int oreAmount = 5;
@@ -25,7 +24,7 @@ public class BioRandomize : MonoBehaviour
         // Initiate all plants on surfaces
         Transform plantFolder = transform.Find("Plant");
         trees = new Object[treeAmount];
-        grass = new Object[grassAmount];
+        grass = new Object[1];
         rocks = new Object[rockAmount];
 
         for (int i = 0; i < treeAmount; i++)
@@ -36,15 +35,14 @@ public class BioRandomize : MonoBehaviour
         {
             rocks[i] = Resources.Load("Plants/_Prefabs/Rock" + i);
         }
-        for (int i = 0; i < grassAmount; i++)
-        {
-            grass[i] = Resources.Load("Plants/_Prefabs/Grass" + i);
-        }
+
+        grass[0] = Resources.Load("Plants/_Prefabs/Grass");
+
         GenerateType(plantFolder, trees, 200, new Vector2(1, 3), new Vector2(2, 6), 5);
         if (enableRock)
             GenerateType(plantFolder, rocks, 100, new Vector2(0, 0), new Vector2(1, 1), 0);
         if (enableGrass)
-            GenerateType(plantFolder, grass, 500, new Vector2(0, 0), new Vector2(5, 8), 3);
+            GenerateType(plantFolder, grass, 20000, new Vector2(0, 0), new Vector2(1, 1), 3);
 
         // Initiate animals
         Transform animalFolder = transform.Find("Animal");
@@ -53,7 +51,7 @@ public class BioRandomize : MonoBehaviour
         {
             animals[i] = Resources.Load("Animal" + i);
         }
-        GenerateType(animalFolder, animals, 200, new Vector2(0, 0), new Vector2(1, 1), 5);
+        GenerateType(animalFolder, animals, 200, new Vector2(0, 0), new Vector2(1, 1), 0);
 
         // Initiate Mine ores
         Transform orbFolder = transform.Find("Orb");

@@ -15,6 +15,10 @@ public class TempReaction : MonoBehaviour
             // push player upwards
             collision.gameObject.transform.position += collision.gameObject.transform.up * 30;
         }
+        else if(collision.gameObject.tag == "Interactable" || collision.gameObject.tag == "Spaceship")
+        {
+            collision.gameObject.transform.position += collision.gameObject.transform.up * 20;
+        }
         else
         {
             // Destroy all objects falling into the ground
