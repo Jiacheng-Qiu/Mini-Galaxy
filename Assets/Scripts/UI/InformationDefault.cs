@@ -6,7 +6,7 @@ using UnityEngine;
 public class InformationDefault : MonoBehaviour
 {
 
-    void Update()
+    void FixedUpdate()
     {
         // All information will get distroyed after pressing esc in anycase, and won't display again
         if (Input.GetKeyDown(KeyCode.Escape))

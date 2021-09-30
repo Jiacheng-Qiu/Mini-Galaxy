@@ -15,6 +15,10 @@ public class PlanetGeneration : MonoBehaviour
 
     public void Init(bool isMoon, int createAmount)
     {
+        planets = new GameObject[0];
+        // TODO: currently disabled
+        return;
+
         planets = new GameObject[createAmount];
         planetSize = new int[createAmount];
 

@@ -57,12 +57,6 @@ public class PlayerMovement : MonoBehaviour
         inventory = gameObject.GetComponent<PlayerInventory>();
     }
 
-    public void Set(float x, float y)
-    {
-        sensX = y;
-        sensY = x;
-    }
-
     // TODO this method is called after starting game, player need to first read info
     public void InitInfo()
     {
