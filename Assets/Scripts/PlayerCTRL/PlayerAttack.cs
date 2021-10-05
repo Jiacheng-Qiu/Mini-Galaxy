@@ -4,10 +4,9 @@ public class PlayerAttack : MonoBehaviour
 {
     public GameObject beacon;
     public Weapon weapon;
-    public bool disabled = false;
     void Update()
     {
-        if (disabled)
+        if (PlayerStatus.attackDisabled)
             return;
         if (Input.GetMouseButtonDown(0))
         {

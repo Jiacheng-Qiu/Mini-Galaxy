@@ -17,6 +17,10 @@ public class GamePause : MonoBehaviour
 
     public void PauseGame()
     {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+        PlayerStatus.attackDisabled = true;
+        PlayerStatus.moveDisabled = true;
         isActive = true;
         pauseMenu.enabled = true;
         Time.timeScale = 0;
@@ -24,6 +28,10 @@ public class GamePause : MonoBehaviour
 
     public void ResumeGame()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        PlayerStatus.attackDisabled = false;
+        PlayerStatus.moveDisabled = false;
         Time.timeScale = 1;
         pauseMenu.enabled = false;
         isActive = false;

@@ -30,7 +30,6 @@ public class Backpack : MonoBehaviour
         inventory = new Hashtable();
         slotItems = new string[itemLimit];
         slots = new GameObject[itemLimit];
-        Debug.Log(slotItems[0] == null);
         CreateSlots();
         canvas = gameObject.GetComponent<Canvas>();
         canvas.enabled = false;

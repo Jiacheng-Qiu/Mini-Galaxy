@@ -68,6 +68,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (PlayerStatus.moveDisabled)
+            return;
         // Place object on ground in placing
         // When player tab left mouse button to place, exit preview state
         if (onPreview && Input.GetMouseButton(0))
@@ -86,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Tell attack script if shooting disabled
-        gameObject.GetComponent<PlayerAttack>().disabled = onFocus;
+        PlayerStatus.attackDisabled = onFocus;
 
         // Ask planet to assign mesh collider, only happen when there is one planet
         gDirection = transform.position - planet.transform.position;
@@ -126,7 +128,6 @@ public class PlayerMovement : MonoBehaviour
         // If above didn't match, then there is no aimObj
         aimObject = null;
         informer.SetActive(false);
-
 
         if (onPreview)
             Preview();
@@ -224,7 +225,7 @@ public class PlayerMovement : MonoBehaviour
             float z = Input.GetAxisRaw("Vertical") * Time.deltaTime * speed;
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                if (gameObject.GetComponent<PlayerHealthSystem>().run(true))
+                if (gameObject.GetComponent<PlayerHealthSystem>().Run(true))
                 {
                     x *= runSpeed / speed;
                     z *= runSpeed / speed;
@@ -232,7 +233,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                gameObject.GetComponent<PlayerHealthSystem>().run(false);
+                gameObject.GetComponent<PlayerHealthSystem>().Run(false);
             }
             
             transform.Translate(x, 0, z);

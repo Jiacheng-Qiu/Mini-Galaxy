@@ -18,6 +18,7 @@ public class StarRandomize : MonoBehaviour
 
     void Start()
     {
+        Random.seed = SeedSettings.seed;
         //size and collider init
         int sizeConst = Random.Range(3000, 5000);
         size = new Vector3(sizeConst, sizeConst, sizeConst);

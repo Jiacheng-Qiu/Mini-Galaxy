@@ -1,47 +1,72 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class SettingsRecord : MonoBehaviour
 {
     public PlayerMovement player;
-    private int volumn = 0;
     private Color darkGrey;
     public Transform volFolder;
-    // JSON file of settings
-    /*    public TextAsset settings;
-        private class Settings
-        {
-            public float HorizontalSensitivity;
-            public float VerticalSensitivity;
-        }*/
-    /*Settings set = new Settings();
-        set.HorizontalSensitivity = x;
-        set.VerticalSensitivity = y;*/
 
-    /*Debug.Log(x + " " + y);
-    JsonUtility.FromJsonOverwrite(settings.text, set);*/
+    public int volume;
+    public bool isFullScreen;
+    public float sensx;
+    public float sensy;
+
     private void Start()
     {
         darkGrey = new Color(0.196f, 0.196f, 0.196f);
-    }
+        volFolder = GameObject.Find("Settings").transform.Find("Vol ctr");
+        isFullScreen = true;
+        volume = 7;
+        sensx = 1;
+        sensy = 1;
+}
 
     public void VolDown()
     {
-        if (volumn > 0)
+        if (volume > 0)
         {
-            volumn--;
+            volume--;
             // Adjust the color of pictures
-            volFolder.Find("vol" + volumn).GetComponent<Image>().color = darkGrey;
+            volFolder.Find("vol" + volume).GetComponent<Image>().color = darkGrey;
         }
     }
 
     public void VolUp()
     {
-        if (volumn < 7)
+        if (volume < 7)
         {
             // Adjust the color of pictures
-            volFolder.Find("vol" + volumn).GetComponent<Image>().color = Color.white;
-            volumn++;
+            volFolder.Find("vol" + volume).GetComponent<Image>().color = Color.white;
+            volume++;
         }
+    }
+
+    public void SetFullScreen()
+    {
+        isFullScreen = !isFullScreen;
+    }
+
+    public void SetSenX()
+    {
+        try
+        {
+            sensx = float.Parse(GameObject.Find("Settings").transform.Find("SensitivityX").Find("InputField").GetComponent<InputField>().text);
+        }
+        catch(Exception e) {
+            Debug.Log("None num received, not accepted");
+        };
+    }
+    public void SetSenY()
+    {
+        try
+        {
+            sensy = float.Parse(GameObject.Find("Settings").transform.Find("SensitivityY").Find("InputField").GetComponent<InputField>().text);
+        }
+        catch (Exception e)
+        {
+            Debug.Log("None num received, not accepted");
+        };
     }
 }

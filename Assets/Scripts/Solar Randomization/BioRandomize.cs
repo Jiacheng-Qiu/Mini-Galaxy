@@ -16,7 +16,7 @@ public class BioRandomize : MonoBehaviour
     private TerrainFace[] faces;
     private void Start()
     {
-        
+        Random.seed = SeedSettings.seed;
         script = gameObject.GetComponent<Planet>();
         Debug.Log(script.shapeSetting.planetRadius);
         faces = script.getTerrainFaces();
@@ -56,7 +56,6 @@ public class BioRandomize : MonoBehaviour
         // Initiate Mine ores
         Transform orbFolder = transform.Find("Orb");
         oreStones = new Object[oreAmount];
-        Debug.Log(oreStones.Length);
         for (int i = 0; i < oreAmount; i++)
         {
             oreStones[i] = Resources.Load("MineOres/Prefabs/MetalOre" + i);

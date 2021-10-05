@@ -4,7 +4,6 @@ using UnityEngine.UI;
 [System.Serializable]
 public class PlayerHealthSystem : HealthSystem
 {
-    public Image health;
     public Image shield;
     public Image energy;
 
@@ -15,6 +14,11 @@ public class PlayerHealthSystem : HealthSystem
     public float runCD = 2;
     private float lastRunAttempt;
     private bool isRun = false;
+
+    public int heartrate = 60;
+    private float lastHeartBeat = 0f;
+    private float heartAmplitude;
+    public GameObject heartSample;
 
     void FixedUpdate()
     {
@@ -40,12 +44,27 @@ public class PlayerHealthSystem : HealthSystem
         {
             currentEnergy = maxEnergy;
         }
-        health.fillAmount = currentHealth * 1f / maxHealth;
+        heartAmplitude = (currentHealth <= 0)? 0 : 0.9f * currentHealth + 30;
         shield.fillAmount = currentShield * 1f / maxShield;
         energy.fillAmount = currentEnergy * 1f / maxEnergy;
+
+        heartrate = 60 + (int)gameObject.GetComponent<Rigidbody>().velocity.magnitude * 10;
+        HeartBeat();
     }
 
-    public bool run(bool run)
+    // Heartbeat is decided based on how severe the movement of player is
+    private void HeartBeat()
+    {
+        if (Time.time > lastHeartBeat + heartrate / 60f)
+        {
+            GameObject newBeat = Instantiate(heartSample);
+            newBeat.transform.parent = GameObject.Find("PlayerUI").transform.Find("Heart sensor");
+            newBeat.GetComponent<HeartBeatCtrl>().Init(heartAmplitude);
+            lastHeartBeat = Time.time;
+        }
+    }
+
+    public bool Run(bool run)
     {
         // If new attempt is shorter than CD, refuse to run
         if (lastRunAttempt + runCD > Time.time)
