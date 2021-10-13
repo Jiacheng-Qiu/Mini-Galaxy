@@ -38,6 +38,11 @@ public class PlayerMovement : MonoBehaviour
     private bool onPreview = false; // Assign preview when placing items
     private GameObject previewObject;
 
+    public InterfaceAnimManager invenUI;
+    private bool invenOn = false;
+
+    public InterfaceAnimManager mapUI;
+    private bool mapOn = false;
 
     void Start()
     {
@@ -85,6 +90,44 @@ public class PlayerMovement : MonoBehaviour
         {
             flashlight.SetActive(flashSwitch);
             flashSwitch = !flashSwitch;
+        }
+
+        // Open or close helmet
+        if (Input.GetKeyUp(KeyCode.N))
+        {
+            gameObject.GetComponent<InteractionAnimation>().HelmetAnimation();
+        }
+
+        // TODO: showcase of inventory
+        if (Input.GetKeyUp(KeyCode.I))
+        {
+            if (invenOn)
+            {
+                invenUI.startDisappear();
+                invenOn = false;
+            }
+            else
+            {
+                invenUI.gameObject.SetActive(true);
+                invenUI.startAppear();
+                invenOn = true;
+            }
+        }
+
+        // TODO: Map showcased
+        if (Input.GetKeyUp(KeyCode.M))
+        {
+            if (mapOn)
+            {
+                mapUI.startDisappear();
+                mapOn = false;
+            }
+            else
+            {
+                mapUI.gameObject.SetActive(true);
+                mapUI.startAppear();
+                mapOn = true;
+            }
         }
 
         // Tell attack script if shooting disabled

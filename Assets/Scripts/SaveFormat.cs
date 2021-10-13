@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 [System.Serializable]
@@ -6,11 +5,6 @@ public class SaveFormat
 {
     public int seed;
     public int gameMode;
-    public int volume;
-    public int resolution;
-    public bool fullScreen;
-    public float sensX;
-    public float sensY;
 
     // player stat & information
     public float hp;

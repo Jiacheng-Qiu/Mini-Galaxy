@@ -7,15 +7,16 @@ public class PlayerHealthSystem : HealthSystem
     public Image shield;
     public Image energy;
 
-    public float currentEnergy = 100;
-    public float maxEnergy = 100;
-    public float energyRecover = 10;
-    public float energyUse = 20;
+    public float currentOxygen = 100;
+    public float maxOxygen = 100;
+    public float oxygenRecover = 0;
+    public float oxygenConsume = 1;
+    public float runOxygenConsume = 2;
     public float runCD = 2;
     private float lastRunAttempt;
     private bool isRun = false;
 
-    public int heartrate = 60;
+    public float heartrate = 60;
     private float lastHeartBeat = 0f;
     private float heartAmplitude;
     public GameObject heartSample;
@@ -30,38 +31,61 @@ public class PlayerHealthSystem : HealthSystem
         {
             currentShield = maxShield;
         }
-        // Recover energy
         if (isRun)
         {
-            currentEnergy = currentEnergy - energyUse * Time.deltaTime;
+            currentOxygen = currentOxygen - runOxygenConsume * Time.deltaTime;
         }
-        else if (currentEnergy < maxEnergy)
+        else
         {
-            currentEnergy = currentEnergy + energyRecover * Time.deltaTime;
+            currentOxygen = currentOxygen - oxygenConsume * Time.deltaTime;
         }
 
-        if (currentEnergy > maxEnergy)
+        currentOxygen = currentOxygen + oxygenRecover * Time.deltaTime;
+        if (currentOxygen > maxOxygen)
         {
-            currentEnergy = maxEnergy;
+            currentOxygen = maxOxygen;
+        } 
+        else if(currentOxygen <= 0)
+        {
+            Choke();
         }
+
+
         heartAmplitude = (currentHealth <= 0)? 0 : 0.9f * currentHealth + 30;
         shield.fillAmount = currentShield * 1f / maxShield;
-        energy.fillAmount = currentEnergy * 1f / maxEnergy;
+        energy.fillAmount = currentOxygen * 1f / maxOxygen;
 
-        heartrate = 60 + (int)gameObject.GetComponent<Rigidbody>().velocity.magnitude * 10;
-        HeartBeat();
+        // Adjust heartrate based on running state
+        if (isRun && heartrate < 150)
+        {
+            heartrate += 2 * Time.deltaTime;
+        } 
+        else if (!isRun && heartrate > 60)
+        {
+            heartrate -= 1 * Time.deltaTime;
+        }
+
+
+        // HeartBeat();
     }
 
     // Heartbeat is decided based on how severe the movement of player is
     private void HeartBeat()
     {
-        if (Time.time > lastHeartBeat + heartrate / 60f)
+        if (Time.time > lastHeartBeat + 60f / heartrate)
         {
             GameObject newBeat = Instantiate(heartSample);
             newBeat.transform.parent = GameObject.Find("PlayerUI").transform.Find("Heart sensor");
             newBeat.GetComponent<HeartBeatCtrl>().Init(heartAmplitude);
             lastHeartBeat = Time.time;
         }
+    }
+
+    // When player is out of oxygen, keep losing health
+    private void Choke()
+    {
+        currentHealth -= 10 * Time.deltaTime;
+        gameObject.GetComponent<InteractionAnimation>().HurtAnimation();
     }
 
     public bool Run(bool run)
@@ -74,7 +98,7 @@ public class PlayerHealthSystem : HealthSystem
         }
         isRun = run;
         // Run method will only be true after energy minimum amount check
-        if (currentEnergy < 1 && isRun)
+        if (currentOxygen < 1 && isRun)
         {
             // if player still want to run while no energy, seton a CD
             lastRunAttempt = Time.time;

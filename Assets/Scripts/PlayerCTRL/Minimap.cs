@@ -95,7 +95,7 @@ public class Minimap : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.M))
+        /*if (Input.GetKeyUp(KeyCode.M))
         {
             // Set on focus
             ctrl.onFocus = true;
@@ -105,6 +105,6 @@ public class Minimap : MonoBehaviour
         {
             ctrl.onFocus = false;
             minimap.enabled = false;
-        }
+        }*/
     }
 }
