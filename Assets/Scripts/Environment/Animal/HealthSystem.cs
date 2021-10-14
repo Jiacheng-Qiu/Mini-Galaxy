@@ -5,7 +5,7 @@ public class HealthSystem : EnvironmentComponent
 {
     // Assign product prefab
     
-    private Rigidbody rb;
+    public Rigidbody rb;
     // TODO: later implementation will read health from json
     // Shield takes full damage, HP takes reduced damage based on defense
     public float maxShield = 0;

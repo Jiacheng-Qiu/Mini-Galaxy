@@ -22,6 +22,7 @@ public class EnvironmentComponent : MonoBehaviour
         }
     }
 
+    // Used only on non kinematic gameobjects (trees, rocks)
     public void Hit(float amount)
     {
         durability -= amount;

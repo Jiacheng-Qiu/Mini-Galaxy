@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.5
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.6143198, g: 0.480964, b: 0.39428765, a: 0.5}
+  m_IndirectSpecularColor: {r: 0.6125314, g: 0.47918952, b: 0.3931011, a: 0.5}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2802,7 +2802,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: f4dc655c284958749bb7bc4f5b1fbcfe, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7869,7 +7868,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 564261514}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: ExampleUI, Assembly-CSharp-firstpass
         m_MethodName: DoSwitchAnimDelays
         m_Mode: 1
         m_Arguments:
@@ -10827,7 +10826,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 564261514}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: ExampleUI, Assembly-CSharp-firstpass
         m_MethodName: DoSwitchAutoCam
         m_Mode: 1
         m_Arguments:
@@ -13838,7 +13837,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -21312,7 +21310,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 564261514}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: ExampleUI, Assembly-CSharp-firstpass
         m_MethodName: DoSwitchCameraEffects
         m_Mode: 1
         m_Arguments:
@@ -27032,7 +27030,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.561412, y: 1}
-  m_AnchoredPosition: {x: 0.000000059604645, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0.00000011920929, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &588626405
@@ -41269,7 +41267,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -0.00000047683716, y: -5.7}
+  m_AnchoredPosition: {x: 0, y: -5.7}
   m_SizeDelta: {x: -30, y: 95.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!82 &1168413641
@@ -42823,7 +42821,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -52112,7 +52109,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1358327279}
   m_HandleRect: {fileID: 588626404}
   m_Direction: 0
-  m_Value: 0
+  m_Value: -0.00000012617521
   m_Size: 0.561412
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -53003,7 +53000,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.0000095, y: -1.5000136}
+  m_AnchoredPosition: {x: 2.0000076, y: -1.5000153}
   m_SizeDelta: {x: 104.7, y: -16.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1393019083
@@ -65467,7 +65464,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1945544911}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: ExcelsiorUtils, Assembly-CSharp-firstpass
         m_MethodName: GetSliderValue_ToText
         m_Mode: 1
         m_Arguments:

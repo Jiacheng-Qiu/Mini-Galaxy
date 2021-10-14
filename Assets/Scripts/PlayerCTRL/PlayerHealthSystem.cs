@@ -4,25 +4,54 @@ using UnityEngine.UI;
 [System.Serializable]
 public class PlayerHealthSystem : HealthSystem
 {
-    public Image shield;
-    public Image energy;
-
     public float currentOxygen = 100;
     public float maxOxygen = 100;
-    public float oxygenRecover = 0;
+    public float oxygenRecover;
     public float oxygenConsume = 1;
+    private bool oxygenProvided;
     public float runOxygenConsume = 2;
     public float runCD = 2;
-    private float lastRunAttempt;
     private bool isRun = false;
 
-    public float heartrate = 60;
-    private float lastHeartBeat = 0f;
-    private float heartAmplitude;
-    public GameObject heartSample;
+
+    private InteractionAnimation uiAnimation;
+
+
+    private void Start()
+    {
+        rb = gameObject.GetComponent<Rigidbody>();
+        uiAnimation = gameObject.GetComponent<InteractionAnimation>();
+        currentHealth = maxHealth;
+        currentShield = maxShield;
+        oxygenProvided = false;
+    }
 
     void FixedUpdate()
     {
+        // Oxygen consumption is different on movement
+        if (isRun)
+        {
+            currentOxygen -= runOxygenConsume * Time.deltaTime;
+        }
+        else
+        {
+            currentOxygen -= oxygenConsume * Time.deltaTime;
+        }
+        // Recover oxygen if provider nearby
+        if (oxygenProvided && currentOxygen < maxOxygen)
+        {
+            currentOxygen += oxygenRecover * Time.deltaTime;
+            if (currentOxygen > maxOxygen)
+            {
+                currentOxygen = maxOxygen;
+            }
+        }
+        else if (currentOxygen <= 0)
+        {
+            Choke();
+        }
+
+        // REDO
         if (currentShield < maxShield)
         {
             currentShield = currentShield + shieldHeal * Time.deltaTime;
@@ -31,54 +60,7 @@ public class PlayerHealthSystem : HealthSystem
         {
             currentShield = maxShield;
         }
-        if (isRun)
-        {
-            currentOxygen = currentOxygen - runOxygenConsume * Time.deltaTime;
-        }
-        else
-        {
-            currentOxygen = currentOxygen - oxygenConsume * Time.deltaTime;
-        }
 
-        currentOxygen = currentOxygen + oxygenRecover * Time.deltaTime;
-        if (currentOxygen > maxOxygen)
-        {
-            currentOxygen = maxOxygen;
-        } 
-        else if(currentOxygen <= 0)
-        {
-            Choke();
-        }
-
-
-        heartAmplitude = (currentHealth <= 0)? 0 : 0.9f * currentHealth + 30;
-        shield.fillAmount = currentShield * 1f / maxShield;
-        energy.fillAmount = currentOxygen * 1f / maxOxygen;
-
-        // Adjust heartrate based on running state
-        if (isRun && heartrate < 150)
-        {
-            heartrate += 2 * Time.deltaTime;
-        } 
-        else if (!isRun && heartrate > 60)
-        {
-            heartrate -= 1 * Time.deltaTime;
-        }
-
-
-        // HeartBeat();
-    }
-
-    // Heartbeat is decided based on how severe the movement of player is
-    private void HeartBeat()
-    {
-        if (Time.time > lastHeartBeat + 60f / heartrate)
-        {
-            GameObject newBeat = Instantiate(heartSample);
-            newBeat.transform.parent = GameObject.Find("PlayerUI").transform.Find("Heart sensor");
-            newBeat.GetComponent<HeartBeatCtrl>().Init(heartAmplitude);
-            lastHeartBeat = Time.time;
-        }
     }
 
     // When player is out of oxygen, keep losing health
@@ -88,22 +70,36 @@ public class PlayerHealthSystem : HealthSystem
         gameObject.GetComponent<InteractionAnimation>().HurtAnimation();
     }
 
+    
+    public new bool Hurt(GameObject attacker, float damage)
+    {
+        if (immunity)
+            return false;
+        lastAttacker = attacker;
+        // Damage taken is calculated as: damage*100/(100+armor) for hp
+
+        float prevShield = currentShield;
+        currentShield -= damage;
+        if (currentShield < 0)
+        {
+            // Exceeding damage on shield will be dealt to hp
+            currentHealth += currentShield * 100 / (100 + armor);
+            // If low on health, also call warn animation
+            uiAnimation.Warning(true);
+            uiAnimation.NewHealth(currentHealth / maxHealth);
+            currentShield = 0;
+        }
+
+        uiAnimation.ShieldChange((currentShield - prevShield) / maxShield);
+
+        uiAnimation.HurtAnimation();
+        return true;
+    }
+
+    // Called from movement script to control run behavior
     public bool Run(bool run)
     {
-        // If new attempt is shorter than CD, refuse to run
-        if (lastRunAttempt + runCD > Time.time)
-        {
-            isRun = false;
-            return isRun;
-        }
         isRun = run;
-        // Run method will only be true after energy minimum amount check
-        if (currentOxygen < 1 && isRun)
-        {
-            // if player still want to run while no energy, seton a CD
-            lastRunAttempt = Time.time;
-            isRun = false;
-        }
         return isRun;
     }
 

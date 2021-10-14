@@ -5,7 +5,7 @@ using Cursor = UnityEngine.Cursor;
 public class PlayerMovement : MonoBehaviour
 {
     // GUI telling player this can interact
-    public GameObject informer;
+    //public GameObject informer;
     // Mouse sensitivity
     public float sensX = 2;
     public float sensY = 2;
@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
         sensY = set.HorizontalSensitivity;*/
 
         // Hide informer on init
-        informer.SetActive(false);
+        //informer.SetActive(false);
 
         // TODO: code dependency
         GameObject.Find("ShipConsole").GetComponent<Canvas>().enabled = false;
@@ -162,15 +162,15 @@ public class PlayerMovement : MonoBehaviour
                 aimObject = hit.collider;
                 // Also display the name on UI, delete clone text
 
-                informer.transform.Find("Item").Find("ItemName").GetComponent<Text>().text = hit.collider.name.Replace("(Clone)", "");
+                //informer.transform.Find("Item").Find("ItemName").GetComponent<Text>().text = hit.collider.name.Replace("(Clone)", "");
 
-                informer.SetActive(true);
+                //informer.SetActive(true);
                 return;
             }
         }
         // If above didn't match, then there is no aimObj
         aimObject = null;
-        informer.SetActive(false);
+        //informer.SetActive(false);
 
         if (onPreview)
             Preview();
@@ -302,7 +302,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            informer.SetActive(false);
+            //informer.SetActive(false);
             onShip.GetComponent<Control>().SpaceshipMove();
             gameObject.transform.position = onShip.transform.position;
             // TODO: Temporary setup for posiution

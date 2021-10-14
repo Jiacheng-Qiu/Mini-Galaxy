@@ -19,8 +19,10 @@ public class AttackSystem : MonoBehaviour
             return false;
         }
         // Animals have health, while environment doesn't
-        if (target.tag == "Animal" || target.tag == "Player")
+        if (target.tag == "Animal")
             target.GetComponent<HealthSystem>().Hurt(this.gameObject, attack);
+        if (target.tag == "Player")
+            target.GetComponent<PlayerHealthSystem>().Hurt(this.gameObject, attack);
         else if (target.tag == "Environment")
             target.GetComponent<EnvironmentComponent>().Hit(attack);
         lastAttack = Time.time;
