@@ -4,14 +4,18 @@ using UnityEngine.UI;
 [System.Serializable]
 public class PlayerHealthSystem : HealthSystem
 {
-    public float currentOxygen = 100;
-    public float maxOxygen = 100;
+    public float currentOxygen;
+    public float maxOxygen;
     public float oxygenRecover;
-    public float oxygenConsume = 1;
+    public float oxygenConsume;
     private bool oxygenProvided;
-    public float runOxygenConsume = 2;
-    public float runCD = 2;
-    private bool isRun = false;
+    public float runOxygenConsume;
+    public float runCD;
+    private bool isRun;
+
+    // Recorded time for last hurt to trigger recovery
+    private float lastHit;
+    private float recoverTimeAfterHit;
 
 
     private InteractionAnimation uiAnimation;
@@ -24,6 +28,8 @@ public class PlayerHealthSystem : HealthSystem
         currentHealth = maxHealth;
         currentShield = maxShield;
         oxygenProvided = false;
+        isRun = false;
+        recoverTimeAfterHit = 3;
     }
 
     void FixedUpdate()
@@ -51,15 +57,8 @@ public class PlayerHealthSystem : HealthSystem
             Choke();
         }
 
-        // REDO
-        if (currentShield < maxShield)
-        {
-            currentShield = currentShield + shieldHeal * Time.deltaTime;
-        }
-        if (currentShield > maxShield)
-        {
-            currentShield = maxShield;
-        }
+        // Shield Recovery
+        ShieldRecover();
 
     }
 
@@ -67,15 +66,48 @@ public class PlayerHealthSystem : HealthSystem
     private void Choke()
     {
         currentHealth -= 10 * Time.deltaTime;
-        gameObject.GetComponent<InteractionAnimation>().HurtAnimation();
+        uiAnimation.HurtAnimation();
     }
 
-    
+    public void ShieldRecover()
+    {
+        if (Time.time > lastHit + recoverTimeAfterHit && currentShield < maxShield)
+        {
+            float prevShield = currentShield;
+            currentShield = currentShield + shieldHeal * Time.deltaTime;
+            if (currentShield > maxShield)
+            {
+                currentShield = maxShield;
+                uiAnimation.ShieldFull();
+            }
+            else
+            {
+                uiAnimation.ShieldChange((currentShield - prevShield) / maxShield);
+            }
+        }
+    }
+
+    public bool HealthRecover(float amount)
+    {
+        if (currentHealth >= maxHealth)
+        {
+            return false;
+        }
+        currentHealth += amount;
+        if (currentHealth >= 0.5f * maxHealth)
+        {
+            uiAnimation.Warning(false);
+        }
+        uiAnimation.HealthChange(currentHealth / maxHealth);
+        return true;
+    }
+
     public new bool Hurt(GameObject attacker, float damage)
     {
         if (immunity)
             return false;
         lastAttacker = attacker;
+        lastHit = Time.time;
         // Damage taken is calculated as: damage*100/(100+armor) for hp
 
         float prevShield = currentShield;
@@ -85,8 +117,11 @@ public class PlayerHealthSystem : HealthSystem
             // Exceeding damage on shield will be dealt to hp
             currentHealth += currentShield * 100 / (100 + armor);
             // If low on health, also call warn animation
-            uiAnimation.Warning(true);
-            uiAnimation.NewHealth(currentHealth / maxHealth);
+            if (currentHealth < 0.5f * maxHealth)
+            {
+                uiAnimation.Warning(true);
+            }
+            uiAnimation.HealthChange(currentHealth / maxHealth);
             currentShield = 0;
         }
 

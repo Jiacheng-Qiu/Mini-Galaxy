@@ -20,6 +20,9 @@ public class InteractionAnimation : MonoBehaviour
     public Image health;
     public Image oxygen;
     public InterfaceAnimManager warning;
+    public InterfaceAnimManager startScreen;
+    public InterfaceAnimManager mainUI;
+    public InterfaceAnimManager invBar;
 
     private float cachedShieldDmg;
 
@@ -31,23 +34,13 @@ public class InteractionAnimation : MonoBehaviour
         lastHurt = 0;
         helmetX = 0;
         warning.gameObject.SetActive(false);
+
+        // After Setting up, run startup animation, and start main UI
+        StartCoroutine(SystemBoot());
     }
 
-    // Warning animation that wakes hiden ui till canceled
-    public void Warning(bool on)
-    {
-        if (on && !warning.gameObject.active)
-        {
-            warning.gameObject.SetActive(true);
-            warning.startAppear();
-        } else if (!on && warning.gameObject.active)
-        {
-            warning.startDisappear();
-        }
-    }
-
-    // color and size change based on current health
-    public void NewHealth(float amount)
+    // color and size change based on current health, amount=percentage
+    public void HealthChange(float amount)
     {
         if (amount == 0)
             return;
@@ -55,7 +48,7 @@ public class InteractionAnimation : MonoBehaviour
         health.rectTransform.sizeDelta = new Vector2(7.5f, 5f * amount);
     }
 
-    // same as above, animation for shield damage
+    // animation for shield damage, amount=+-percentage
     public void ShieldChange(float amount)
     {
         if (amount == 0)
@@ -71,6 +64,12 @@ public class InteractionAnimation : MonoBehaviour
             shield.fillAmount += amount;
             baseShield.fillAmount = shield.fillAmount;
         }
+    }
+
+    // animation when shield turns to full charge
+    public void ShieldFull()
+    {
+        StartCoroutine(ShieldShake());
     }
 
     // Can only be called once 1.5s
@@ -95,6 +94,21 @@ public class InteractionAnimation : MonoBehaviour
             onHelmetAnimation = true;
         }
     }
+
+    // Warning animation that wakes hiden ui till canceled
+    public void Warning(bool on)
+    {
+        if (on && !warning.gameObject.active)
+        {
+            warning.gameObject.SetActive(true);
+            warning.startAppear();
+        }
+        else if (!on && warning.gameObject.active)
+        {
+            warning.startDisappear();
+        }
+    }
+
 
     // Move helmet up or down
     private void FixedUpdate()
@@ -143,6 +157,30 @@ public class InteractionAnimation : MonoBehaviour
         }
     }
 
+    private IEnumerator SystemBoot()
+    {
+        float elapsed = 0f;
+        startScreen.gameObject.SetActive(true);
+        startScreen.startAppear();
+        while (elapsed < 2.5f)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        startScreen.startDisappear();
+        elapsed = 0;
+        while (elapsed < 2f)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        startScreen.gameObject.SetActive(false);
+        mainUI.gameObject.SetActive(true);
+        mainUI.startAppear();
+        invBar.gameObject.SetActive(true);
+        invBar.startAppear();
+    }
+
     private IEnumerator CamShake(float duration, float magnitude)
     {
         Vector3 origPos = cam.transform.localPosition;
@@ -157,5 +195,22 @@ public class InteractionAnimation : MonoBehaviour
             yield return null;
         }
         cam.transform.localPosition = origPos;
+    }
+
+    private IEnumerator ShieldShake()
+    {
+        Vector2 origSize = shield.rectTransform.sizeDelta;
+        Color origColor = shield.color;
+        shield.color = Color.white;
+        float elapsed = 0f;
+        float sizeChange = 10f;
+        while (elapsed < 0.1f)
+        {
+            shield.rectTransform.sizeDelta = new Vector2(origSize.x + sizeChange * elapsed, origSize.y + sizeChange * elapsed);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        shield.rectTransform.sizeDelta = origSize;
+        shield.color = origColor;
     }
 }

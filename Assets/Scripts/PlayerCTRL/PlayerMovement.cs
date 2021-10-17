@@ -7,18 +7,18 @@ public class PlayerMovement : MonoBehaviour
     // GUI telling player this can interact
     //public GameObject informer;
     // Mouse sensitivity
-    public float sensX = 2;
-    public float sensY = 2;
+    public float sensX;
+    public float sensY;
     // Cam view init
-    private float viewX = 0f;
+    private float viewX;
     // POV wont move if on menu focus
     public bool onFocus = false;
     public GameObject onShip;
-    public int interactRange = 5;
+    public int interactRange;
 
-    public float speed = 10f;
-    public float runSpeed = 20f;
-    public float jump = 10f;
+    public float speed;
+    public float runSpeed;
+    public float jump;
     
     public bool isGround = true;
 
