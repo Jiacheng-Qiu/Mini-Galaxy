@@ -5,14 +5,14 @@ using Cursor = UnityEngine.Cursor;
 public class PlayerMovement : MonoBehaviour
 {
     // GUI telling player this can interact
-    //public GameObject informer;
+    public GameObject informer;
     // Mouse sensitivity
     public float sensX;
     public float sensY;
     // Cam view init
     private float viewX;
     // POV wont move if on menu focus
-    public bool onFocus = false;
+    private bool onFocus;
     public GameObject onShip;
     public int interactRange;
 
@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerInventory inventory;
     public Camera cam;
-    
+    private InteractionAnimation uiAnimation;
     public Rigidbody rb;
 
     //private RaycastHit hit;
@@ -38,9 +38,6 @@ public class PlayerMovement : MonoBehaviour
     private bool onPreview = false; // Assign preview when placing items
     private GameObject previewObject;
 
-    public InterfaceAnimManager invenUI;
-    private bool invenOn = false;
-
     public InterfaceAnimManager mapUI;
     private bool mapOn = false;
 
@@ -50,24 +47,33 @@ public class PlayerMovement : MonoBehaviour
         Settings set = JsonUtility.FromJson<Settings>(settings.text);
         sensX = set.VerticalSensitivity;
         sensY = set.HorizontalSensitivity;*/
-
-        // Hide informer on init
-        //informer.SetActive(false);
-
+        uiAnimation = gameObject.GetComponent<InteractionAnimation>();
+        informer.SetActive(true);
+        uiAnimation.DisplayInformer(false);
         // TODO: code dependency
-        GameObject.Find("ShipConsole").GetComponent<Canvas>().enabled = false;
-        onFocus = true;
+        // GameObject.Find("ShipConsole").GetComponent<Canvas>().enabled = false;
+        ChangeCursorFocus(false);
         //hit = new RaycastHit();
         transform.parent = planet.transform;
         inventory = gameObject.GetComponent<PlayerInventory>();
     }
 
-    // TODO this method is called after starting game, player need to first read info
-    public void InitInfo()
+    // If there are multiple interface active, only inactive when all screens are shut down
+    public void ChangeCursorFocus(bool state)
     {
-        onFocus = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        if (state)
+        {
+            onFocus = true;
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+        } 
+        else
+        {
+            onFocus = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        
     }
 
 
@@ -96,22 +102,6 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.N))
         {
             gameObject.GetComponent<InteractionAnimation>().HelmetAnimation();
-        }
-
-        // TODO: showcase of inventory
-        if (Input.GetKeyUp(KeyCode.I))
-        {
-            if (invenOn)
-            {
-                invenUI.startDisappear();
-                invenOn = false;
-            }
-            else
-            {
-                invenUI.gameObject.SetActive(true);
-                invenUI.startAppear();
-                invenOn = true;
-            }
         }
 
         // TODO: Map showcased
@@ -162,16 +152,14 @@ public class PlayerMovement : MonoBehaviour
                 aimObject = hit.collider;
                 // Also display the name on UI, delete clone text
 
-                //informer.transform.Find("Item").Find("ItemName").GetComponent<Text>().text = hit.collider.name.Replace("(Clone)", "");
-
-                //informer.SetActive(true);
+                informer.transform.Find("Item name").GetComponent<Text>().text = hit.collider.name.Replace("(Clone)", "");
+                uiAnimation.DisplayInformer(true);
                 return;
             }
         }
         // If above didn't match, then there is no aimObj
         aimObject = null;
-        //informer.SetActive(false);
-
+        uiAnimation.DisplayInformer(false);
         if (onPreview)
             Preview();
     }
@@ -302,7 +290,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            //informer.SetActive(false);
+            uiAnimation.DisplayInformer(false);
             onShip.GetComponent<Control>().SpaceshipMove();
             gameObject.transform.position = onShip.transform.position;
             // TODO: Temporary setup for posiution

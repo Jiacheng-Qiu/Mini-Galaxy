@@ -7,51 +7,57 @@ using UnityEngine.UI;
 // The backpack system that contains items
 public class Backpack : MonoBehaviour
 {
-    public GameObject player;
     public GameObject slotPrefab;
-    public int itemLimit = 25;
-    private Canvas canvas;
+    public int itemLimit;
     private GameObject[] slots;
     private string[] slotItems; // Save the name of all items in slots
     private Hashtable inventory;
-    private int currentItemCount = 0;
-    private int nextEmptySlot = 0;
+    private int currentItemCount;
+    private int nextEmptySlot;
+    private bool bagActive;
 
     private int[] onBar; // Record the items reged on inv bar
 
+    private PlayerMovement movement;
+    private InteractionAnimation uiInteraction;
+    private PlayerInventory invBar;
+
     void Start()
     {
+        uiInteraction = gameObject.GetComponent<InteractionAnimation>();
+        bagActive = false;
         onBar = new int[5];
         for (int i = 0; i < 5; i++)
         {
             onBar[i] = -1;
         }
+        currentItemCount = 0;
+        nextEmptySlot = 0;
 
         inventory = new Hashtable();
         slotItems = new string[itemLimit];
         slots = new GameObject[itemLimit];
-        CreateSlots();
-        canvas = gameObject.GetComponent<Canvas>();
-        canvas.enabled = false;
+        //CreateSlots();
+        movement = gameObject.GetComponent<PlayerMovement>();
+        invBar = gameObject.GetComponent<PlayerInventory>();
     }
 
-    // Generate slots based on position on init
+    // Generate slots based on amount on the UI
     private void CreateSlots()
     {
-        int limit = (int)Math.Sqrt(itemLimit);
-        for (int i = 0; i < limit; i++)
+        int itemPerRow = 4;
+        for (int i = 0; i < itemPerRow; i++)
         {
-            for (int j = 0; j < limit; j++)
+            for (int j = 0; j < itemLimit / itemPerRow; j++)
             {
-                int cur = i * limit + j;
+                int cur = i * 4 + j;
                 Backpack cla = this;
                 slots[cur] = Instantiate(slotPrefab);
                 slots[cur].transform.localPosition = new Vector3(750 + 105 * j, 680 - 105 * i, 0);
                 slots[cur].transform.SetParent(transform);
                 slots[cur].GetComponent<Button>().onClick.AddListener(() => cla.OnListen(cur));
                 slots[cur].transform.Find("Amount").gameObject.SetActive(false);
-                slots[cur].transform.Find("Selected").gameObject.SetActive(false);
-                slots[cur].transform.Find("Code").gameObject.SetActive(false);
+                slots[cur].transform.Find("Image").gameObject.SetActive(false);
             }
         }
     }
@@ -61,17 +67,18 @@ public class Backpack : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.B))
         {
-            player.GetComponent<PlayerMovement>().onFocus = true;
-            canvas.enabled = true;
-            Cursor.lockState = CursorLockMode.Confined;
-            Cursor.visible = true;
-        }
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            player.GetComponent<PlayerMovement>().onFocus = false;
-            canvas.enabled = false;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            if (bagActive)
+            {
+                bagActive = false;
+                movement.ChangeCursorFocus(false);
+                uiInteraction.DisplayBag(false);
+            }
+            else
+            {
+                bagActive = true;
+                movement.ChangeCursorFocus(true);
+                uiInteraction.DisplayBag(true);
+            }
         }
     }
 
@@ -85,7 +92,7 @@ public class Backpack : MonoBehaviour
             int total = (int)inventory[obj] + amount;
             inventory[obj] = total;
             // Renew the amount count
-            int pos;
+            int pos = 0;
             for (pos = 0; pos < itemLimit; pos++)
             {
                 if (slotItems[pos] != null && slotItems[pos].Equals(obj))
@@ -274,11 +281,11 @@ public class Backpack : MonoBehaviour
             if (slotItems[slotPos] == null)
             {
                 onBar[barPos] = -1;
-                player.GetComponent<PlayerInventory>().UnassignIcon(barPos);
+                invBar.UnassignIcon(barPos);
             } else
             {
                 // Update the amount on bar
-                player.GetComponent<PlayerInventory>().UpdateIcon(barPos, (int)inventory[name]);
+                invBar.UpdateIcon(barPos, (int)inventory[name]);
             }
         }
     }
@@ -328,16 +335,16 @@ public class Backpack : MonoBehaviour
             // Case that the same item is assigned onto different slot
             int oldPos = Array.IndexOf(onBar, pos);
             onBar[oldPos] = -1;
-            player.GetComponent<PlayerInventory>().UnassignIcon(oldPos);
+            invBar.UnassignIcon(oldPos);
         }
         if (orig != -1 && orig != pos)
         {
-            player.GetComponent<PlayerInventory>().UnassignIcon(index);
+            invBar.UnassignIcon(index);
             slots[orig].transform.Find("Selected").gameObject.SetActive(false);
             slots[orig].transform.Find("Code").gameObject.SetActive(false);
 
         }
-        player.GetComponent<PlayerInventory>().AssignIcon(index, name, amount);
+        invBar.AssignIcon(index, name, amount);
         slots[pos].transform.Find("Selected").gameObject.SetActive(true);
         GameObject code = slots[pos].transform.Find("Code").gameObject;
         code.GetComponent<Text>().text = (index + 1).ToString();

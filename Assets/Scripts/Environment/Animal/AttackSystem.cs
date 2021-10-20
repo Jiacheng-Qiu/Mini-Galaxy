@@ -22,7 +22,7 @@ public class AttackSystem : MonoBehaviour
         if (target.tag == "Animal")
             target.GetComponent<HealthSystem>().Hurt(this.gameObject, attack);
         if (target.tag == "Player")
-            target.GetComponent<PlayerHealthSystem>().Hurt(this.gameObject, attack);
+            target.GetComponent<PlayerHealthSystem>().Hurt(this.gameObject, attack, false);
         else if (target.tag == "Environment")
             target.GetComponent<EnvironmentComponent>().Hit(attack);
         lastAttack = Time.time;

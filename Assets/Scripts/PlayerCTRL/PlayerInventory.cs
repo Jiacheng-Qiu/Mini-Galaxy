@@ -5,31 +5,38 @@ using UnityEngine.UI;
 public class PlayerInventory : MonoBehaviour
 {
     private Hashtable inventory;
-    public int itemLimit = 5;
 
     // UI display part
-    public GameObject[] slots;
-    public int selectedSlot = 0;
+    public GameObject barComponent;
+    // Record the amount of slots 
+    public int slotAmount;
+    private GameObject[] slots;
+    private int selectedSlot;
 
-    public GameObject backpackObj;
     private Backpack backpack;
+
+    private Color notSelectedColor;
+    private Color selectedColor;
 
     void Start()
     {
-        backpack = backpackObj.GetComponent<Backpack>();
-        inventory = new Hashtable();
-        // slots = new GameObject[itemLimit];
-        for (int i = 0; i < itemLimit; i++)
+        slots = new GameObject[slotAmount];
+        for (int i = 0; i < slotAmount; i++)
         {
-            // mark all item counts and selected slots as hidden
-            slots[i].transform.Find("Amount").gameObject.SetActive(false);
-            if (i != selectedSlot)
-                slots[i].transform.Find("Selected").gameObject.SetActive(false);
+            slots[i] = barComponent.transform.Find("Slot" + i).gameObject;
         }
+        inventory = new Hashtable();
+        notSelectedColor = Color.HSVToRGB(215f / 360, 0.7f, 1);
+        selectedColor = Color.HSVToRGB(215f / 360, 1, 1);
+
+        // Originally slot0 is selected
+        selectedSlot = 0;
+        slots[selectedSlot].GetComponent<Image>().color = selectedColor;
     }
 
     private void Update()
     {
+        // Assign selected slot based on input
         int origSelect = selectedSlot;
         // TODO: Need to optimize the ifs
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -52,8 +59,46 @@ public class PlayerInventory : MonoBehaviour
         {
             selectedSlot = 4;
         }
-        slots[origSelect].transform.Find("Selected").gameObject.SetActive(false);
-        slots[selectedSlot].transform.Find("Selected").gameObject.SetActive(true);
+        if (selectedSlot != origSelect)
+        {
+            slots[origSelect].GetComponent<Image>().color = notSelectedColor;
+            slots[selectedSlot].GetComponent<Image>().color = selectedColor;
+        }
+    }
+
+    // Icon associated methods to connect backpack with bar
+    public void AssignIcon(int index, string item, int amount)
+    {
+        GameObject imgIcon = slots[index].transform.Find("Image").gameObject;
+        imgIcon.GetComponent<Image>().sprite = Resources.Load<Sprite>("Icons/" + item);
+        imgIcon.SetActive(true);
+        GameObject amountCount = slots[index].transform.Find("Amount").gameObject;
+        amountCount.GetComponent<Text>().text = amount.ToString();
+        amountCount.SetActive(true);
+    }
+
+    public void UpdateIcon(int index, int amount)
+    {
+        slots[index].transform.Find("Amount").gameObject.GetComponent<Text>().text = amount.ToString();
+    }
+
+    public void UnassignIcon(int index)
+    {
+        slots[index].transform.Find("Image").gameObject.SetActive(false);
+        slots[index].transform.Find("Amount").gameObject.SetActive(false);
+        /*foreach (Transform child in slots[index].GetComponent<Transform>())
+        {
+            if (child.name == "Amount")
+            {
+                child.gameObject.SetActive(false);
+            }
+            else if (child.name == "Item")
+            {
+                // Destroy the image icon
+                GameObject.Destroy(child.gameObject);
+                break;
+            }
+        }*/
     }
 
     // Return false if inventory up to limit
@@ -98,37 +143,5 @@ public class PlayerInventory : MonoBehaviour
         return (int)inventory[obj];
     }
 
-    public void AssignIcon(int index, string item, int amount)
-    {
-        GameObject imgIcon = new GameObject("Item");
-        imgIcon.AddComponent<Image>().sprite = Resources.Load<Sprite>("Icons/" + item);
-        imgIcon.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
-        imgIcon.transform.SetParent(slots[index].transform, false);
-        imgIcon.transform.localPosition = new Vector3(0, 0, 0);
-        GameObject amountCount = slots[index].transform.Find("Amount").gameObject;
-        amountCount.GetComponent<Text>().text = amount.ToString();
-        amountCount.SetActive(true);
-    }
-
-    public void UpdateIcon(int index, int amount)
-    {
-        slots[index].transform.Find("Amount").gameObject.GetComponent<Text>().text = amount.ToString();
-    }
-
-    public void UnassignIcon(int index)
-    {
-        foreach (Transform child in slots[index].GetComponent<Transform>())
-        {
-            if (child.name == "Amount")
-            {
-                child.gameObject.SetActive(false);
-            }
-            else if (child.name == "Item")
-            {
-                // Destroy the image icon
-                GameObject.Destroy(child.gameObject);
-                break;
-            }
-        }
-    }
+    
 }

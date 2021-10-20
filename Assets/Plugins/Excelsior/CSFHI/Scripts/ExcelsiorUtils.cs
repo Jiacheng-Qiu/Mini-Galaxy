@@ -58,10 +58,6 @@ public class ExcelsiorUtils:MonoBehaviour {
         target.GetComponent<Image>().color = _color;
         playSound();
     }
-    public void OpenWebPage() {
-        Application.OpenURL("http://www.assetstore.unity3d.com/#!/content/69794");
-        playSound();
-    }
     public void GetSliderValue_ToText() {
         textContent.text = slider.value.ToString();
     }

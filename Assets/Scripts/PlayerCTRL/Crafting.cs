@@ -5,7 +5,7 @@ public class Crafting : MonoBehaviour
 {
     public Canvas craftCanvas;
     private PlayerInventory inventory;
-    private PlayerMovement ctrl;
+    private PlayerMovement movement;
 
     public GameObject buttonPrefab;
     private GameObject[] buttons; // All buttons in order
@@ -27,7 +27,7 @@ public class Crafting : MonoBehaviour
     {
         craftCanvas.enabled = false;
         inventory = this.gameObject.GetComponent<PlayerInventory>();
-        ctrl = this.gameObject.GetComponent<PlayerMovement>();
+        movement = this.gameObject.GetComponent<PlayerMovement>();
 
         // Load all recipies
         RecipeAmount = 3;
@@ -116,17 +116,13 @@ public class Crafting : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.C))
         {
             // Set on focus
-            ctrl.onFocus = true;
+            movement.ChangeCursorFocus(true);
             craftCanvas.enabled = true;
-            Cursor.lockState = CursorLockMode.Confined;
-            Cursor.visible = true;
         }
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            ctrl.onFocus = false;
+            movement.ChangeCursorFocus(false);
             craftCanvas.enabled = false;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
     }
 

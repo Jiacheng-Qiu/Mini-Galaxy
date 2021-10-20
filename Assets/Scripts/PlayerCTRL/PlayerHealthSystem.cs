@@ -34,15 +34,32 @@ public class PlayerHealthSystem : HealthSystem
 
     void FixedUpdate()
     {
+        OxygenChange();
+
+        // Shield Recovery
+        ShieldRecover();
+
+    }
+    
+    private void OxygenChange()
+    {
         // Oxygen consumption is different on movement
-        if (isRun)
+        if (currentOxygen > 0)
         {
-            currentOxygen -= runOxygenConsume * Time.deltaTime;
+            if (isRun)
+            {
+                currentOxygen -= runOxygenConsume * Time.deltaTime;
+            }
+            else
+            {
+                currentOxygen -= oxygenConsume * Time.deltaTime;
+            }
         }
         else
         {
-            currentOxygen -= oxygenConsume * Time.deltaTime;
-        }
+            Choke();
+            Hurt(null, 5 * Time.time, true);
+        } 
         // Recover oxygen if provider nearby
         if (oxygenProvided && currentOxygen < maxOxygen)
         {
@@ -52,14 +69,7 @@ public class PlayerHealthSystem : HealthSystem
                 currentOxygen = maxOxygen;
             }
         }
-        else if (currentOxygen <= 0)
-        {
-            Choke();
-        }
-
-        // Shield Recovery
-        ShieldRecover();
-
+        uiAnimation.OxygenChange(currentOxygen / maxOxygen);
     }
 
     // When player is out of oxygen, keep losing health
@@ -102,10 +112,22 @@ public class PlayerHealthSystem : HealthSystem
         return true;
     }
 
-    public new bool Hurt(GameObject attacker, float damage)
+    public bool Hurt(GameObject attacker, float damage, bool directToHealth)
     {
         if (immunity)
             return false;
+        // Damage taken from environment
+        if (directToHealth)
+        {
+            currentHealth -= damage;
+            if (currentHealth < 0.5f * maxHealth)
+            {
+                uiAnimation.Warning(true);
+            }
+            uiAnimation.HealthChange(currentHealth / maxHealth);
+            return true;
+        }
+        
         lastAttacker = attacker;
         lastHit = Time.time;
         // Damage taken is calculated as: damage*100/(100+armor) for hp

@@ -4,7 +4,7 @@ public class EquipmentCustomize : MonoBehaviour
 {
     public GameObject player;
     private PlayerInventory inventory;
-    private PlayerMovement ctrl;
+    private PlayerMovement movement;
     private Canvas canvas;
     // Start is called before the first frame update
     void Start()
@@ -12,7 +12,7 @@ public class EquipmentCustomize : MonoBehaviour
         canvas = gameObject.GetComponent<Canvas>();
         canvas.enabled = false;
         inventory = player.GetComponent<PlayerInventory>();
-        ctrl = player.GetComponent<PlayerMovement>();
+        movement = player.GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
@@ -21,17 +21,13 @@ public class EquipmentCustomize : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.E))
         {
             // Set on focus
-            ctrl.onFocus = true;
+            movement.ChangeCursorFocus(true);
             canvas.enabled = true;
-            Cursor.lockState = CursorLockMode.Confined;
-            Cursor.visible = true;
         }
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            ctrl.onFocus = false;
+            movement.ChangeCursorFocus(false);
             canvas.enabled = false;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
     }
 }

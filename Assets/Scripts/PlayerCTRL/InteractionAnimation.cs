@@ -18,23 +18,28 @@ public class InteractionAnimation : MonoBehaviour
     public Image shield;
     public Image baseShield;
     public Image health;
-    public Image oxygen;
+    public Image oxygenBar;
+    public Text oxygenAmount;
     public InterfaceAnimManager warning;
     public InterfaceAnimManager startScreen;
     public InterfaceAnimManager mainUI;
     public InterfaceAnimManager invBar;
+    public InterfaceAnimManager informer;
+    public InterfaceAnimManager invenUI;
 
     private float cachedShieldDmg;
+    private bool oxygenWarningEnabled;
 
     private void Start()
     {
         cachedShieldDmg = 0;
         helmetOn = true;
         onHelmetAnimation = false;
+        oxygenWarningEnabled = false;
         lastHurt = 0;
         helmetX = 0;
         warning.gameObject.SetActive(false);
-
+        invenUI.gameObject.SetActive(false);
         // After Setting up, run startup animation, and start main UI
         StartCoroutine(SystemBoot());
     }
@@ -109,6 +114,68 @@ public class InteractionAnimation : MonoBehaviour
         }
     }
 
+    // amount=cur percentage
+    public void OxygenChange(float amount)
+    {
+        if (amount < 0)
+        {
+            // Avoid image fill amount exception
+            amount = 0;
+        }
+        else if (amount < 0.1f && !oxygenWarningEnabled)
+        {
+            oxygenWarningEnabled = true;
+            StartCoroutine(OxygenWarning());
+        } 
+        else if (oxygenWarningEnabled)
+        {
+            oxygenWarningEnabled = false;
+            oxygenBar.color = Color.white;
+            oxygenAmount.color = Color.white;
+        }
+        oxygenBar.fillAmount = amount;
+        string txt = (amount * 100).ToString();
+        // Ensure only two numbers with correct value will be displayed
+        if (amount == 0)
+        {
+            txt = "0";
+        }
+        else if (txt.Substring(0, 3).Equals("100"))
+        {
+            txt = "99";
+        } else if (txt.Substring(1, 1).Equals("."))
+        {
+            txt = txt.Substring(0, 1);
+        } else
+        {
+            txt = txt.Substring(0, 2);
+        }
+        oxygenAmount.text = txt;
+    }
+
+    public void DisplayInformer(bool state)
+    {
+        if (state)
+        {
+            informer.startAppear();
+        } else
+        {
+            informer.startDisappear();
+        }
+    }
+
+    public void DisplayBag(bool state)
+    {
+        if (state)
+        {
+            invenUI.gameObject.SetActive(true);
+            invenUI.startAppear();
+        }
+        else
+        {
+            invenUI.startDisappear();
+        }
+    }
 
     // Move helmet up or down
     private void FixedUpdate()
@@ -179,6 +246,19 @@ public class InteractionAnimation : MonoBehaviour
         mainUI.startAppear();
         invBar.gameObject.SetActive(true);
         invBar.startAppear();
+    }
+
+    // Make oxygen display red
+    private IEnumerator OxygenWarning()
+    {
+        float elapsed = 0f;
+        while(elapsed < 0.5f)
+        {
+            oxygenBar.color = Color.HSVToRGB(0, elapsed, 1);
+            oxygenAmount.color = Color.HSVToRGB(0, elapsed, 1);
+            elapsed += Time.time;
+            yield return null;
+        }
     }
 
     private IEnumerator CamShake(float duration, float magnitude)
