@@ -14153,13 +14153,14 @@ GameObject:
   - component: {fileID: 564283068}
   - component: {fileID: 564283067}
   - component: {fileID: 564283066}
+  - component: {fileID: 564283071}
   m_Layer: 11
   m_Name: Split
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &564283065
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14168,7 +14169,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 564283064}
   m_LocalRotation: {x: 0.08715575, y: 0, z: 0, w: 0.9961947}
-  m_LocalPosition: {x: 0, y: 0, z: -0.1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.5}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children:
   - {fileID: 1416275774}
@@ -14381,6 +14382,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &564283071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564283064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b3f51d5499f3a44db8bc4cd33b2fc98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backpack: {fileID: 9158067}
 --- !u!1 &565518708
 GameObject:
   m_ObjectHideFlags: 0
@@ -15407,8 +15421,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSubMenu: 1
   subSlot: {fileID: 618990896}
-  backpack: {fileID: 9158067}
+  player: {fileID: 9158072}
   slotAssign: {fileID: 472435044}
+  splitMenu: {fileID: 564283066}
 --- !u!1 &619180228
 GameObject:
   m_ObjectHideFlags: 0
@@ -18182,7 +18197,6 @@ GameObject:
   - component: {fileID: 755053402}
   - component: {fileID: 755053401}
   - component: {fileID: 755053400}
-  - component: {fileID: 755053399}
   - component: {fileID: 755053398}
   m_Layer: 11
   m_Name: slider
@@ -18236,23 +18250,6 @@ MonoBehaviour:
   - {fileID: 7400000, guid: 633d8e0b954ccda4bbd89ac29e7fae2b, type: 2}
   currentState: 3
   isNested_IAM: 0
---- !u!114 &755053399
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 755053396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9e2586f069cb7f4b940ae6a8b5e0f93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  audioSource: {fileID: 0}
-  audioClip: {fileID: 0}
-  textContent: {fileID: 1848830788}
-  slider: {fileID: 755053400}
 --- !u!114 &755053400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18303,19 +18300,7 @@ MonoBehaviour:
   m_Value: 10
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 755053399}
-        m_TargetAssemblyTypeName: ExcelsiorUtils, Assembly-CSharp-firstpass
-        m_MethodName: GetSliderValue_ToText
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!95 &755053401
 Animator:
   serializedVersion: 3
@@ -35468,8 +35453,8 @@ RectTransform:
   m_Father: {fileID: 1058191369}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 4, y: -2}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -39387,8 +39372,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSubMenu: 0
   subSlot: {fileID: 618990896}
-  backpack: {fileID: 0}
+  player: {fileID: 0}
   slotAssign: {fileID: 0}
+  splitMenu: {fileID: 0}
 --- !u!1 &1848286823
 GameObject:
   m_ObjectHideFlags: 0
@@ -40387,7 +40373,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1896683910}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 564283071}
+        m_TargetAssemblyTypeName: SplitMenu, Assembly-CSharp
+        m_MethodName: ConfirmSplit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!225 &1896683912
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -42295,7 +42293,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2055017616}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 564283071}
+        m_TargetAssemblyTypeName: SplitMenu, Assembly-CSharp
+        m_MethodName: Disappear
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!225 &2055017618
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -43068,7 +43078,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

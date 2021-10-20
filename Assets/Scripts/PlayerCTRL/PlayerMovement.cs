@@ -136,7 +136,10 @@ public class PlayerMovement : MonoBehaviour
         if (!onShip)
         {
             Jump();
-            Throw();
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                Throw(-1);
+            }
             Place();
         }
     }
@@ -311,23 +314,27 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // Throw material out
-    void Throw()
+    // Throw material out from inv bar
+    // If pos=-1, throw from invbar, if pos>=0, throw from backpack
+    public void Throw(int pos)
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        // Check material tag before actual throwing
+        /*string tag = inventory.CheckTag();
+        if (tag != "Material")
         {
-            // Check material tag before actual throwing
-            string tag = inventory.CheckTag();
-            if (tag != "Material")
-            {
-                return;
-            }
-            GameObject obj = inventory.getOut();
-            obj.AddComponent<TinyObjGravity>().Init(transform.parent);
-            obj.SetActive(true);
-            // Throw in the front direction after activate
-            obj.GetComponent<Rigidbody>().AddForce(transform.Find("Main Camera").forward * 500);
-        }
+            return;
+        }*/
+        GameObject obj;
+        if (pos == -1)
+            obj = inventory.GetOut();
+        else
+            obj = backpack.GetOut(pos, false);
+        obj.transform.position = transform.Find("Main Camera").position;
+        obj.transform.parent = transform.parent.Find("Material");
+        obj.AddComponent<TinyObjGravity>().Init(transform.parent);
+        obj.SetActive(true);
+        // Throw in the front direction after activate
+        obj.GetComponent<Rigidbody>().AddForce(transform.Find("Main Camera").forward * 500);
     }
 
     // Put placeable items onto ground only when no interactives on aiming
@@ -341,7 +348,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 return;
             }
-            GameObject obj = inventory.getOut();
+            GameObject obj = inventory.GetOut();
             if (tag == "Interactable")
             {
                 obj.GetComponent<Machine>().player = gameObject;

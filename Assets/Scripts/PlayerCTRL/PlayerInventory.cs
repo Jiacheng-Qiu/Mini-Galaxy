@@ -32,6 +32,7 @@ public class PlayerInventory : MonoBehaviour
         // Originally slot0 is selected
         selectedSlot = 0;
         slots[selectedSlot].GetComponent<Image>().color = selectedColor;
+        backpack = gameObject.GetComponent<Backpack>();
     }
 
     private void Update()
@@ -125,15 +126,13 @@ public class PlayerInventory : MonoBehaviour
     }
 
     // return null if there is not such obj in inventory
-    public GameObject getOut()
+    public GameObject GetOut()
     {
         GameObject output = backpack.GetOut(selectedSlot, true);
         if (output == null)
         {
             return null;
         }
-        output.transform.position = transform.Find("Main Camera").position;
-        output.transform.parent = transform.parent.Find("Material");
         return output;
     }
 
@@ -142,6 +141,4 @@ public class PlayerInventory : MonoBehaviour
     {
         return (int)inventory[obj];
     }
-
-    
 }

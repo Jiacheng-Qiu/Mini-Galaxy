@@ -268,8 +268,8 @@ public class Backpack : MonoBehaviour
             MaterialProperty prop = gen.AddComponent<MaterialProperty>();
             prop.remainInteract = 1;
             prop.materialName = item;
-            prop.minProduct = 0;
-            prop.maxProduct = 0;
+            prop.minProduct = amount;
+            prop.maxProduct = amount;
         }
 
         return gen;
@@ -346,12 +346,10 @@ public class Backpack : MonoBehaviour
             onBar[oldPos] = -1;
             invBar.UnassignIcon(oldPos);
         }
+
         if (orig != -1 && orig != slotId)
         {
             invBar.UnassignIcon(index);
-            slots[orig].transform.Find("Selected").gameObject.SetActive(false);
-            slots[orig].transform.Find("Code").gameObject.SetActive(false);
-
         }
         invBar.AssignIcon(index, item, amount);
         onBar[index] = slotId;

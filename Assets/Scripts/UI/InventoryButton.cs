@@ -6,8 +6,9 @@ public class InventoryButton : MonoBehaviour
     private int slotID;
     public bool isSubMenu; // If this object is submenu, it will listen to left clicks and disappear
     public InterfaceAnimManager subSlot;
-    public Backpack backpack; // Only necessary on submenu side
+    public PlayerMovement player; // Only necessary on submenu side
     public InterfaceAnimManager slotAssign; // On submenu side
+    public InterfaceAnimManager splitMenu; // On submenu side
 
     // Setup the slot currently submenu is calling on
     public void SetId(int id)
@@ -48,12 +49,15 @@ public class InventoryButton : MonoBehaviour
 
     public void Split()
     {
+        splitMenu.gameObject.SetActive(true);
+        splitMenu.startAppear();
+        splitMenu.gameObject.GetComponent<SplitMenu>().SetId(slotID);
         Debug.Log("Spliting");
     }
 
     public void Drop()
     {
-        backpack.GetOut(slotID, false);
+        player.Throw(slotID);
     }
 
     private void Update()
