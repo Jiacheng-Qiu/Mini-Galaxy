@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isGround = true;
 
     private PlayerInventory inventory;
+    private Backpack backpack;
     public Camera cam;
     private InteractionAnimation uiAnimation;
     public Rigidbody rb;
@@ -56,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
         //hit = new RaycastHit();
         transform.parent = planet.transform;
         inventory = gameObject.GetComponent<PlayerInventory>();
+        backpack = gameObject.GetComponent<Backpack>();
     }
 
     // If there are multiple interface active, only inactive when all screens are shut down
@@ -224,7 +226,7 @@ public class PlayerMovement : MonoBehaviour
                     MaterialProperty mat = aimObject.gameObject.GetComponent<MaterialProperty>();
                     var materialName = mat.getName();
                     int amount = mat.Interacted();
-                    inventory.putIn(materialName, amount);
+                    backpack.PutIn(materialName, amount);
                     break;
                 // TODO
                 case "Spaceship":
@@ -239,7 +241,7 @@ public class PlayerMovement : MonoBehaviour
                     break;
                 // All machines can be taken back into backpack
                 case "Interactable":
-                    inventory.putIn(aimObject.GetComponent<Machine>().machineName, 1);
+                    backpack.PutIn(aimObject.GetComponent<Machine>().machineName, 1);
                     Destroy(aimObject.gameObject);
                     break;
             }

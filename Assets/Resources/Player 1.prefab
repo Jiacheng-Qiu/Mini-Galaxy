@@ -247,6 +247,7 @@ GameObject:
   - component: {fileID: 1346284290}
   - component: {fileID: 9158066}
   - component: {fileID: 9158067}
+  - component: {fileID: 7002645135548134311}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player
@@ -365,7 +366,6 @@ MonoBehaviour:
   informer: {fileID: 0}
   sensX: 1
   sensY: 1
-  onFocus: 0
   onShip: {fileID: 0}
   interactRange: 5
   speed: 10
@@ -376,7 +376,6 @@ MonoBehaviour:
   rb: {fileID: 3648729673969551593}
   planet: {fileID: 3648729673969551602}
   flashlight: {fileID: 1853342546}
-  invenUI: {fileID: 0}
   mapUI: {fileID: 0}
 --- !u!114 &3648729673969551599
 MonoBehaviour:
@@ -390,15 +389,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7734c448df0dd70448680c6b4d75cb54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemLimit: 5
-  slots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  selectedSlot: 0
-  backpackObj: {fileID: 0}
+  barComponent: {fileID: 0}
+  slotAmount: 5
 --- !u!114 &3648729673969551597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,7 +398,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3648729673969551602}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4608247339dc2944952108bfe91358a, type: 3}
   m_Name: 
@@ -443,29 +435,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   durability: 100
-  name: 
+  name: Player
   productName: Iron
   product: {fileID: 0}
   productAmount: {x: 2, y: 4}
+  rb: {fileID: 0}
   maxShield: 100
   currentShield: 0
   maxHealth: 100
   currentHealth: 0
-  shieldHeal: 5
+  shieldHeal: 10
   hpHeal: 1
   armor: 10
   immunity: 0
   lastAttacker: {fileID: 0}
-  shield: {fileID: 0}
-  energy: {fileID: 0}
   currentOxygen: 100
   maxOxygen: 100
   oxygenRecover: 0
   oxygenConsume: 1
   runOxygenConsume: 2
   runCD: 2
-  heartrate: 60
-  heartSample: {fileID: 3646162423062823440, guid: ccfbc6320793deb47af9bea9619f8b57, type: 3}
 --- !u!114 &1346284290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -507,6 +496,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 2056940337}
   helmet: {fileID: 0}
+  shield: {fileID: 0}
+  baseShield: {fileID: 0}
+  health: {fileID: 0}
+  oxygenBar: {fileID: 0}
+  oxygenAmount: {fileID: 0}
+  warning: {fileID: 0}
+  startScreen: {fileID: 0}
+  mainUI: {fileID: 0}
+  invBar: {fileID: 0}
+  informer: {fileID: 0}
+  invenUI: {fileID: 0}
+--- !u!114 &7002645135548134311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3648729673969551602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7a6a7458ed987d4b92e046e25a24a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemLimit: 25
+  slotContainer: {fileID: 0}
 --- !u!1 &3648729675821191555
 GameObject:
   m_ObjectHideFlags: 0

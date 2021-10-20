@@ -103,12 +103,12 @@ public class InteractionAnimation : MonoBehaviour
     // Warning animation that wakes hiden ui till canceled
     public void Warning(bool on)
     {
-        if (on && !warning.gameObject.active)
+        if (on && !warning.gameObject.activeSelf)
         {
             warning.gameObject.SetActive(true);
             warning.startAppear();
         }
-        else if (!on && warning.gameObject.active)
+        else if (!on && warning.gameObject.activeSelf)
         {
             warning.startDisappear();
         }
@@ -155,10 +155,10 @@ public class InteractionAnimation : MonoBehaviour
 
     public void DisplayInformer(bool state)
     {
-        if (state)
+        if (state && informer.currentState == CSFHIAnimableState.disappeared)
         {
             informer.startAppear();
-        } else
+        } else if (!state)
         {
             informer.startDisappear();
         }

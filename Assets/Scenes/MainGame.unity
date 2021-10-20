@@ -704,42 +704,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingsData: {fileID: 0}
---- !u!1 &9158065 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3648729673969551602, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-  m_PrefabInstance: {fileID: 3648729674309148476}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &9158066 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9158066, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
   m_PrefabInstance: {fileID: 3648729674309148476}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9158065}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed210632f2530514d890b2a36dde7230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &9158067
+--- !u!114 &9158067 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 7002645135548134311, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
+  m_PrefabInstance: {fileID: 3648729674309148476}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9158065}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7a6a7458ed987d4b92e046e25a24a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotPrefab: {fileID: 4451985955367479952, guid: b20452a127edfeb42a4cf1c8d148862d, type: 3}
-  itemLimit: 25
 --- !u!114 &9158072 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3648729673969551592, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
   m_PrefabInstance: {fileID: 3648729674309148476}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9158065}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb05c73314bf3164591b9c6efa98e64d, type: 3}
@@ -6600,7 +6592,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &87836770
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7782,7 +7774,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 143693270}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 618990901}
+        m_TargetAssemblyTypeName: InventoryButton, Assembly-CSharp
+        m_MethodName: Assign
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!225 &143693272
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8969,7 +8973,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 239638562}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 618990901}
+        m_TargetAssemblyTypeName: InventoryButton, Assembly-CSharp
+        m_MethodName: Use
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!225 &239638564
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -11376,9 +11392,9 @@ GameObject:
   - component: {fileID: 364485406}
   - component: {fileID: 364485405}
   - component: {fileID: 364485404}
-  - component: {fileID: 364485403}
   - component: {fileID: 364485402}
   - component: {fileID: 364485401}
+  - component: {fileID: 364485403}
   m_Layer: 11
   m_Name: slot 1
   m_TagString: Untagged
@@ -11420,8 +11436,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectRef: {fileID: 364485399}
-  timeAppear: 1
-  timeDisappear: 0
+  timeAppear: 0.2
+  timeDisappear: 0.8
   recycling: 0
   sortID: 1
   animator: {fileID: 364485405}
@@ -11503,7 +11519,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 364485402}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 472435049}
+        m_TargetAssemblyTypeName: SlotAssign, Assembly-CSharp
+        m_MethodName: AssignOnto
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!225 &364485404
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -12548,7 +12576,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 447422629}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 618990901}
+        m_TargetAssemblyTypeName: InventoryButton, Assembly-CSharp
+        m_MethodName: Drop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!225 &447422631
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -12716,13 +12756,14 @@ GameObject:
   - component: {fileID: 472435046}
   - component: {fileID: 472435045}
   - component: {fileID: 472435044}
+  - component: {fileID: 472435049}
   m_Layer: 11
   m_Name: Slot assign
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &472435043
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12731,7 +12772,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 472435042}
   m_LocalRotation: {x: 0.08715575, y: 0, z: 0, w: 0.9961947}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: -0.5}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children:
   - {fileID: 112239792}
@@ -12745,7 +12786,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: -0.75}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &472435044
@@ -12763,6 +12804,10 @@ MonoBehaviour:
   elementsList:
   - {fileID: 112239793}
   - {fileID: 364485401}
+  - {fileID: 1252430515}
+  - {fileID: 1929992529}
+  - {fileID: 591874373}
+  - {fileID: 1227424481}
   autoStart: 1
   invertDelays: 1
   cloneDelays: 0
@@ -12771,8 +12816,8 @@ MonoBehaviour:
   testLoop: 0
   autoLinearAppearDelay: 1
   forceUnscaledTime: 0
-  appearDelay_SpeedMultiplier: 1
-  disappearDelay_SpeedMultiplier: 1
+  appearDelay_SpeedMultiplier: 0.1
+  disappearDelay_SpeedMultiplier: 0.1
   currentState: 3
   useDelays: 1
   audioSource: {fileID: 0}
@@ -12938,6 +12983,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &472435049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472435042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43be45d7fba13034d980ebc4f1c71920, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backpack: {fileID: 9158067}
 --- !u!1 &479441746
 GameObject:
   m_ObjectHideFlags: 0
@@ -13185,8 +13243,8 @@ RectTransform:
   m_Father: {fileID: 1083628216}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.22222269}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -14156,8 +14214,8 @@ MonoBehaviour:
   testLoop: 0
   autoLinearAppearDelay: 1
   forceUnscaledTime: 0
-  appearDelay_SpeedMultiplier: 1
-  disappearDelay_SpeedMultiplier: 1
+  appearDelay_SpeedMultiplier: 0.1
+  disappearDelay_SpeedMultiplier: 0.1
   currentState: 3
   useDelays: 1
   audioSource: {fileID: 0}
@@ -14567,9 +14625,9 @@ GameObject:
   - component: {fileID: 591874378}
   - component: {fileID: 591874377}
   - component: {fileID: 591874376}
-  - component: {fileID: 591874375}
   - component: {fileID: 591874374}
   - component: {fileID: 591874373}
+  - component: {fileID: 591874375}
   m_Layer: 11
   m_Name: slot 4
   m_TagString: Untagged
@@ -14611,10 +14669,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectRef: {fileID: 591874371}
-  timeAppear: 1
-  timeDisappear: 0
+  timeAppear: 0.8
+  timeDisappear: 0.19999999
   recycling: 0
-  sortID: 1
+  sortID: 4
   animator: {fileID: 591874377}
   animClips:
   - {fileID: 7400000, guid: 22e0207d6cd021842b84a65cae6707b7, type: 2}
@@ -14694,7 +14752,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 591874374}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 472435049}
+        m_TargetAssemblyTypeName: SlotAssign, Assembly-CSharp
+        m_MethodName: AssignOnto
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!225 &591874376
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -15098,13 +15168,14 @@ GameObject:
   - component: {fileID: 618990898}
   - component: {fileID: 618990897}
   - component: {fileID: 618990896}
+  - component: {fileID: 618990901}
   m_Layer: 11
   m_Name: Inventory Spec
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &618990895
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15113,7 +15184,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 618990894}
   m_LocalRotation: {x: 0.08715575, y: 0, z: 0, w: 0.9961947}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.0868258}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children:
   - {fileID: 961970795}
@@ -15126,9 +15197,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 120}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.30000016, y: 0.49240357}
+  m_SizeDelta: {x: 60, y: 100}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &618990896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15155,8 +15226,8 @@ MonoBehaviour:
   testLoop: 0
   autoLinearAppearDelay: 1
   forceUnscaledTime: 0
-  appearDelay_SpeedMultiplier: 1
-  disappearDelay_SpeedMultiplier: 1
+  appearDelay_SpeedMultiplier: 0.1
+  disappearDelay_SpeedMultiplier: 0.1
   currentState: 3
   useDelays: 1
   audioSource: {fileID: 0}
@@ -15322,6 +15393,22 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &618990901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618990894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5116ecd7aa68a9a4585e0305e53b01ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSubMenu: 1
+  subSlot: {fileID: 618990896}
+  backpack: {fileID: 9158067}
+  slotAssign: {fileID: 472435044}
 --- !u!1 &619180228
 GameObject:
   m_ObjectHideFlags: 0
@@ -17313,7 +17400,7 @@ MonoBehaviour:
   timer: 0
   timeBetweenLoops: 3
   testLoop: 0
-  autoLinearAppearDelay: 1
+  autoLinearAppearDelay: 0
   forceUnscaledTime: 0
   appearDelay_SpeedMultiplier: 1
   disappearDelay_SpeedMultiplier: 1
@@ -26601,8 +26688,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a6a7458ed987d4b92e046e25a24a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotPrefab: {fileID: 4451985955367479952, guid: b20452a127edfeb42a4cf1c8d148862d, type: 3}
   itemLimit: 25
+  slotContainer: {fileID: 0}
 --- !u!1 &1006731910
 GameObject:
   m_ObjectHideFlags: 0
@@ -26816,7 +26903,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1023320303}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 618990901}
+        m_TargetAssemblyTypeName: InventoryButton, Assembly-CSharp
+        m_MethodName: Split
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!225 &1023320305
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -29955,9 +30054,9 @@ GameObject:
   - component: {fileID: 1227424486}
   - component: {fileID: 1227424485}
   - component: {fileID: 1227424484}
-  - component: {fileID: 1227424483}
   - component: {fileID: 1227424482}
   - component: {fileID: 1227424481}
+  - component: {fileID: 1227424483}
   m_Layer: 11
   m_Name: slot 5
   m_TagString: Untagged
@@ -30002,7 +30101,7 @@ MonoBehaviour:
   timeAppear: 1
   timeDisappear: 0
   recycling: 0
-  sortID: 1
+  sortID: 5
   animator: {fileID: 1227424485}
   animClips:
   - {fileID: 7400000, guid: 22e0207d6cd021842b84a65cae6707b7, type: 2}
@@ -30082,7 +30181,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1227424482}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 472435049}
+        m_TargetAssemblyTypeName: SlotAssign, Assembly-CSharp
+        m_MethodName: AssignOnto
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!225 &1227424484
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -30625,9 +30736,9 @@ GameObject:
   - component: {fileID: 1252430520}
   - component: {fileID: 1252430519}
   - component: {fileID: 1252430518}
-  - component: {fileID: 1252430517}
   - component: {fileID: 1252430516}
   - component: {fileID: 1252430515}
+  - component: {fileID: 1252430517}
   m_Layer: 11
   m_Name: slot 2
   m_TagString: Untagged
@@ -30669,10 +30780,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectRef: {fileID: 1252430513}
-  timeAppear: 1
-  timeDisappear: 0
+  timeAppear: 0.4
+  timeDisappear: 0.6
   recycling: 0
-  sortID: 1
+  sortID: 2
   animator: {fileID: 1252430519}
   animClips:
   - {fileID: 7400000, guid: 22e0207d6cd021842b84a65cae6707b7, type: 2}
@@ -30752,7 +30863,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1252430516}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 472435049}
+        m_TargetAssemblyTypeName: SlotAssign, Assembly-CSharp
+        m_MethodName: AssignOnto
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!225 &1252430518
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -34202,8 +34325,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectRef: {fileID: 1515703746}
-  timeAppear: 0.25
-  timeDisappear: 0.75
+  timeAppear: 0.3
+  timeDisappear: 0.7
   recycling: 0
   sortID: 2
   animator: {fileID: 1515703750}
@@ -35234,8 +35357,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectRef: {fileID: 1604788009}
-  timeAppear: 0.37
-  timeDisappear: 0.63
+  timeAppear: 0.3
+  timeDisappear: 0.7
   recycling: 0
   sortID: 3
   animator: {fileID: 1604788013}
@@ -36240,8 +36363,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectRef: {fileID: 1689395675}
-  timeAppear: 0.87
-  timeDisappear: 0.13
+  timeAppear: 0.3
+  timeDisappear: 0.7
   recycling: 0
   sortID: 7
   animator: {fileID: 1689395679}
@@ -39096,8 +39219,9 @@ GameObject:
   - component: {fileID: 1841893825}
   - component: {fileID: 1841893824}
   - component: {fileID: 1841893828}
+  - component: {fileID: 1841893829}
   m_Layer: 11
-  m_Name: slot
+  m_Name: 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39119,9 +39243,9 @@ RectTransform:
   m_Father: {fileID: 1626585070}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 15, y: -15}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -75, y: 75}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1841893824
@@ -39236,7 +39360,35 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1841893824}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1841893829}
+        m_TargetAssemblyTypeName: InventoryButton, Assembly-CSharp
+        m_MethodName: CallSubMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1841893829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841893822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5116ecd7aa68a9a4585e0305e53b01ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSubMenu: 0
+  subSlot: {fileID: 618990896}
+  backpack: {fileID: 0}
+  slotAssign: {fileID: 0}
 --- !u!1 &1848286823
 GameObject:
   m_ObjectHideFlags: 0
@@ -40406,9 +40558,9 @@ GameObject:
   - component: {fileID: 1929992534}
   - component: {fileID: 1929992533}
   - component: {fileID: 1929992532}
-  - component: {fileID: 1929992531}
   - component: {fileID: 1929992530}
   - component: {fileID: 1929992529}
+  - component: {fileID: 1929992531}
   m_Layer: 11
   m_Name: slot 3
   m_TagString: Untagged
@@ -40450,10 +40602,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectRef: {fileID: 1929992527}
-  timeAppear: 1
-  timeDisappear: 0
+  timeAppear: 0.6
+  timeDisappear: 0.39999998
   recycling: 0
-  sortID: 1
+  sortID: 3
   animator: {fileID: 1929992533}
   animClips:
   - {fileID: 7400000, guid: 22e0207d6cd021842b84a65cae6707b7, type: 2}
@@ -40533,7 +40685,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1929992530}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 472435049}
+        m_TargetAssemblyTypeName: SlotAssign, Assembly-CSharp
+        m_MethodName: AssignOnto
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!225 &1929992532
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -40845,8 +41009,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectRef: {fileID: 1953246051}
-  timeAppear: 0.75
-  timeDisappear: 0.25
+  timeAppear: 0.3
+  timeDisappear: 0.7
   recycling: 0
   sortID: 6
   animator: {fileID: 1953246055}
@@ -43760,10 +43924,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 778842343}
     - target: {fileID: 9158067, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: oxygen
-      value: 
-      objectReference: {fileID: 266388196}
-    - target: {fileID: 9158067, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
       propertyPath: shield
       value: 
       objectReference: {fileID: 394362503}
@@ -43795,10 +43955,6 @@ PrefabInstance:
       propertyPath: oxygenAmount
       value: 
       objectReference: {fileID: 957417144}
-    - target: {fileID: 1346284290, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2056940335, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
       propertyPath: m_Cameras.Array.data[0]
       value: 
@@ -43807,10 +43963,6 @@ PrefabInstance:
       propertyPath: mapUI
       value: 
       objectReference: {fileID: 1347093}
-    - target: {fileID: 3648729673969551592, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: invenUI
-      value: 
-      objectReference: {fileID: 87836771}
     - target: {fileID: 3648729673969551592, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
       propertyPath: informer
       value: 
@@ -43824,60 +43976,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2066970300}
     - target: {fileID: 3648729673969551597, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3648729673969551597, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
       propertyPath: craftCanvas
       value: 
       objectReference: {fileID: 723100278}
     - target: {fileID: 3648729673969551599, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3648729673969551599, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: slotAmount
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3648729673969551599, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: backpackObj
-      value: 
-      objectReference: {fileID: 1003605873}
-    - target: {fileID: 3648729673969551599, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
       propertyPath: barComponent
       value: 
       objectReference: {fileID: 869131950}
-    - target: {fileID: 3648729673969551599, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: slots.Array.data[0]
-      value: 
-      objectReference: {fileID: 65144502}
-    - target: {fileID: 3648729673969551599, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: slots.Array.data[1]
-      value: 
-      objectReference: {fileID: 833447549}
-    - target: {fileID: 3648729673969551599, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: slots.Array.data[2]
-      value: 
-      objectReference: {fileID: 1098643023}
-    - target: {fileID: 3648729673969551599, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: slots.Array.data[3]
-      value: 
-      objectReference: {fileID: 1931458792}
-    - target: {fileID: 3648729673969551599, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: slots.Array.data[4]
-      value: 
-      objectReference: {fileID: 2128645278}
     - target: {fileID: 3648729673969551602, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 3648729673969551603, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 3648729673969551603, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
-      propertyPath: shieldHeal
-      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3648729675596902718, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
       propertyPath: m_RootOrder
@@ -43923,5 +44031,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7002645135548134311, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}
+      propertyPath: slotContainer
+      value: 
+      objectReference: {fileID: 1626585069}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c7448bc51ffbf04a942fefcd3198ee8, type: 3}

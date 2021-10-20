@@ -77,7 +77,7 @@ public class PlayerInventory : MonoBehaviour
         amountCount.SetActive(true);
     }
 
-    public void UpdateIcon(int index, int amount)
+    public void UpdateAmount(int index, int amount)
     {
         slots[index].transform.Find("Amount").gameObject.GetComponent<Text>().text = amount.ToString();
     }
@@ -127,7 +127,7 @@ public class PlayerInventory : MonoBehaviour
     // return null if there is not such obj in inventory
     public GameObject getOut()
     {
-        GameObject output = backpack.GetOut(selectedSlot);
+        GameObject output = backpack.GetOut(selectedSlot, true);
         if (output == null)
         {
             return null;
