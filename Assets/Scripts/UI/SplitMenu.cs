@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class SplitMenu : MonoBehaviour
 {
+    public InteractionAnimation anim;
+    public Backpack backpack;
+
     private InterfaceAnimManager split;
     private int slotID;
-    public Backpack backpack;
     private int origAmount;
     private int newAmount;
 
@@ -32,10 +34,10 @@ public class SplitMenu : MonoBehaviour
         split.startDisappear();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         // If received close signal on either backpack or itself, then do disappear anyway
-        if (Input.GetKeyUp(KeyCode.B))
+        if (!anim.GetBagUIStat())
         {
             // Is active means that some other slot called the menu already, simply make it disappear
             if (split.currentState != CSFHIAnimableState.disappeared)

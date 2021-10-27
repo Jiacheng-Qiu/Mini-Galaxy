@@ -3,159 +3,197 @@ using UnityEngine.UI;
 
 public class Crafting : MonoBehaviour
 {
-    public Canvas craftCanvas;
-    private PlayerInventory inventory;
-    private PlayerMovement movement;
+    private Backpack backpack;
 
     public GameObject buttonPrefab;
+    public GameObject craftMenu;
+    private CraftAmount craftAmount;
+    private GameObject detailedPage;
     private GameObject[] buttons; // All buttons in order
-    private Recipe[] recipies; // All Recipe info
-    private int RecipeAmount;
+    private Blueprint[] blueprints; // All blueprint info
+    private int blueprintAmount;
+    private InteractionAnimation uiInteraction;
+    private int currentOnView; // Record the current viewing blueprint
 
     // Read from json
     public TextAsset data;
 
     [System.Serializable]
-    public class Recipe
+    public class Blueprint
     {
-        public string name;
-        public string[] items; // Record all Recipe in string[]
-        public int[] amounts; // record corresponding Recipe amount
+        public string itemName;
+        public string[] items; // Record all blueprint in string[]
+        public int[] amounts; // record corresponding blueprint amount
     }
 
     void Start()
     {
-        craftCanvas.enabled = false;
-        inventory = this.gameObject.GetComponent<PlayerInventory>();
-        movement = this.gameObject.GetComponent<PlayerMovement>();
+        backpack = gameObject.GetComponent<Backpack>();
+        uiInteraction = gameObject.GetComponent<InteractionAnimation>();
+        detailedPage = craftMenu.transform.Find("Detailed Page").gameObject;
+        
 
-        // Load all recipies
-        RecipeAmount = 3;
-        recipies = new Recipe[RecipeAmount];
-        buttons = new GameObject[RecipeAmount];
+        // Load all blueprints
+        blueprintAmount = 3;
+        blueprints = new Blueprint[blueprintAmount];
+        buttons = new GameObject[blueprintAmount];
 
-        //Recipe[] set = JsonHelper.getJsonArray<Recipe>(data.text);
-        //Recipe[] set = JsonUtility.FromJson<Recipes>(data.text).recipes;
-        //Recipe set = JsonUtility.FromJson<Recipe>(data.text);
+        //blueprint[] set = JsonHelper.getJsonArray<blueprint>(data.text);
+        //blueprint[] set = JsonUtility.FromJson<blueprints>(data.text).blueprints;
+        //blueprint set = JsonUtility.FromJson<blueprint>(data.text);
 
-        recipies[0] = new Recipe();
-        recipies[0].name = "Furnace";
-        recipies[0].items = new string[2];
-        recipies[0].items[0] = "Coal";
-        recipies[0].items[1] = "Wood";
-        recipies[0].amounts = new int[2];
-        recipies[0].amounts[0] = 1;
-        recipies[0].amounts[1] = 1;
+        blueprints[0] = new Blueprint();
+        blueprints[0].itemName = "Furnace";
+        blueprints[0].items = new string[2];
+        blueprints[0].items[0] = "Coal";
+        blueprints[0].items[1] = "Wood";
+        blueprints[0].amounts = new int[2];
+        blueprints[0].amounts[0] = 5;
+        blueprints[0].amounts[1] = 10;
 
-        recipies[1] = new Recipe();
-        recipies[1].name = "Crafttable";
-        recipies[1].items = new string[1];
-        recipies[1].items[0] = "Wood";
-        recipies[1].amounts = new int[1];
-        recipies[1].amounts[0] = 1;
+        blueprints[1] = new Blueprint();
+        blueprints[1].itemName = "Crafttable";
+        blueprints[1].items = new string[1];
+        blueprints[1].items[0] = "Wood";
+        blueprints[1].amounts = new int[1];
+        blueprints[1].amounts[0] = 2;
 
-        recipies[2] = new Recipe();
-        recipies[2].name = "Spaceship";
-        recipies[2].items = new string[2];
-        recipies[2].items[0] = "IronIngot";
-        recipies[2].items[1] = "AluminumIngot";
-        recipies[2].amounts = new int[2];
-        recipies[2].amounts[0] = 1;
-        recipies[2].amounts[1] = 1;
+        blueprints[2] = new Blueprint();
+        blueprints[2].itemName = "Spaceship";
+        blueprints[2].items = new string[2];
+        blueprints[2].items[0] = "IronIngot";
+        blueprints[2].items[1] = "AluminumIngot";
+        blueprints[2].amounts = new int[2];
+        blueprints[2].amounts[0] = 4;
+        blueprints[2].amounts[1] = 4;
 
         CreateButtons();
         string[] list = new string[2];
         list[0] = "Spaceship";
         list[1] = "Furnace";
-        SwitchRecipeState(list, false);
+        SwitchBlueprintState(list, false);
 
+        craftAmount = detailedPage.transform.Find("Amount").Find("Input").GetComponent<CraftAmount>();
+        // Make sure initial amount is always 1
+        craftAmount.ResetAmount();
+        OnDetailPage(0);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.C))
+        {
+            uiInteraction.DisplayCraft();
+        }
     }
 
     // Generate all buttons based on needs
     private void CreateButtons()
     {
-        for (int i = 0; i < RecipeAmount; i++)
+        for (int i = 0; i < blueprintAmount; i++)
         {
-            buttons[i] = Instantiate(buttonPrefab);
-            buttons[i].transform.SetParent(craftCanvas.transform);
-            buttons[i].transform.localPosition = new Vector3(200, -200 + 105 * i, 0);
-            buttons[i].transform.Find("ItemName").GetComponent<Text>().text = recipies[i].name;
-            buttons[i].transform.Find("Item1").GetComponent<Image>().sprite = Resources.Load<Sprite>("Icons/" + recipies[i].items[0]);
-            buttons[i].transform.Find("Text1").GetComponent<Text>().text = recipies[i].amounts[0].ToString();
-            if (recipies[i].items.Length > 1)
+            if (i == 0)
             {
-                buttons[i].transform.Find("Item2").GetComponent<Image>().sprite = Resources.Load<Sprite>("Icons/" + recipies[i].items[1]);
-                buttons[i].transform.Find("Text2").GetComponent<Text>().text = recipies[i].amounts[1].ToString();
+                buttons[0] = buttonPrefab;
             } else
             {
-                buttons[i].transform.Find("Item2").gameObject.SetActive(false);
-                buttons[i].transform.Find("Text2").gameObject.SetActive(false);
-                buttons[i].transform.Find("Add sign").gameObject.SetActive(false);
+                buttons[i] = Instantiate(buttonPrefab);
+                buttons[i].transform.SetParent(buttonPrefab.transform.parent);
+                buttons[i].GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 1);
+                buttons[i].GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 1);
+                buttons[i].transform.GetComponent<RectTransform>().anchoredPosition3D = new Vector3((i % 2 == 0 ? -30 : 30), -15 - 40 * (i / 2), 0);
+                buttons[i].transform.localRotation = Quaternion.identity;
+                buttons[i].name = i.ToString();
             }
+            buttons[i].transform.Find("Item name").GetComponent<Text>().text = blueprints[i].itemName;
+            buttons[i].transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Icons/" + blueprints[i].itemName);
+            /*
             Crafting cft = this;
             int j = i;
-            buttons[i].GetComponent<Button>().onClick.AddListener(() => cft.CraftItem(recipies[j].name));
+            buttons[i].GetComponent<Button>().onClick.AddListener(() => cft.CraftItem(blueprints[j].name));*/
         }
     }
 
-    // Switch state of Recipe by name
-    public void SwitchRecipeState(string[] name, bool state)
+    // Shows the detailed information of current viewed blueprint
+    public void OnDetailPage(int index)
+    {
+        if (index == currentOnView)
+            return;
+        detailedPage.SetActive(false);
+        detailedPage.transform.Find("Item Name").GetComponent<Text>().text = blueprints[index].itemName;
+        Transform list = detailedPage.transform.Find("Materials");
+        for (int i = 0; i < 5; i++)
+        {
+            if (i < blueprints[index].items.Length)
+            {
+                list.Find(i.ToString()).GetComponent<Text>().text = blueprints[index].items[i];
+                list.Find(i.ToString()).Find("Amount").GetComponent<Text>().text = blueprints[index].amounts[i].ToString();
+                list.Find(i.ToString()).gameObject.SetActive(true);
+            } else
+            {
+                list.Find(i.ToString()).gameObject.SetActive(false);
+            }
+        }
+        craftAmount.ResetAmount();
+        detailedPage.transform.Find("Warning Text").gameObject.SetActive(true);
+        detailedPage.SetActive(true);
+        currentOnView = index;
+    }
+
+    // Change the material required amount based on current willing crafting amounts
+    public void ChangeMaterialAmount()
+    {
+        Transform list = detailedPage.transform.Find("Materials");
+        int curAmount = craftAmount.GetCurAmount();
+        for (int i = 0; i < blueprints[currentOnView].items.Length; i++)
+        {
+            list.Find(i.ToString()).Find("Amount").GetComponent<Text>().text = (blueprints[currentOnView].amounts[i] * curAmount).ToString();
+        }
+        detailedPage.transform.Find("Warning Text").gameObject.SetActive(true);
+    }
+
+    // Switch state of blueprint by name
+    // TODO: Efficiency is super low, try to redo
+    public void SwitchBlueprintState(string[] name, bool state)
     {
         foreach(string recName in name)
         {
-            int pos = RecipeFinder(recName);
+            int pos = BlueprintFinder(recName);
             if (pos != -1)
             {
-                buttons[pos].GetComponent<Button>().interactable = state;
+                buttons[pos].SetActive(state);
             }
-        }
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.C))
-        {
-            // Set on focus
-            movement.ChangeCursorFocus(true);
-            craftCanvas.enabled = true;
-        }
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            movement.ChangeCursorFocus(false);
-            craftCanvas.enabled = false;
         }
     }
 
     // Check item amount and use items if possible
-    private bool ItemChecker(string[] items, int[] amount)
+    private bool ItemChecker(string[] items, int[] amount, int multiplier)
     {
-        // Use checker instead of grabbing things out before check
-        bool cond;
         for (int i = 0; i < items.Length; i++)
         {
-            cond = inventory.Check(items[i], amount[i]);
-            if (!cond)
+            if (!backpack.Check(items[i], amount[i] * multiplier))
             {
                 return false;
             }
         }
+        
         for (int i = 0; i < items.Length; i++)
         {
-            inventory.use(items[i], amount[i]);
+            backpack.Use(items[i], amount[i] * multiplier);
         }
         return true;
     }
 
-    // Find position of Recipe in array, -1 if not found
-    public int RecipeFinder(string name)
+    // Find position of blueprint in array, -1 if not found
+    public int BlueprintFinder(string name)
     {
         if (name == null || name == "")
         {
             return -1;
         }
-        for (int i = 0; i < RecipeAmount; i++)
+        for (int i = 0; i < blueprintAmount; i++)
         {
-            if (recipies[i].name == name)
+            if (blueprints[i].itemName == name)
             {
                 return i;
             }
@@ -164,12 +202,17 @@ public class Crafting : MonoBehaviour
     }
 
     // Building craft items and put in inventory
-    public void CraftItem(string name)
+    public void CraftItem()
     {
-        int pos = RecipeFinder(name);
-        if (ItemChecker(recipies[pos].items, recipies[pos].amounts))
-            inventory.putIn(name, 1);
+        detailedPage.transform.Find("Warning Text").gameObject.SetActive(false);
+        Debug.Log("Crafting " + blueprints[currentOnView].itemName + " " + craftAmount.GetCurAmount());
+        if (ItemChecker(blueprints[currentOnView].items, blueprints[currentOnView].amounts, craftAmount.GetCurAmount()))
+        {
+            backpack.PutIn(name, craftAmount.GetCurAmount());
+        }
         else
-            Debug.Log("Crafting failed!");
+        {
+            detailedPage.transform.Find("Warning Text").gameObject.SetActive(true);
+        }
     }
 }

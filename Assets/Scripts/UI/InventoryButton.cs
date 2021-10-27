@@ -10,6 +10,8 @@ public class InventoryButton : MonoBehaviour
     public InterfaceAnimManager slotAssign; // On submenu side
     public InterfaceAnimManager splitMenu; // On submenu side
 
+    public InteractionAnimation anim;
+
     // Setup the slot currently submenu is calling on
     public void SetId(int id)
     {
@@ -63,7 +65,7 @@ public class InventoryButton : MonoBehaviour
     private void Update()
     {
         // If this is submenu and received close signal on either backpack or itself, then do disappear anyway
-        if (subSlot && (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.B)))
+        if (subSlot && (Input.GetMouseButtonUp(0) || !anim.GetBagUIStat()))
         {
             // Is active means that some other slot called the menu, simply make it disappear
             if (subSlot.currentState == CSFHIAnimableState.appeared)

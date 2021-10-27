@@ -14,7 +14,6 @@ public class Backpack : MonoBehaviour
     private Hashtable inventory;
     private int currentItemCount;
     private int nextEmptySlot;
-    private bool bagActive;
 
     private int[] onBar; // Record the items reged on inv bar
 
@@ -29,7 +28,6 @@ public class Backpack : MonoBehaviour
         CreateSlots(5);
 
         uiInteraction = gameObject.GetComponent<InteractionAnimation>();
-        bagActive = false;
         onBar = new int[5];
         for (int i = 0; i < 5; i++)
         {
@@ -76,18 +74,7 @@ public class Backpack : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.B))
         {
-            if (bagActive)
-            {
-                bagActive = false;
-                movement.ChangeCursorFocus(false);
-                uiInteraction.DisplayBag(false);
-            }
-            else
-            {
-                bagActive = true;
-                movement.ChangeCursorFocus(true);
-                uiInteraction.DisplayBag(true);
-            }
+            uiInteraction.DisplayBag();
         }
     }
 
@@ -109,7 +96,7 @@ public class Backpack : MonoBehaviour
                     break;
                 }
             }
-            slots[pos].transform.Find("Amount").gameObject.GetComponent<Text>().text = total.ToString();
+            slots[pos].transform.Find("Amount").GetComponent<Text>().text = total.ToString();
             UpdateAmount(pos);
         }
         else
@@ -146,7 +133,7 @@ public class Backpack : MonoBehaviour
         return true;
     }
 
-    // Check an amount of some materials in the inventory
+    // Check an amount of some materials in the inventory for crafting
     public bool Check(string obj, int amount)
     {
         // Return false if the obj isn't in inventory
@@ -173,8 +160,7 @@ public class Backpack : MonoBehaviour
         }
     }
 
-    // Use an amount of some materials in the inventory
-    // TODO update on inv bar
+    // Use an amount of some materials in the inventory, mainly used by crafting
     public bool Use(string obj, int amount)
     {
         // Return false if the obj isn't in inventory
@@ -193,7 +179,7 @@ public class Backpack : MonoBehaviour
                 {
                     // Update amount in display UI and hashtable
                     inventory[obj] = (int)inventory[obj] - amount;
-                    slots[i].transform.Find("Amount").gameObject.GetComponent<Text>().text = inventory[obj].ToString();
+                    slots[i].transform.Find("Amount").GetComponent<Text>().text = inventory[obj].ToString();
                     UpdateAmount(i);
                     return true;
                 }

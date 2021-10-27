@@ -7,6 +7,7 @@ public class SlotAssign : MonoBehaviour
     private InterfaceAnimManager slotAssign;
     private int slotID;
     public Backpack backpack;
+    public InteractionAnimation anim;
 
     private void Start()
     {
@@ -27,7 +28,7 @@ public class SlotAssign : MonoBehaviour
     private void Update()
     {
         // If received close signal on either backpack or itself, then do disappear anyway
-        if ((Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.B)))
+        if ((Input.GetMouseButtonUp(0) || !anim.GetBagUIStat()))
         {
             // Is active means that some other slot called the menu already, simply make it disappear
             if (slotAssign.currentState == CSFHIAnimableState.appeared)

@@ -102,24 +102,6 @@ public class PlayerInventory : MonoBehaviour
         }*/
     }
 
-    // Return false if inventory up to limit
-    public bool putIn(string obj, int amount)
-    {
-        return backpack.PutIn(obj, amount);
-    }
-
-    // Check an amount of some materials in the inventory
-    public bool Check(string obj, int amount)
-    {
-        return backpack.Check(obj, amount);
-    }
-
-    // Use an amount of some materials in the inventory
-    public bool use(string obj, int amount)
-    {
-        return backpack.Use(obj, amount);
-    }
-
     public string CheckTag()
     {
         return backpack.CheckTag(selectedSlot);
@@ -134,11 +116,5 @@ public class PlayerInventory : MonoBehaviour
             return null;
         }
         return output;
-    }
-
-    // check amount of one obj in inventory
-    public int GetAmount(string obj)
-    {
-        return (int)inventory[obj];
     }
 }

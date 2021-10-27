@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     // Cam view init
     private float viewX;
     // POV wont move if on menu focus
-    private bool onFocus;
+    public bool onFocus;
     public GameObject onShip;
     public int interactRange;
 
@@ -75,7 +75,6 @@ public class PlayerMovement : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-        
     }
 
 
@@ -87,7 +86,6 @@ public class PlayerMovement : MonoBehaviour
         // When player tab left mouse button to place, exit preview state
         if (onPreview && Input.GetMouseButton(0))
         {
-            Debug.Log("Placing;");
             onPreview = false;
             previewObject.transform.parent = transform.parent;
             previewObject = null;
@@ -103,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
         // Open or close helmet
         if (Input.GetKeyUp(KeyCode.N))
         {
-            gameObject.GetComponent<InteractionAnimation>().HelmetAnimation();
+            gameObject.GetComponent<InteractionAnimation>().HelmetSwitch();
         }
 
         // TODO: Map showcased
@@ -131,16 +129,21 @@ public class PlayerMovement : MonoBehaviour
         {
             planet.GetComponent<Planet>().GenerateCollider((transform.position - planet.transform.position).normalized);
         }
-        Interact();
-        Move();
-        if (!onShip)
+        // Can't do anything if is on Interfaces
+        if (!onFocus)
         {
-            Jump();
-            if (Input.GetKeyDown(KeyCode.G))
+
+            Interact();
+            Move();
+            if (!onShip)
             {
-                Throw(-1);
+                Jump();
+                if (Input.GetKeyDown(KeyCode.G))
+                {
+                    Throw(-1);
+                }
+                Place();
             }
-            Place();
         }
     }
 
@@ -162,6 +165,7 @@ public class PlayerMovement : MonoBehaviour
                 return;
             }
         }
+
         // If above didn't match, then there is no aimObj
         aimObject = null;
         uiAnimation.DisplayInformer(false);
@@ -263,16 +267,21 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (gameObject.GetComponent<PlayerHealthSystem>().Run(true))
                 {
+                    uiAnimation.WalkCamEffect(1.2f);
                     x *= runSpeed / speed;
                     z *= runSpeed / speed;
                 }
             }
-            else
+            else if (Input.GetKeyUp(KeyCode.LeftShift))
             {
                 gameObject.GetComponent<PlayerHealthSystem>().Run(false);
             }
             
-            transform.Translate(x, 0, z);
+            if (x != 0 || z != 0)
+            {
+                uiAnimation.WalkCamEffect(1);
+                transform.Translate(x, 0, z);
+            }
             // Apply gravity
             Vector3 grav = (transform.position - planet.transform.position).normalized;
             rb.AddForce(grav * -9.8f);
@@ -329,7 +338,7 @@ public class PlayerMovement : MonoBehaviour
             obj = inventory.GetOut();
         else
             obj = backpack.GetOut(pos, false);
-        obj.transform.position = transform.Find("Main Camera").position;
+        obj.transform.position = cam.transform.position;
         obj.transform.parent = transform.parent.Find("Material");
         obj.AddComponent<TinyObjGravity>().Init(transform.parent);
         obj.SetActive(true);

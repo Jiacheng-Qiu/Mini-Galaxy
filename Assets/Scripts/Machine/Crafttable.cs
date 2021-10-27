@@ -14,7 +14,7 @@ public class Crafttable : Machine
         list[1] = "Furnace";
     }
 
-    // If player is within range of the crafttable, enable corresponding crafting recipes
+    // If player is within range of the crafttable, enable corresponding crafting Blueprints
     private void FixedUpdate()
     {
         if (Vector3.Distance(player.transform.position, transform.position) < range)
@@ -22,7 +22,7 @@ public class Crafttable : Machine
             if (!isActive)
             {
                 isActive = true;
-                player.GetComponent<Crafting>().SwitchRecipeState(list, isActive);
+                player.GetComponent<Crafting>().SwitchBlueprintState(list, isActive);
             }
         } 
         else
@@ -30,7 +30,7 @@ public class Crafttable : Machine
             if (isActive)
             {
                 isActive = false;
-                player.GetComponent<Crafting>().SwitchRecipeState(list, isActive);
+                player.GetComponent<Crafting>().SwitchBlueprintState(list, isActive);
             }
         }
     }
