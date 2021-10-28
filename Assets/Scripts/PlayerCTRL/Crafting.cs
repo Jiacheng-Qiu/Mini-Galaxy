@@ -76,7 +76,7 @@ public class Crafting : MonoBehaviour
         craftAmount = detailedPage.transform.Find("Amount").Find("Input").GetComponent<CraftAmount>();
         // Make sure initial amount is always 1
         craftAmount.ResetAmount();
-        OnDetailPage(0);
+        OnDetailPage(1);
     }
 
     private void Update()
@@ -135,7 +135,7 @@ public class Crafting : MonoBehaviour
             }
         }
         craftAmount.ResetAmount();
-        detailedPage.transform.Find("Warning Text").gameObject.SetActive(true);
+        detailedPage.transform.Find("Warning Text").gameObject.SetActive(false);
         detailedPage.SetActive(true);
         currentOnView = index;
     }
@@ -149,7 +149,7 @@ public class Crafting : MonoBehaviour
         {
             list.Find(i.ToString()).Find("Amount").GetComponent<Text>().text = (blueprints[currentOnView].amounts[i] * curAmount).ToString();
         }
-        detailedPage.transform.Find("Warning Text").gameObject.SetActive(true);
+        detailedPage.transform.Find("Warning Text").gameObject.SetActive(false);
     }
 
     // Switch state of blueprint by name
@@ -205,10 +205,9 @@ public class Crafting : MonoBehaviour
     public void CraftItem()
     {
         detailedPage.transform.Find("Warning Text").gameObject.SetActive(false);
-        Debug.Log("Crafting " + blueprints[currentOnView].itemName + " " + craftAmount.GetCurAmount());
         if (ItemChecker(blueprints[currentOnView].items, blueprints[currentOnView].amounts, craftAmount.GetCurAmount()))
         {
-            backpack.PutIn(name, craftAmount.GetCurAmount());
+            backpack.PutIn(blueprints[currentOnView].itemName, craftAmount.GetCurAmount());
         }
         else
         {

@@ -87,6 +87,8 @@ public class PlayerMovement : MonoBehaviour
         if (onPreview && Input.GetMouseButton(0))
         {
             onPreview = false;
+            previewObject.GetComponent<MeshRenderer>().material = Resources.Load("Materials/" + previewObject.GetComponent<Machine>().machineName + "Material", typeof(Material)) as Material;
+            previewObject.GetComponent<Machine>().enabled = true;
             previewObject.transform.parent = transform.parent;
             previewObject = null;
         }
@@ -132,7 +134,6 @@ public class PlayerMovement : MonoBehaviour
         // Can't do anything if is on Interfaces
         if (!onFocus)
         {
-
             Interact();
             Move();
             if (!onShip)
@@ -142,7 +143,11 @@ public class PlayerMovement : MonoBehaviour
                 {
                     Throw(-1);
                 }
-                Place();
+
+                if (aimObject == null && Input.GetKeyDown(KeyCode.E))
+                {
+                    Place(-1);
+                }
             }
         }
     }
@@ -187,6 +192,7 @@ public class PlayerMovement : MonoBehaviour
         if (Physics.Raycast(rayOrigin, cam.transform.forward, out hit, 30, LayerMask.GetMask("Terrain")))
         { 
             previewObject.transform.position = hit.point;
+            previewObject.transform.LookAt(transform);
         }
     }
 
@@ -347,24 +353,30 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Put placeable items onto ground only when no interactives on aiming
-    void Place()
+    public void Place(int bagPos)
     {
-        if (aimObject == null && Input.GetKeyDown(KeyCode.F))
+        string tag = bagPos == -1 ? inventory.CheckTag() : backpack.CheckTag(bagPos, false);
+        // First check the tag of the output, if it is Interactable or Spaceship, then direct to preview scene
+        if (tag != "Interactable" && tag != "Spaceship")
         {
-            string tag = inventory.CheckTag();
-            // First check the tag of the output, if it is Interactable or Spaceship, then direct to preview scene
-            if (tag != "Interactable" && tag != "Spaceship")
-            {
-                return;
-            }
-            GameObject obj = inventory.GetOut();
-            if (tag == "Interactable")
-            {
-                obj.GetComponent<Machine>().player = gameObject;
-            }
-            onPreview = true;
-            previewObject = obj;
-            previewObject.SetActive(true);
+            return;
         }
+        GameObject obj;
+        if (bagPos == -1)
+        {
+            obj = inventory.GetOut();
+        } else
+        {
+            obj = backpack.GetOut(bagPos, false);
+        }
+        // Assign preview material, and disable scripts
+        obj.GetComponent<Machine>().player = gameObject;
+        Debug.Log(Resources.Load("Materials/PreviewMaterial.mat"));
+        obj.GetComponent<MeshRenderer>().material = Resources.Load("Materials/PreviewMaterial", typeof(Material)) as Material;
+        obj.GetComponent<Machine>().enabled = false;
+        onPreview = true;
+        previewObject = obj;
+        previewObject.SetActive(true);
+        
     }
 }

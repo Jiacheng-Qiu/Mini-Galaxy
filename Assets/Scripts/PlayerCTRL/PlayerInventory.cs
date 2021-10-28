@@ -104,17 +104,13 @@ public class PlayerInventory : MonoBehaviour
 
     public string CheckTag()
     {
-        return backpack.CheckTag(selectedSlot);
+        return backpack.CheckTag(selectedSlot, true);
     }
 
     // return null if there is not such obj in inventory
     public GameObject GetOut()
     {
         GameObject output = backpack.GetOut(selectedSlot, true);
-        if (output == null)
-        {
-            return null;
-        }
         return output;
     }
 }

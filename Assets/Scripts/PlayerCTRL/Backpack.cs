@@ -172,13 +172,15 @@ public class Backpack : MonoBehaviour
                 if ((int)inventory[obj] == amount)
                 {
                     // if the count = required amount, run getOut and take out material entirely from slot
-                    GetOut(i, true);
+                    GetOut(i, false);
                     return true;
                 }
                 else if ((int)inventory[obj] > amount)
                 {
+                    Debug.Log(inventory[obj]);
                     // Update amount in display UI and hashtable
                     inventory[obj] = (int)inventory[obj] - amount;
+                    Debug.Log(inventory[obj]);
                     slots[i].transform.Find("Amount").GetComponent<Text>().text = inventory[obj].ToString();
                     UpdateAmount(i);
                     return true;
@@ -190,9 +192,9 @@ public class Backpack : MonoBehaviour
     }
 
     // Checker method for determining the tag of the selected item in slot
-    public string CheckTag(int barPos)
+    public string CheckTag(int barPos, bool isOnBar)
     {
-        int selectedSlot = onBar[barPos];
+        int selectedSlot = isOnBar ? onBar[barPos] : barPos;
         if (selectedSlot == -1)
         {
             return "";
@@ -235,7 +237,7 @@ public class Backpack : MonoBehaviour
         GameObject gen;
         try
         {
-            gen = (GameObject)Instantiate(Resources.Load("Prefabs/" + item));
+             gen = (GameObject)Instantiate(Resources.Load("Prefabs/" + item));
         }
         catch
         {

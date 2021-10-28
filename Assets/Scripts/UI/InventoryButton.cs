@@ -6,7 +6,7 @@ public class InventoryButton : MonoBehaviour
     private int slotID;
     public bool isSubMenu; // If this object is submenu, it will listen to left clicks and disappear
     public InterfaceAnimManager subSlot;
-    public PlayerMovement player; // Only necessary on submenu side
+    public PlayerMovement player; 
     public InterfaceAnimManager slotAssign; // On submenu side
     public InterfaceAnimManager splitMenu; // On submenu side
 
@@ -34,7 +34,8 @@ public class InventoryButton : MonoBehaviour
 
     public void Use()
     {
-        Debug.Log("Using");
+        player.Place(slotID);
+        anim.DisplayBag();
     }
 
     public void Assign()
