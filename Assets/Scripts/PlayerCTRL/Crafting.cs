@@ -161,7 +161,8 @@ public class Crafting : MonoBehaviour
             int pos = BlueprintFinder(recName);
             if (pos != -1)
             {
-                buttons[pos].SetActive(state);
+                buttons[pos].transform.Find("Avail").gameObject.SetActive(!state);
+                buttons[pos].GetComponent<Button>().interactable = state;
             }
         }
     }

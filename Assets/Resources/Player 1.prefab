@@ -121,7 +121,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056940332}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3651354033582768012}
@@ -268,6 +268,7 @@ Transform:
   m_Children:
   - {fileID: 2056940333}
   - {fileID: 3648729675821191676}
+  - {fileID: 8820179309174557991}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -366,6 +367,7 @@ MonoBehaviour:
   informer: {fileID: 0}
   sensX: 1
   sensY: 1
+  onFocus: 0
   onShip: {fileID: 0}
   interactRange: 5
   speed: 10
@@ -398,13 +400,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3648729673969551602}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4608247339dc2944952108bfe91358a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  craftCanvas: {fileID: 0}
-  buttonPrefab: {fileID: 4167119639049996973, guid: 0e4f50a6c534ecd42aa916d162637b49, type: 3}
+  buttonPrefab: {fileID: 0}
+  craftMenu: {fileID: 0}
   data: {fileID: 4900000, guid: f84f143a5ec99ef4c8515337ecf7459c, type: 3}
 --- !u!114 &3648729673969551596
 MonoBehaviour:
@@ -495,7 +497,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 2056940337}
+  uiCam: {fileID: 0}
   helmet: {fileID: 0}
+  movement: {fileID: 3648729673969551592}
   shield: {fileID: 0}
   baseShield: {fileID: 0}
   health: {fileID: 0}
@@ -507,6 +511,7 @@ MonoBehaviour:
   invBar: {fileID: 0}
   informer: {fileID: 0}
   invenUI: {fileID: 0}
+  craftUI: {fileID: 0}
 --- !u!114 &7002645135548134311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -584,6 +589,36 @@ MonoBehaviour:
   maxMag: 30
   curMag: 30
   ammoUI: {fileID: 0}
+--- !u!1 &5087788605211730781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8820179309174557991}
+  m_Layer: 0
+  m_Name: Radar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8820179309174557991
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5087788605211730781}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3648729675596902718}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &3648729674386078014
 PrefabInstance:
   m_ObjectHideFlags: 0

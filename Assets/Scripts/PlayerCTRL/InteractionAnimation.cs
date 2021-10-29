@@ -152,6 +152,7 @@ public class InteractionAnimation : MonoBehaviour
         if (Time.time > lastHurt + 1.5f)
         {
             StartCoroutine(CameraShake(cam, 0.4f, new Vector2(0.2f, 0.2f), false, 0));
+            StartCoroutine(CameraShake(uiCam, 0.4f, new Vector3(0, 0, 2), false, 0));
             lastHurt = Time.time;
         }
     }
@@ -397,7 +398,7 @@ public class InteractionAnimation : MonoBehaviour
     }
 
     // Provide camera xy axis shake, isRegular decides if a random shake is generated. On regular shakes, camera will move for a up and down (and/or left and right) loop
-    private IEnumerator CameraShake(Camera camera, float duration, Vector2 magnitude, bool isRegular, float wait)
+    private IEnumerator CameraShake(Camera camera, float duration, Vector3 magnitude, bool isRegular, float wait)
     {
         Vector3 origPos = camera.transform.localPosition;
         float elapsed = 0f;
@@ -410,11 +411,13 @@ public class InteractionAnimation : MonoBehaviour
         }
 
         elapsed = 0f;
-        // Shift amount based on magnitude per frame
+        // Shift amount based on magnitude per frame for 1/4 of the duration
         float xShiftPerFrame = magnitude.x * Time.deltaTime / (0.25f * duration);
         float yShiftPerFrame = magnitude.y * Time.deltaTime / (0.25f * duration);
+        float zRotatePerFrame = magnitude.z * Time.deltaTime / (0.25f * duration);
         bool xEnabled = magnitude.x != 0;
         bool yEnabled = magnitude.y != 0;
+        bool zEnabled = magnitude.z != 0;
         while (elapsed < duration)
         {
             float x = origPos.x;
@@ -450,6 +453,18 @@ public class InteractionAnimation : MonoBehaviour
                 }
                 else
                     y = Random.Range(-1f, 1f) * magnitude.y;
+            }
+            if (zEnabled)
+            {
+                // Z rotation is always regular
+                if (elapsed > 0.75f * duration || elapsed < 0.25f * duration)
+                {
+                    camera.transform.Rotate(0, 0, zRotatePerFrame, Space.Self);
+                }
+                else
+                {
+                    camera.transform.Rotate(0, 0, -zRotatePerFrame, Space.Self);
+                }
             }
             camera.transform.localPosition = new Vector3(x, y, origPos.z);
             elapsed += Time.deltaTime;
