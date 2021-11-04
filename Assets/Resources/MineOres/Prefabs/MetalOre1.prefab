@@ -130,6 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   durability: 100
   name: CopperOre
+  generalType: Mine
   productName: Copper
   product: {fileID: 0}
   productAmount: {x: 3, y: 4}

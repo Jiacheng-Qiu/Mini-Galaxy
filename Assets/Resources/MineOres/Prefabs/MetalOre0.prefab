@@ -130,6 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   durability: 150
   name: AluminumOre
+  generalType: Mine
   productName: Aluminum
   product: {fileID: 0}
   productAmount: {x: 3, y: 4}

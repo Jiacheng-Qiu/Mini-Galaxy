@@ -129,6 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   durability: 200
   name: GoldOre
+  generalType: Mine
   productName: Gold
   product: {fileID: 0}
   productAmount: {x: 1, y: 2}

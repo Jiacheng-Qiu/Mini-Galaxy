@@ -242,12 +242,12 @@ GameObject:
   - component: {fileID: 3648729673969551592}
   - component: {fileID: 3648729673969551599}
   - component: {fileID: 3648729673969551597}
-  - component: {fileID: 3648729673969551596}
   - component: {fileID: 3648729673969551603}
   - component: {fileID: 1346284290}
   - component: {fileID: 9158066}
   - component: {fileID: 9158067}
   - component: {fileID: 7002645135548134311}
+  - component: {fileID: 1933861437}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player
@@ -408,22 +408,6 @@ MonoBehaviour:
   buttonPrefab: {fileID: 0}
   craftMenu: {fileID: 0}
   data: {fileID: 4900000, guid: f84f143a5ec99ef4c8515337ecf7459c, type: 3}
---- !u!114 &3648729673969551596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3648729673969551602}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86d436a1bfaed9d44949dad935df416f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minimap: {fileID: 0}
-  star: {fileID: 0}
-  planetSprite: {fileID: 21300000, guid: fa30ce46884338f49a8303633df3a282, type: 3}
-  playerSprite: {fileID: 21300000, guid: 19e74203639423d47a25abad3ca0ae64, type: 3}
 --- !u!114 &3648729673969551603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -438,6 +422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   durability: 100
   name: Player
+  generalType: Animal
   productName: Iron
   product: {fileID: 0}
   productAmount: {x: 2, y: 4}
@@ -526,6 +511,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemLimit: 25
   slotContainer: {fileID: 0}
+--- !u!114 &1933861437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3648729673969551602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d49d774f9d2b984ba9ef832994d3b88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapPlanet: {fileID: 0}
 --- !u!1 &3648729675821191555
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,6 +596,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8820179309174557991}
+  - component: {fileID: 3648729674309148478}
+  - component: {fileID: 3648729674309148480}
   m_Layer: 0
   m_Name: Radar
   m_TagString: Untagged
@@ -619,6 +619,35 @@ Transform:
   m_Father: {fileID: 3648729675596902718}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &3648729674309148478
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5087788605211730781}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 100
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3648729674309148480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5087788605211730781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86d436a1bfaed9d44949dad935df416f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapFolder: {fileID: 0}
+  dot: {fileID: 8962627284287561052, guid: 6358416958cd8a94a889c656c8adb6e1, type: 3}
+  radarRadius: 100
+  scanCD: 10
 --- !u!1001 &3648729674386078014
 PrefabInstance:
   m_ObjectHideFlags: 0

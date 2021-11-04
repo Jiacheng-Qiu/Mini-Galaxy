@@ -4,8 +4,9 @@ public class EnvironmentComponent : MonoBehaviour
 {
     public float durability = 100; // Health
     public string name = ""; // The name of this object, used to help creatures distinguish food
+    public string generalType;
 
-    public string productName = "Iron";
+    public string productName;
     public Object product;
     public Vector2 productAmount = new Vector2(2, 4);
 

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,15 +28,17 @@ public class InteractionAnimation : MonoBehaviour
     public InterfaceAnimManager informer;
     public InterfaceAnimManager invenUI;
     public InterfaceAnimManager craftUI;
+    public InterfaceAnimManager mapUI;
 
     private float cachedShieldDmg;
     private bool oxygenWarningEnabled;
     private bool onStartup;
     private bool firstFrame;
-    private bool bagActive;
     private Task walk;
     private float lastUIAnim;
+    private bool bagActive;
     private bool craftActive;
+    private bool mapActive;
 
     private void Start()
     {
@@ -53,8 +54,10 @@ public class InteractionAnimation : MonoBehaviour
         warning.gameObject.SetActive(false);
         invenUI.gameObject.SetActive(false);
         craftUI.gameObject.SetActive(false);
+        mapUI.gameObject.SetActive(false);
         bagActive = false;
         craftActive = false;
+        mapActive = false;
         walk = null;
     }
 
@@ -76,6 +79,7 @@ public class InteractionAnimation : MonoBehaviour
                 cachedShieldDmg = 0;
             }
         }
+
     }
 
     // Method called only on startup for animation
@@ -277,6 +281,10 @@ public class InteractionAnimation : MonoBehaviour
             {
                 DisplayCraft();
             }
+            if (mapActive)
+            {
+                DisplayMap();
+            }
             invenUI.gameObject.SetActive(true);
             invenUI.startAppear();
             bagActive = true;
@@ -297,6 +305,10 @@ public class InteractionAnimation : MonoBehaviour
             {
                 DisplayBag();
             }
+            if (mapActive)
+            {
+                DisplayMap();
+            }
             craftUI.gameObject.SetActive(true);
             craftUI.startAppear();
             craftActive = true;
@@ -309,6 +321,30 @@ public class InteractionAnimation : MonoBehaviour
         movement.ChangeCursorFocus(craftActive);
     }
 
+    public void DisplayMap()
+    {
+        if (!mapActive)
+        {
+            if (bagActive)
+            {
+                DisplayBag();
+            }
+            if (craftActive)
+            {
+                DisplayCraft();
+            }
+            mapUI.gameObject.SetActive(true);
+            mapUI.startAppear();
+            mapActive = true;
+        }
+        else
+        {
+            mapUI.startDisappear();
+            mapActive = false;
+        }
+        movement.ChangeCursorFocus(mapActive);
+    }
+
     public void UISlide(bool isLeft)
     {
         // Make sure that slide only happen when a UI is fully appeared
@@ -318,13 +354,13 @@ public class InteractionAnimation : MonoBehaviour
         {
             if (isLeft)
             {
-                StartCoroutine(UISlideAnim(craftUI, bagActive ? 2 : 1, 1.75f));
-                StartCoroutine(UISlideAnim(invenUI, bagActive ? 1 : 2, 1.75f));
+                StartCoroutine(UISlideAnim(craftUI, bagActive ? 2 : 1, 1.5f));
+                StartCoroutine(UISlideAnim(invenUI, bagActive ? 1 : 2, 1.5f));
             }
             else
             {
-                StartCoroutine(UISlideAnim(craftUI, bagActive ? 0 : 3, 1.75f));
-                StartCoroutine(UISlideAnim(invenUI, bagActive ? 3 : 0, 1.75f));
+                StartCoroutine(UISlideAnim(craftUI, bagActive ? 0 : 3, 1.5f));
+                StartCoroutine(UISlideAnim(invenUI, bagActive ? 3 : 0, 1.5f));
             }
             bagActive = !bagActive;
             craftActive = !craftActive;
@@ -338,12 +374,15 @@ public class InteractionAnimation : MonoBehaviour
         return bagActive;
     }
 
-    public bool GetCraftUIStat()
+    public void HeartrateChange(int amount)
     {
-        return craftActive;
+
     }
 
-    // Method for switching 
+    public void HeartBeat()
+    {
+
+    }
 
     // Make oxygen display red
     private IEnumerator OxygenWarning(float lim)
@@ -478,24 +517,25 @@ public class InteractionAnimation : MonoBehaviour
     // Slide ui to quickly switch among different interfaces without pressing buttons
     private IEnumerator UISlideAnim(InterfaceAnimManager ui, int state, float time)
     {
+        float degreeRot = 120;
         Vector3 origPos = ui.transform.localPosition;
         Quaternion origRot = ui.transform.localRotation;
         // Adjust starting position based on state
         if (state == 0)
         {
             ui.startAppear();
-            ui.transform.RotateAround(uiCam.transform.position, Vector3.up, -90);
+            ui.transform.RotateAround(uiCam.transform.position, Vector3.up, -degreeRot);
         } 
         else if(state == 2)
         {
             ui.startAppear();
-            ui.transform.RotateAround(uiCam.transform.position, Vector3.up, 90);
+            ui.transform.RotateAround(uiCam.transform.position, Vector3.up, degreeRot);
         } else
         {
             ui.startDisappear();
         }
 
-        float degreePerFrame = ((state == 0 || state == 3) ? 1 : -1) * 90 / time;
+        float degreePerFrame = ((state == 0 || state == 3) ? 1 : -1) * degreeRot / time;
         float elapsed = 0;
         while (elapsed < time)
         {

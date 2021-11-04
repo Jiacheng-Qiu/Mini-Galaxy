@@ -1,115 +1,86 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Map : MonoBehaviour
 {
-    private List<GameObject> objAround;
-    private SphereCollider radar;
-    private float radarStartTime;
-    public Transform mapFolder;
-    public GameObject dot;
+    public GameObject player;
+    public Planet mapPlanet;
+    public Transform camera;
+    private PlayerMovement movement;
+    private ShapeSettings shape;
+    private InteractionAnimation uiAnimation;
+    private GameObject[] markers; // TODO
+    private float updatePeriod;
 
     private void Start()
     {
-        objAround = new List<GameObject>();
-        radar = gameObject.GetComponent<SphereCollider>();
-        radarStartTime = -10f;
-    }
-
-    // Change the range of radar scanner
-    public void SetRange(float range)
-    {
-        radar.radius = range;
+        movement = gameObject.GetComponent<PlayerMovement>();
+        uiAnimation = gameObject.GetComponent<InteractionAnimation>();
+        mapPlanet.gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K) && Time.time > radarStartTime + 10f)
+        if (Input.GetKeyDown(KeyCode.M))
         {
-            ScanNearby();
-            Debug.Log("Scanning");
+            uiAnimation.DisplayMap();
         }
     }
 
     private void FixedUpdate()
     {
-
-        // Five seconds after scanning, disable minimap and delete other obj position
-        if (Time.time > radarStartTime + 5f)
+        // On first frame call start on map
+        if (!mapPlanet.gameObject.activeSelf)
         {
-            mapFolder.gameObject.SetActive(false);
-            objAround.Clear();
+            // First check if player is on planet, if not do nothing
+            if (movement.planet == null)
+            {
+                return;
+            }
+            shape = ScriptableObject.CreateInstance<ShapeSettings>();
+            mapPlanet.faceRenderMask = Planet.FaceRenderMask.All;
+            mapPlanet.resolution = 16;
+            mapPlanet.shapeSetting = shape;
+            UpdatePlanetInfo();
+            mapPlanet.gameObject.SetActive(true);
         }
-        // After rader scans for a while, disable it
         else
         {
-            if (Time.time > radarStartTime + 0.5f)
+            UpdatePlayerPos();
+            // Update position of player & other obj
+            if (Time.time > updatePeriod)
             {
-                radar.enabled = false;
+                updatePeriod += 2;
+                UpdateMarkers();
             }
-            MapDisplay();
-            MapRotate();
         }
     }
 
-    // Scan all existing objects within range, show position on minimap
-    public void ScanNearby()
+    public void ChangeSize(float input)
     {
-        radarStartTime = Time.time;
-        radar.enabled = true;
-        MapDisplay();
-        mapFolder.gameObject.SetActive(true);
+        mapPlanet.transform.localScale = new Vector3(input, input, input);
     }
 
-    private void MapDisplay()
+    // Called when player enter new planet
+    public void UpdatePlanetInfo()
     {
-        // Delete all previous dots
-        foreach (Transform child in mapFolder)
-        {
-            Destroy(child.gameObject);
-        }
-
-        foreach (GameObject pos in objAround)
-        {
-            float xDist = pos.transform.localPosition.x - transform.position.x;
-            float yDist = pos.transform.localPosition.y - transform.position.y;
-            // First check if the object is already out of the range, if so display on edge
-            float distFromCenter = Mathf.Sqrt(Mathf.Pow(xDist, 2) + Mathf.Pow(yDist, 2));
-            if (distFromCenter > radar.radius)
-            {
-                xDist *= radar.radius / distFromCenter;
-                yDist *= radar.radius / distFromCenter;
-            }
-            GameObject dotter = Instantiate(dot);
-            dotter.transform.SetParent(mapFolder.transform, false);
-            dotter.transform.localPosition = new Vector3(xDist / radar.radius * 5.5f, yDist / radar.radius * 5.5f, 0);
-        }
+        Planet newPlanet = movement.planet.GetComponent<Planet>();
+        shape.noiseLayers = newPlanet.shapeSetting.noiseLayers;
+        shape.planetRadius = newPlanet.shapeSetting.planetRadius / 100;
+        mapPlanet.colorSetting = newPlanet.colorSetting;
+        mapPlanet.GeneratePlanet();
     }
 
-    // Rotate map based on player rotation
-    private void MapRotate()
+    public void UpdatePlayerPos()
     {
-        mapFolder.transform.localRotation = Quaternion.identity; 
-        mapFolder.transform.localRotation = Quaternion.Euler(0, 0, transform.parent.localRotation.eulerAngles.y);
+        // Reset player to preset pos
+        player.transform.localPosition = transform.localPosition / 100;
+        player.transform.LookAt(camera);
     }
 
-    private void OnTriggerStay(Collider other)
+    public void UpdateMarkers()
     {
-        // First check tag to determine the type, then add position to array
-        if (other.tag == "Environment" && !objAround.Contains(other.gameObject))
-        {
-            objAround.Add(other.gameObject);
-        }
+
     }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Environment")
-        {
-            objAround.Remove(other.gameObject);
-        }
-    }
-
-
 }

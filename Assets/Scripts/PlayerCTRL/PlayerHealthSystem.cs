@@ -9,20 +9,22 @@ public class PlayerHealthSystem : HealthSystem
     public float oxygenRecover;
     public float oxygenConsume;
     private bool oxygenProvided;
-    public float runOxygenConsume;
     public float runCD;
     private bool isRun;
-
+    private int heartrate;
+    private float lastRunHeart;
+    private int cachedHeart;
+    private float lastHeartUpdate;
+    private float lastHeartbeat;
     // Recorded time for last hurt to trigger recovery
     private float lastHit;
     private float recoverTimeAfterHit;
-
-
     private InteractionAnimation uiAnimation;
 
 
     private void Start()
     {
+        heartrate = 60;
         rb = gameObject.GetComponent<Rigidbody>();
         uiAnimation = gameObject.GetComponent<InteractionAnimation>();
         currentHealth = maxHealth;
@@ -38,22 +40,41 @@ public class PlayerHealthSystem : HealthSystem
 
         // Shield Recovery
         ShieldRecover();
+        
+        // Every 3 second in run, increase heartrate by randomly 3-8 till 160
+        if (isRun && Time.time > lastRunHeart && heartrate < 160)
+        {
+            cachedHeart += Random.Range(3, 8);
+            lastRunHeart = Time.time + 3;
+        } else if (!isRun && heartrate > 60)
+        {
+            cachedHeart -= 5;
+        }
 
+        // Update heartrate every second, and send to animation
+        if (cachedHeart != 0 && Time.time > lastHeartUpdate)
+        {
+            int shiftAmount = (cachedHeart > 2) ? cachedHeart / 3 : cachedHeart;
+            cachedHeart -= shiftAmount;
+            heartrate += shiftAmount;
+            lastHeartUpdate = Time.time + 1;
+            uiAnimation.HeartrateChange(heartrate);
+        }
+
+        // Call heartbeat function in animation
+        if (Time.time > lastHeartbeat + 60f / heartrate)
+        {
+            uiAnimation.HeartBeat();
+            lastHeartbeat = Time.time;
+        }
     }
     
     private void OxygenChange()
     {
-        // Oxygen consumption is different on movement
+        // Oxygen consumption is proportional to heartrate
         if (currentOxygen > 0)
         {
-            if (isRun)
-            {
-                currentOxygen -= runOxygenConsume * Time.deltaTime;
-            }
-            else
-            {
-                currentOxygen -= oxygenConsume * Time.deltaTime;
-            }
+            currentOxygen -= oxygenConsume * Time.deltaTime * heartrate / 60f;
         }
         else
         {
@@ -75,7 +96,10 @@ public class PlayerHealthSystem : HealthSystem
     // When player is out of oxygen, keep losing health
     private void Choke()
     {
+        if (currentHealth < 0)
+            return;
         currentHealth -= 10 * Time.deltaTime;
+        heartrate += 10;
         uiAnimation.HurtAnimation();
     }
 
@@ -144,6 +168,7 @@ public class PlayerHealthSystem : HealthSystem
                 uiAnimation.Warning(true);
             }
             uiAnimation.HealthChange(currentHealth / maxHealth);
+            cachedHeart += 5;
             currentShield = 0;
         }
 
@@ -164,6 +189,8 @@ public class PlayerHealthSystem : HealthSystem
     private void Die()
     {
         Debug.Log("player is dead!");
+        cachedHeart = 0;
+        heartrate = 0;
         // TODO: add crate on ground
         Destroy(this.gameObject);
     }

@@ -271,12 +271,10 @@ public class PlayerMovement : MonoBehaviour
             float z = Input.GetAxisRaw("Vertical") * Time.deltaTime * speed;
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                if (gameObject.GetComponent<PlayerHealthSystem>().Run(true))
-                {
-                    uiAnimation.WalkCamEffect(1.2f);
-                    x *= runSpeed / speed;
-                    z *= runSpeed / speed;
-                }
+                gameObject.GetComponent<PlayerHealthSystem>().Run(true);
+                uiAnimation.WalkCamEffect(1.2f);
+                x *= runSpeed / speed;
+                z *= runSpeed / speed;
             }
             else if (Input.GetKeyUp(KeyCode.LeftShift))
             {

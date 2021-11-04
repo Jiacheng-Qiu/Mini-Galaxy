@@ -146,9 +146,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   durability: 100
   name: Carnivore
+  generalType: Animal
   productName: Meat
   product: {fileID: 0}
   productAmount: {x: 2, y: 4}
+  rb: {fileID: 0}
   maxShield: 0
   currentShield: 0
   maxHealth: 100
