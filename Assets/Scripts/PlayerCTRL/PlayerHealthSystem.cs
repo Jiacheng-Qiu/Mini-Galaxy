@@ -41,14 +41,18 @@ public class PlayerHealthSystem : HealthSystem
         // Shield Recovery
         ShieldRecover();
         
-        // Every 3 second in run, increase heartrate by randomly 3-8 till 160
-        if (isRun && Time.time > lastRunHeart && heartrate < 160)
+        // Every 3 second in run, increase heartrate by randomly 3-8 till 160; elsewise
+        if (Time.time > lastRunHeart)
         {
-            cachedHeart += Random.Range(3, 8);
+            if (isRun && heartrate < 160)
+            {
+                cachedHeart += Random.Range(8, 15);
+            }
+            else if (!isRun && heartrate > 60)
+            {
+                cachedHeart -= 5;
+            }
             lastRunHeart = Time.time + 3;
-        } else if (!isRun && heartrate > 60)
-        {
-            cachedHeart -= 5;
         }
 
         // Update heartrate every second, and send to animation

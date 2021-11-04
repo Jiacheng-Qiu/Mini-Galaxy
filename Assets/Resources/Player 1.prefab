@@ -248,6 +248,7 @@ GameObject:
   - component: {fileID: 9158067}
   - component: {fileID: 7002645135548134311}
   - component: {fileID: 1933861437}
+  - component: {fileID: 1011312925}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player
@@ -440,7 +441,6 @@ MonoBehaviour:
   maxOxygen: 100
   oxygenRecover: 0
   oxygenConsume: 1
-  runOxygenConsume: 2
   runCD: 2
 --- !u!114 &1346284290
 MonoBehaviour:
@@ -490,6 +490,8 @@ MonoBehaviour:
   health: {fileID: 0}
   oxygenBar: {fileID: 0}
   oxygenAmount: {fileID: 0}
+  heart: {fileID: 0}
+  heartFolder: {fileID: 0}
   warning: {fileID: 0}
   startScreen: {fileID: 0}
   mainUI: {fileID: 0}
@@ -497,6 +499,8 @@ MonoBehaviour:
   informer: {fileID: 0}
   invenUI: {fileID: 0}
   craftUI: {fileID: 0}
+  mapUI: {fileID: 0}
+  missionUI: {fileID: 0}
 --- !u!114 &7002645135548134311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -523,7 +527,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d49d774f9d2b984ba9ef832994d3b88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   mapPlanet: {fileID: 0}
+  camera: {fileID: 0}
+--- !u!114 &1011312925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3648729673969551602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8465e4242144935449f6c6a1a2af8e9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  missionFolder: {fileID: 0}
 --- !u!1 &3648729675821191555
 GameObject:
   m_ObjectHideFlags: 0

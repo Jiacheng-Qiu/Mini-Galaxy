@@ -21,6 +21,8 @@ public class InteractionAnimation : MonoBehaviour
     public Image health;
     public Image oxygenBar;
     public Text oxygenAmount;
+    public Text heart;
+    public Transform heartFolder;
     public InterfaceAnimManager warning;
     public InterfaceAnimManager startScreen;
     public InterfaceAnimManager mainUI;
@@ -29,6 +31,7 @@ public class InteractionAnimation : MonoBehaviour
     public InterfaceAnimManager invenUI;
     public InterfaceAnimManager craftUI;
     public InterfaceAnimManager mapUI;
+    public InterfaceAnimManager missionUI;
 
     private float cachedShieldDmg;
     private bool oxygenWarningEnabled;
@@ -39,6 +42,7 @@ public class InteractionAnimation : MonoBehaviour
     private bool bagActive;
     private bool craftActive;
     private bool mapActive;
+    private bool missionActive;
 
     private void Start()
     {
@@ -55,9 +59,11 @@ public class InteractionAnimation : MonoBehaviour
         invenUI.gameObject.SetActive(false);
         craftUI.gameObject.SetActive(false);
         mapUI.gameObject.SetActive(false);
+        missionUI.gameObject.SetActive(false);
         bagActive = false;
         craftActive = false;
         mapActive = false;
+        missionActive = false;
         walk = null;
     }
 
@@ -285,6 +291,10 @@ public class InteractionAnimation : MonoBehaviour
             {
                 DisplayMap();
             }
+            if (missionActive)
+            {
+                DisplayMission();
+            }
             invenUI.gameObject.SetActive(true);
             invenUI.startAppear();
             bagActive = true;
@@ -308,6 +318,10 @@ public class InteractionAnimation : MonoBehaviour
             if (mapActive)
             {
                 DisplayMap();
+            }
+            if (missionActive)
+            {
+                DisplayMission();
             }
             craftUI.gameObject.SetActive(true);
             craftUI.startAppear();
@@ -333,6 +347,10 @@ public class InteractionAnimation : MonoBehaviour
             {
                 DisplayCraft();
             }
+            if (missionActive)
+            {
+                DisplayMission();
+            }
             mapUI.gameObject.SetActive(true);
             mapUI.startAppear();
             mapActive = true;
@@ -343,6 +361,34 @@ public class InteractionAnimation : MonoBehaviour
             mapActive = false;
         }
         movement.ChangeCursorFocus(mapActive);
+    }
+    
+    public void DisplayMission()
+    {
+        if (!missionActive)
+        {
+            if (bagActive)
+            {
+                DisplayBag();
+            }
+            if (craftActive)
+            {
+                DisplayCraft();
+            }
+            if (mapActive)
+            {
+                DisplayMap();
+            }
+            missionUI.gameObject.SetActive(true);
+            missionUI.startAppear();
+            missionActive = true;
+        }
+        else
+        {
+            missionUI.startDisappear();
+            missionActive = false;
+        }
+        movement.ChangeCursorFocus(missionActive);
     }
 
     public void UISlide(bool isLeft)
@@ -376,12 +422,18 @@ public class InteractionAnimation : MonoBehaviour
 
     public void HeartrateChange(int amount)
     {
-
+        heart.text = amount.ToString();
     }
 
     public void HeartBeat()
     {
-
+        if (mainUI.currentState != CSFHIAnimableState.appeared)
+            return;
+        GameObject newBeat = Instantiate(Resources.Load("Beat")) as GameObject;
+        newBeat.transform.SetParent(heartFolder);
+        newBeat.transform.localPosition = new Vector3(4.1f, 0, 0);
+        newBeat.transform.localScale = new Vector3(1, 1, 1);
+        newBeat.gameObject.SetActive(true);
     }
 
     // Make oxygen display red

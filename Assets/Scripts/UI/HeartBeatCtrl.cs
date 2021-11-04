@@ -5,20 +5,12 @@ using UnityEngine;
 public class HeartBeatCtrl : MonoBehaviour
 {
 
-    public void Init(float size)
+    private void FixedUpdate()
     {
-        gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(60, size);
-        gameObject.GetComponent<RectTransform>().localPosition = new Vector3(130, -0.5f, 0);
-    }
-
-    void FixedUpdate()
-    {
-        if(transform.localPosition.x <= -130)
+        transform.localPosition -= new Vector3(4 * Time.deltaTime, 0, 0);
+        if (transform.localPosition.x <= -4.1)
         {
             Destroy(gameObject);
-        } else
-        {
-            transform.localPosition -= new Vector3(2, 0, 0);
         }
     }
 }
