@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed;
     public float runSpeed;
     public float jump;
-    
+
     public bool isGround = true;
 
     private PlayerInventory inventory;
@@ -39,8 +39,7 @@ public class PlayerMovement : MonoBehaviour
     private bool onPreview = false; // Assign preview when placing items
     private GameObject previewObject;
 
-    public InterfaceAnimManager mapUI;
-    private bool mapOn = false;
+    private Vector3 marker; // Player marker for marking positions on planet
 
     void Start()
     {
@@ -58,6 +57,13 @@ public class PlayerMovement : MonoBehaviour
         transform.parent = planet.transform;
         inventory = gameObject.GetComponent<PlayerInventory>();
         backpack = gameObject.GetComponent<Backpack>();
+
+        marker = Vector3.zero;
+    }
+
+    public Vector3 GetMarker()
+    {
+        return marker;
     }
 
     // If there are multiple interface active, only inactive when all screens are shut down
@@ -68,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
             onFocus = true;
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
-        } 
+        }
         else
         {
             onFocus = false;
@@ -82,6 +88,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (PlayerStatus.moveDisabled)
             return;
+
         // Place object on ground in placing
         // When player tab left mouse button to place, exit preview state
         if (onPreview && Input.GetMouseButton(0))
@@ -100,26 +107,21 @@ public class PlayerMovement : MonoBehaviour
             flashSwitch = !flashSwitch;
         }
 
+        if (Input.GetKeyUp(KeyCode.LeftBracket))
+        {
+            Vector3 rayOrigin = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+            RaycastHit hit;
+            if (Physics.Raycast(rayOrigin, cam.transform.forward, out hit, 50, LayerMask.GetMask("Terrain")))
+            {
+                // Make marker local position on planet
+                marker = hit.point - planet.transform.position;
+            }
+        }
+
         // Open or close helmet
         if (Input.GetKeyUp(KeyCode.N))
         {
             gameObject.GetComponent<InteractionAnimation>().HelmetSwitch();
-        }
-
-        // TODO: Map showcased
-        if (Input.GetKeyUp(KeyCode.M))
-        {
-            if (mapOn)
-            {
-                mapUI.startDisappear();
-                mapOn = false;
-            }
-            else
-            {
-                mapUI.gameObject.SetActive(true);
-                mapUI.startAppear();
-                mapOn = true;
-            }
         }
 
         // Tell attack script if shooting disabled
@@ -154,9 +156,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Gravitize();
+
         Vector3 rayOrigin = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
-
         // TODO: add interactable in the following
         if (Physics.Raycast(rayOrigin, cam.transform.forward, out hit, interactRange, LayerMask.GetMask("Material")))
         {
@@ -190,7 +193,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 rayOrigin = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
         if (Physics.Raycast(rayOrigin, cam.transform.forward, out hit, 30, LayerMask.GetMask("Terrain")))
-        { 
+        {
             previewObject.transform.position = hit.point;
             previewObject.transform.LookAt(transform);
         }
@@ -215,6 +218,8 @@ public class PlayerMovement : MonoBehaviour
         if (collision.transform.tag == "Planet")
         {
             Debug.Log("Exiting planet");
+            // Also clear marker
+            marker = Vector3.zero;
         }
     }
 
@@ -261,7 +266,22 @@ public class PlayerMovement : MonoBehaviour
         }
 
     }
-    // Move POV and make player rotate to gravity
+
+    // Make player rotate to gravity
+    void Gravitize()
+    {
+        // Apply gravity
+        Vector3 grav = (transform.position - planet.transform.position).normalized;
+        rb.AddForce(grav * -9.8f);
+        Quaternion onPlanetRotate = Quaternion.FromToRotation(transform.up, gDirection) * transform.rotation;
+        // Rotate player based on gravity
+        transform.rotation = onPlanetRotate;
+        // Also need to rotate cam based on player input + gravity
+        Quaternion camRotate = Quaternion.AngleAxis(viewX, cam.transform.right);
+        cam.transform.rotation = camRotate * onPlanetRotate;
+    }
+
+    // Move POV
     void Move()
     {
         // move when not on ship
@@ -285,13 +305,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 uiAnimation.WalkCamEffect(1);
                 transform.Translate(x, 0, z);
+                gameObject.GetComponent<PlayerHealthSystem>().Walk(true);
+            }else
+            {
+                gameObject.GetComponent<PlayerHealthSystem>().Walk(false);
             }
-            // Apply gravity
-            Vector3 grav = (transform.position - planet.transform.position).normalized;
-            rb.AddForce(grav * -9.8f);
-            Quaternion onPlanetRotate = Quaternion.FromToRotation(transform.up, gDirection) * transform.rotation;
-            // Rotate player based on gravity
-            transform.rotation = onPlanetRotate;
             if (!onFocus)
             {
                 // rotation
@@ -301,9 +319,6 @@ public class PlayerMovement : MonoBehaviour
                 viewX = Mathf.Clamp(viewX, -55, 55);
                 // Player only rotate on Y axis, which won't affect quaternion rotation for planet
                 transform.Rotate(0, playerX, 0);
-                // Also need to rotate cam based on player input + gravity
-                Quaternion camRotate = Quaternion.AngleAxis(viewX, cam.transform.right);
-                cam.transform.rotation = camRotate * onPlanetRotate;
             }
         }
         else

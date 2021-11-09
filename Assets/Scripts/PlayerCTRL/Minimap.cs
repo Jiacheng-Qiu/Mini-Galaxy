@@ -8,6 +8,7 @@ public class Minimap : MonoBehaviour
     public GameObject dot;
     public float radarRadius;
     public float scanCD;
+    public float displayRadius; // Radar can scan larger range than display
     
     private List<GameObject> objAround;
     private SphereCollider radar;
@@ -42,27 +43,34 @@ public class Minimap : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // While scanning is active, constantly increase radar size till reaching limit
-        if (radar.enabled)
+        if (Time.time > radarStartTime + 15)
         {
-            if (radar.radius < radarRadius)
-            {
-                radar.radius += radarRadius * Time.deltaTime;
-                float len = 12f * radar.radius / radarRadius;
-                scanner.rectTransform.sizeDelta = new Vector2(len, len);
-            }
-            else
-            {
-                scanner.gameObject.SetActive(false);
-                radar.enabled = false;
-            }
+            objAround.Clear();
         }
-        MapDisplay();
-
-        // Update CD
-        if (cdImg.enabled)
+        else
         {
-            UpdateCDDisplay();
+        // While scanning is active, constantly increase radar size till reaching limit
+            if (radar.enabled)
+            {
+                if (radar.radius < radarRadius)
+                {
+                    radar.radius += radarRadius * Time.deltaTime;
+                    float len = 12f * radar.radius / radarRadius;
+                    scanner.rectTransform.sizeDelta = new Vector2(len, len);
+                }
+                else
+                {
+                    scanner.gameObject.SetActive(false);
+                    radar.enabled = false;
+                }
+            }
+            MapDisplay();
+
+            // Update CD
+            if (cdImg.enabled)
+            {
+                UpdateCDDisplay();
+            }
         }
     }
 
@@ -77,6 +85,7 @@ public class Minimap : MonoBehaviour
         mapFolder.gameObject.SetActive(true);
         cdImg.enabled = true;
     }
+
     // Display known environment obj from list onto minimap
     private void MapDisplay()
     {
@@ -102,9 +111,9 @@ public class Minimap : MonoBehaviour
 
             float distance = Vector3.Magnitude(obj.transform.position - transform.position);
             // Check if the object is already out of the range, if so display on edge
-            if (distance > radarRadius)
+            if (distance > displayRadius)
             {
-                distance = radarRadius;
+                distance = displayRadius;
             }
             GameObject dotter = Instantiate(dot);
             // Adjust indicator color based on resource type
@@ -121,10 +130,11 @@ public class Minimap : MonoBehaviour
                     break;
             }
             dotter.transform.SetParent(mapFolder.transform, false);
-            dotter.transform.localPosition = new Vector3(0, distance / radarRadius * 5.5f, 0);
+            dotter.transform.localPosition = new Vector3(0, distance / displayRadius * 5.5f, 0);
             dotter.transform.RotateAround(mapFolder.position, mapFolder.forward, angle);
         }
     }
+
     // Check surrounding environment obj
     private void OnTriggerStay(Collider other)
     {

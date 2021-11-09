@@ -11,6 +11,7 @@ public class PlayerHealthSystem : HealthSystem
     private bool oxygenProvided;
     public float runCD;
     private bool isRun;
+    private bool isWalk;
     private int heartrate;
     private float lastRunHeart;
     private int cachedHeart;
@@ -31,6 +32,7 @@ public class PlayerHealthSystem : HealthSystem
         currentShield = maxShield;
         oxygenProvided = false;
         isRun = false;
+        isWalk = false;
         recoverTimeAfterHit = 3;
     }
 
@@ -44,11 +46,18 @@ public class PlayerHealthSystem : HealthSystem
         // Every 3 second in run, increase heartrate by randomly 3-8 till 160; elsewise
         if (Time.time > lastRunHeart)
         {
-            if (isRun && heartrate < 160)
+            if (isRun && heartrate < 120)
             {
                 cachedHeart += Random.Range(8, 15);
             }
-            else if (!isRun && heartrate > 60)
+            else if (!isRun && isWalk)
+            {
+                if (heartrate < 90)
+                    cachedHeart += Random.Range(5, 10);
+                else
+                    cachedHeart -= Random.Range(5, 10);
+            }
+            else if (!isRun && !isWalk && heartrate > 60)
             {
                 cachedHeart -= 5;
             }
@@ -187,6 +196,12 @@ public class PlayerHealthSystem : HealthSystem
     {
         isRun = run;
         return isRun;
+    }
+
+    public bool Walk(bool walk)
+    {
+        isWalk = walk;
+        return isWalk;
     }
 
     // While dead, destroy player, and create a crate on ground with everything in backpack

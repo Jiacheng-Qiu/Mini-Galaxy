@@ -101,7 +101,7 @@ public class Crafting : MonoBehaviour
                 buttons[i].transform.SetParent(buttonPrefab.transform.parent);
                 buttons[i].GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 1);
                 buttons[i].GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 1);
-                buttons[i].transform.GetComponent<RectTransform>().anchoredPosition3D = new Vector3((i % 2 == 0 ? -30 : 30), -15 - 40 * (i / 2), 0);
+                buttons[i].GetComponent<RectTransform>().anchoredPosition3D = new Vector3((i % 2 == 0 ? -30 : 30), -15 - 40 * (i / 2), 0);
                 buttons[i].transform.localRotation = Quaternion.identity;
                 buttons[i].name = i.ToString();
             }

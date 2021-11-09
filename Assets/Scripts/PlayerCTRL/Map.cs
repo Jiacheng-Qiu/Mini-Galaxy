@@ -4,20 +4,21 @@ using UnityEngine.UI;
 
 public class Map : MonoBehaviour
 {
-    public GameObject player;
+    public Transform player;
+    public Transform marker;
     public Planet mapPlanet;
-    public Transform camera;
     private PlayerMovement movement;
     private ShapeSettings shape;
     private InteractionAnimation uiAnimation;
-    private GameObject[] markers; // TODO
-    private float updatePeriod;
+    private Missions mission;
+    //private float updatePeriod;
 
     private void Start()
     {
         movement = gameObject.GetComponent<PlayerMovement>();
         uiAnimation = gameObject.GetComponent<InteractionAnimation>();
         mapPlanet.gameObject.SetActive(false);
+        mission = transform.GetComponent<Missions>();
     }
 
     private void Update()
@@ -25,6 +26,8 @@ public class Map : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.M))
         {
             uiAnimation.DisplayMap();
+            UpdatePlayerPos();
+            UpdateMarkers();
         }
     }
 
@@ -45,16 +48,15 @@ public class Map : MonoBehaviour
             UpdatePlanetInfo();
             mapPlanet.gameObject.SetActive(true);
         }
-        else
+        /*else
         {
-            UpdatePlayerPos();
             // Update position of player & other obj
             if (Time.time > updatePeriod)
             {
+                UpdatePlayerPos();
                 updatePeriod += 2;
-                UpdateMarkers();
             }
-        }
+        }*/
     }
 
     public void ChangeSize(float input)
@@ -63,6 +65,7 @@ public class Map : MonoBehaviour
     }
 
     // Called when player enter new planet
+    // TODO: fix
     public void UpdatePlanetInfo()
     {
         Planet newPlanet = movement.planet.GetComponent<Planet>();
@@ -75,12 +78,28 @@ public class Map : MonoBehaviour
     public void UpdatePlayerPos()
     {
         // Reset player to preset pos
-        player.transform.localPosition = transform.localPosition / 100;
-        player.transform.LookAt(camera);
+        player.localPosition = transform.localPosition / 99;
+        player.localRotation = movement.transform.localRotation;
+        player.Rotate(new Vector3(90, 0, 0));
+
+        // Always display player on the center of screen
+        mapPlanet.transform.localRotation = Quaternion.FromToRotation(player.localPosition , -Vector3.forward);
     }
 
     public void UpdateMarkers()
     {
+        // Check missions markers
 
+        // Check player made marker (Only one allowed each time)
+        Vector3 markerPos = movement.GetMarker();
+        if (markerPos != Vector3.zero)
+        {
+            marker.gameObject.SetActive(true);
+            marker.localPosition = movement.GetMarker() / 99;
+            marker.transform.LookAt(mapPlanet.transform);
+        } else
+        {
+            marker.gameObject.SetActive(false);
+        }
     }
 }

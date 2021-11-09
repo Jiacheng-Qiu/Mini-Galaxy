@@ -41,9 +41,5 @@ public class GrabRotate : MonoBehaviour
             transform.RotateAround(Vector3.right, -(mousePos.y - newMousePos.y) / Mathf.Rad2Deg);
             mousePos = newMousePos;
         }
-        else
-        {
-            transform.RotateAround(Vector3.up, 0.01f);
-        }
     }
 }
