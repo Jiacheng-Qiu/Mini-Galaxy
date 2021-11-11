@@ -420,6 +420,11 @@ public class InteractionAnimation : MonoBehaviour
         return bagActive;
     }
 
+    public bool GetMapUIStat()
+    {
+        return mapActive;
+    }
+
     public void HeartrateChange(int amount)
     {
         heart.text = amount.ToString();

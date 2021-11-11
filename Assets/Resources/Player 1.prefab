@@ -243,7 +243,6 @@ GameObject:
   - component: {fileID: 3648729673969551599}
   - component: {fileID: 3648729673969551597}
   - component: {fileID: 3648729673969551603}
-  - component: {fileID: 1346284290}
   - component: {fileID: 9158066}
   - component: {fileID: 9158067}
   - component: {fileID: 7002645135548134311}
@@ -379,7 +378,6 @@ MonoBehaviour:
   rb: {fileID: 3648729673969551593}
   planet: {fileID: 3648729673969551602}
   flashlight: {fileID: 1853342546}
-  mapUI: {fileID: 0}
 --- !u!114 &3648729673969551599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,20 +440,6 @@ MonoBehaviour:
   oxygenRecover: 0
   oxygenConsume: 1
   runCD: 2
---- !u!114 &1346284290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3648729673969551602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afad08e0d83eef04aa6a2dc745b9f506, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  beacon: {fileID: 7519300999579546485, guid: 0e37f0526e882644e944b93d023ea5e1, type: 3}
-  weapon: {fileID: 976528112}
 --- !u!114 &9158066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -528,8 +512,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  marker: {fileID: 0}
   mapPlanet: {fileID: 0}
-  camera: {fileID: 0}
 --- !u!114 &1011312925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -649,7 +633,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Radius: 100
+  m_Radius: 200
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3648729674309148480
 MonoBehaviour:
@@ -667,6 +651,7 @@ MonoBehaviour:
   dot: {fileID: 8962627284287561052, guid: 6358416958cd8a94a889c656c8adb6e1, type: 3}
   radarRadius: 100
   scanCD: 10
+  displayRadius: 50
 --- !u!1001 &3648729674386078014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -677,6 +662,10 @@ PrefabInstance:
     - target: {fileID: 1576634372668950, guid: 32ca24d493f79754a94923210f088a44, type: 3}
       propertyPath: m_Name
       value: HandGun
+      objectReference: {fileID: 0}
+    - target: {fileID: 1576634372668950, guid: 32ca24d493f79754a94923210f088a44, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4173107327043250, guid: 32ca24d493f79754a94923210f088a44, type: 3}
       propertyPath: m_RootOrder

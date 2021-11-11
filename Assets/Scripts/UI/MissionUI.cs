@@ -18,6 +18,10 @@ public class MissionUI : MonoBehaviour
 
     public void CreateButtons(List<Mission> missions)
     {
+        if (missionFolder == null)
+        { 
+            missionFolder = transform.Find("scrollview").Find("viewport").Find("content");
+        }
         GameObject sample = missionFolder.Find("0").gameObject;
         sample.transform.Find("Content").GetComponent<Text>().text = missions[0].missionName;
         for (int i = 1; i < missions.Count; i++)

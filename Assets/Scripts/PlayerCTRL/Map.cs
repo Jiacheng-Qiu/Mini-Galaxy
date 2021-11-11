@@ -11,6 +11,8 @@ public class Map : MonoBehaviour
     private ShapeSettings shape;
     private InteractionAnimation uiAnimation;
     private Missions mission;
+    private Planet planet;
+    private bool mapUsable;
     //private float updatePeriod;
 
     private void Start()
@@ -19,44 +21,39 @@ public class Map : MonoBehaviour
         uiAnimation = gameObject.GetComponent<InteractionAnimation>();
         mapPlanet.gameObject.SetActive(false);
         mission = transform.GetComponent<Missions>();
+        planet = null;
+        shape = new ShapeSettings();
+        mapUsable = false;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M))
+        if (mapUsable && Input.GetKeyDown(KeyCode.M))
         {
             uiAnimation.DisplayMap();
-            UpdatePlayerPos();
-            UpdateMarkers();
+            if (uiAnimation.GetMapUIStat())
+            {
+                UpdatePlayerPos();
+                UpdateMarkers();
+            }
         }
     }
 
     private void FixedUpdate()
     {
-        // On first frame call start on map
-        if (!mapPlanet.gameObject.activeSelf)
+        if (!mapUsable && planet != null)
         {
-            // First check if player is on planet, if not do nothing
-            if (movement.planet == null)
-            {
-                return;
-            }
+            shape.noiseLayers = planet.shapeSetting.noiseLayers;
+            shape.planetRadius = planet.shapeSetting.planetRadius / 100;
+            mapPlanet.colorSetting = planet.colorSetting;
+            mapPlanet.GeneratePlanet();
             shape = ScriptableObject.CreateInstance<ShapeSettings>();
             mapPlanet.faceRenderMask = Planet.FaceRenderMask.All;
             mapPlanet.resolution = 16;
             mapPlanet.shapeSetting = shape;
-            UpdatePlanetInfo();
             mapPlanet.gameObject.SetActive(true);
+            mapUsable = true;
         }
-        /*else
-        {
-            // Update position of player & other obj
-            if (Time.time > updatePeriod)
-            {
-                UpdatePlayerPos();
-                updatePeriod += 2;
-            }
-        }*/
     }
 
     public void ChangeSize(float input)
@@ -65,14 +62,20 @@ public class Map : MonoBehaviour
     }
 
     // Called when player enter new planet
-    // TODO: fix
-    public void UpdatePlanetInfo()
+    // TODO Check why this fails
+    public void UpdatePlanetInfo(Planet newPlanet)
     {
-        Planet newPlanet = movement.planet.GetComponent<Planet>();
-        shape.noiseLayers = newPlanet.shapeSetting.noiseLayers;
-        shape.planetRadius = newPlanet.shapeSetting.planetRadius / 100;
-        mapPlanet.colorSetting = newPlanet.colorSetting;
-        mapPlanet.GeneratePlanet();
+        if (newPlanet == null)
+        {
+            // Stop displaying map if player leave planet while viewing
+            if (uiAnimation.GetMapUIStat()) 
+            {
+                uiAnimation.DisplayMap();
+            }
+            return;
+        }
+        planet = newPlanet;
+        mapUsable = false;
     }
 
     public void UpdatePlayerPos()
@@ -88,7 +91,26 @@ public class Map : MonoBehaviour
 
     public void UpdateMarkers()
     {
+        for (int i = 0; i < 2; i++)
+        {
+            Transform t = marker.parent.Find("Mission" + i);
+        }
         // Check missions markers
+        List<Mission> curMissions = mission.GetMissions();
+        for (int i = 0; i < 2; i++)
+        {
+            Transform t = marker.parent.Find("Mission" + i);
+            if (i < curMissions.Count)
+            {
+                t.localPosition = curMissions[i].position / 99;
+                t.LookAt(mapPlanet.transform);
+                t.gameObject.SetActive(true);
+            } 
+            else
+            {
+                t.gameObject.SetActive(false);
+            }
+        }
 
         // Check player made marker (Only one allowed each time)
         Vector3 markerPos = movement.GetMarker();

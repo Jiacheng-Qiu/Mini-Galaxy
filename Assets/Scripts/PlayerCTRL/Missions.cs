@@ -9,9 +9,13 @@ public class Missions : MonoBehaviour
     private List<int> onDisplay;
     private List<Text> displayMissions;
     public Transform missionFolder;
+    public Transform missionIconFolder;
+    public Transform camera;
+    private Transform[] missionIcons;
     private int displayLimit;
     private InteractionAnimation uiAnimation;
     private MissionUI missionUI;
+    private float planetRadius;
 
     private void Start()
     {
@@ -24,12 +28,20 @@ public class Missions : MonoBehaviour
         {
             displayMissions.Add(missionFolder.Find(i.ToString()).GetComponent<Text>());
         }
-        missions.Add(new Mission("Learn to move around with the buttons.", "To survive you need to learn the basics: \n- WASD to move around\n- SHIFT to run\n- B to open inventory\n- [to set marker on planets\n- R to reload\n- E for equipment customization\n-C for crafting", new Vector3(0, 0, 0), 0, 0));
-        missions.Add(new Mission("Try to build a craft table.", "Gather materials by shooting, build and place the craft table on the ground afterwards. Remember that you can pick it up!", new Vector3(0, 0, 0), 1, 0));
+        missions.Add(new Mission("Learn to move around with the buttons.", "To survive you need to learn the basics: \n- WASD to move around\n- SHIFT to run\n- B to open inventory\n- [to set marker on planets\n- R to reload\n- E for equipment customization\n-C for crafting", new Vector3(0, 736, 13), 0, 0));
+        missions.Add(new Mission("Try to build a craft table.", "Gather materials by shooting, build and place the craft table on the ground afterwards. Remember that you can pick it up!", new Vector3(0, 0, 740), 1, 0));
 
         uiAnimation = gameObject.GetComponent<InteractionAnimation>();
         missionUI = uiAnimation.missionUI.GetComponent<MissionUI>();
         missionUI.CreateButtons(missions);
+
+        missionIcons = new Transform[3];
+        for (int i = 0; i < 3; i++)
+        {
+            missionIcons[i] = missionIconFolder.Find("Mission"+i);
+            missionIcons[i].gameObject.SetActive(false);
+        }
+        planetRadius = 0;
     }
 
 
@@ -100,7 +112,12 @@ public class Missions : MonoBehaviour
 
     public List<Mission> GetMissions()
     {
-        return missions;
+        List<Mission> onDisplayMissions = new List<Mission>();
+        foreach(int i in onDisplay)
+        {
+            onDisplayMissions.Add(missions[i]);
+        }
+        return onDisplayMissions;
     }
 
     private void Update()
@@ -109,5 +126,45 @@ public class Missions : MonoBehaviour
         {
             uiAnimation.DisplayMission();
         }
+    }
+
+    // Update mission tags on player helmet based on direction
+    private void ShowOnHelmet()
+    {
+        if (planetRadius <= 0)
+        {
+            return;
+        }
+        Vector3 euler = transform.localRotation.eulerAngles;
+        missionIconFolder.eulerAngles = new Vector3(-euler.x - transform.Find("Main Camera").localEulerAngles.x, -euler.y, -euler.z);
+        for (int i = 0; i < 2; i++)
+        {
+            if (i >= onDisplay.Count)
+            {
+                missionIcons[i].gameObject.SetActive(false);
+            }
+            else
+            {
+                Vector3 missionPos = missions[onDisplay[i]].position;
+                float minAngle = Vector3.Angle(transform.localPosition, missionPos);
+                int distance = (int)(2 * Mathf.PI * planetRadius * minAngle / 360);
+                missionIcons[i].Find("Distance").GetComponent<Text>().text = distance + "m";
+                missionIcons[i].localPosition = (missionPos - transform.localPosition).normalized * 5;
+                missionIcons[i].rotation = Quaternion.LookRotation(missionIcons[i].position - camera.position);
+                float scale = (distance < 600) ? 0.08f - 0.0001f * distance : 0.02f;
+                missionIcons[i].localScale = new Vector3(scale, scale, scale);
+                missionIcons[i].gameObject.SetActive(true);
+            }
+        }
+    }
+
+    public void ModifyPlanetRadius(float radius)
+    {
+        planetRadius = radius;
+    }
+
+    private void FixedUpdate()
+    {
+        ShowOnHelmet();
     }
 }

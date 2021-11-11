@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public float sensY;
     // Cam view init
     private float viewX;
+    private float viewY;
     // POV wont move if on menu focus
     public bool onFocus;
     public GameObject onShip;
@@ -210,6 +211,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 transform.parent = planet.transform;
             }
+            gameObject.GetComponent<Map>().UpdatePlanetInfo(planet.GetComponent<Planet>());
+            gameObject.GetComponent<Missions>().ModifyPlanetRadius(planet.GetComponent<Planet>().shapeSetting.planetRadius);
         }
     }
 
@@ -273,6 +276,9 @@ public class PlayerMovement : MonoBehaviour
         // Apply gravity
         Vector3 grav = (transform.position - planet.transform.position).normalized;
         rb.AddForce(grav * -9.8f);
+        // Player only rotate on Y axis, which won't affect quaternion rotation for planet
+        transform.Rotate(0, viewY, 0);
+        viewY = 0;
         Quaternion onPlanetRotate = Quaternion.FromToRotation(transform.up, gDirection) * transform.rotation;
         // Rotate player based on gravity
         transform.rotation = onPlanetRotate;
@@ -313,12 +319,10 @@ public class PlayerMovement : MonoBehaviour
             if (!onFocus)
             {
                 // rotation
-                float playerX = sensY * Input.GetAxis("Mouse X");
+                viewY += sensY * Input.GetAxis("Mouse X");
                 viewX -= sensX * Input.GetAxis("Mouse Y");
                 // Set up a limit for viewX, so that player can't look at his back with huge flip
                 viewX = Mathf.Clamp(viewX, -55, 55);
-                // Player only rotate on Y axis, which won't affect quaternion rotation for planet
-                transform.Rotate(0, playerX, 0);
             }
         }
         else
