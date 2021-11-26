@@ -14,6 +14,8 @@ public class Crafting : MonoBehaviour
     private int blueprintAmount;
     private InteractionAnimation uiInteraction;
     private int currentOnView; // Record the current viewing blueprint
+    private Color warningRed;
+    private float successCountdown; // Record the time craft success msg was sent
 
     // Read from json
     public TextAsset data;
@@ -28,10 +30,12 @@ public class Crafting : MonoBehaviour
 
     void Start()
     {
+        successCountdown = -1;
         backpack = gameObject.GetComponent<Backpack>();
         uiInteraction = gameObject.GetComponent<InteractionAnimation>();
         detailedPage = craftMenu.transform.Find("Detailed Page").gameObject;
-        
+
+        warningRed = new Color(1, 170f / 255, 200f / 255);
 
         // Load all blueprints
         blueprintAmount = 3;
@@ -48,8 +52,8 @@ public class Crafting : MonoBehaviour
         blueprints[0].items[0] = "Coal";
         blueprints[0].items[1] = "Wood";
         blueprints[0].amounts = new int[2];
-        blueprints[0].amounts[0] = 5;
-        blueprints[0].amounts[1] = 10;
+        blueprints[0].amounts[0] = 1;
+        blueprints[0].amounts[1] = 3;
 
         blueprints[1] = new Blueprint();
         blueprints[1].itemName = "Crafttable";
@@ -59,17 +63,15 @@ public class Crafting : MonoBehaviour
         blueprints[1].amounts[0] = 2;
 
         blueprints[2] = new Blueprint();
-        blueprints[2].itemName = "Spaceship";
-        blueprints[2].items = new string[2];
+        blueprints[2].itemName = "Rifle Scope";
+        blueprints[2].items = new string[1];
         blueprints[2].items[0] = "IronIngot";
-        blueprints[2].items[1] = "AluminumIngot";
-        blueprints[2].amounts = new int[2];
+        blueprints[2].amounts = new int[1];
         blueprints[2].amounts[0] = 4;
-        blueprints[2].amounts[1] = 4;
 
         CreateButtons();
         string[] list = new string[2];
-        list[0] = "Spaceship";
+        list[0] = "Rifle Scope";
         list[1] = "Furnace";
         SwitchBlueprintState(list, false);
 
@@ -84,6 +86,8 @@ public class Crafting : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.C))
         {
             uiInteraction.DisplayCraft();
+            detailedPage.transform.Find("Warning Text").gameObject.SetActive(false);
+            ChangeMaterialAmount();
         }
     }
 
@@ -128,6 +132,15 @@ public class Crafting : MonoBehaviour
             {
                 list.Find(i.ToString()).GetComponent<Text>().text = blueprints[index].items[i];
                 list.Find(i.ToString()).Find("Amount").GetComponent<Text>().text = blueprints[index].amounts[i].ToString();
+                if (!backpack.Check(blueprints[index].items[i], blueprints[index].amounts[i] * craftAmount.GetCurAmount()))
+                {
+                    list.Find(i.ToString()).GetComponent<Text>().color = warningRed;
+                    list.Find(i.ToString()).Find("Amount").GetComponent<Text>().color = warningRed;
+                } else
+                {
+                    list.Find(i.ToString()).GetComponent<Text>().color = Color.white;
+                    list.Find(i.ToString()).Find("Amount").GetComponent<Text>().color = Color.white;
+                }
                 list.Find(i.ToString()).gameObject.SetActive(true);
             } else
             {
@@ -148,6 +161,16 @@ public class Crafting : MonoBehaviour
         for (int i = 0; i < blueprints[currentOnView].items.Length; i++)
         {
             list.Find(i.ToString()).Find("Amount").GetComponent<Text>().text = (blueprints[currentOnView].amounts[i] * curAmount).ToString();
+            if (!backpack.Check(blueprints[currentOnView].items[i], blueprints[currentOnView].amounts[i] * craftAmount.GetCurAmount()))
+            {
+                list.Find(i.ToString()).GetComponent<Text>().color = warningRed;
+                list.Find(i.ToString()).Find("Amount").GetComponent<Text>().color = warningRed;
+            }
+            else
+            {
+                list.Find(i.ToString()).GetComponent<Text>().color = Color.white;
+                list.Find(i.ToString()).Find("Amount").GetComponent<Text>().color = Color.white;
+            }
         }
         detailedPage.transform.Find("Warning Text").gameObject.SetActive(false);
     }
@@ -208,11 +231,26 @@ public class Crafting : MonoBehaviour
         detailedPage.transform.Find("Warning Text").gameObject.SetActive(false);
         if (ItemChecker(blueprints[currentOnView].items, blueprints[currentOnView].amounts, craftAmount.GetCurAmount()))
         {
+            detailedPage.transform.Find("Success Text").gameObject.SetActive(true);
+            successCountdown = Time.time;
             backpack.PutIn(blueprints[currentOnView].itemName, craftAmount.GetCurAmount());
         }
         else
         {
+            // When call warning text, always disable success text
+            detailedPage.transform.Find("Success Text").gameObject.SetActive(false);
+            successCountdown = -1;
+
             detailedPage.transform.Find("Warning Text").gameObject.SetActive(true);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (successCountdown != -1 && Time.time > successCountdown + 3)
+        {
+            successCountdown = -1;
+            detailedPage.transform.Find("Success Text").gameObject.SetActive(false);
         }
     }
 }

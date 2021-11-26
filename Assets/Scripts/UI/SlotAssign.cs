@@ -21,7 +21,6 @@ public class SlotAssign : MonoBehaviour
 
     public void AssignOnto(int pos)
     {
-        Debug.Log("Assigning slot " + slotID + " onto bar " + pos);
         backpack.PutOnBar(pos, slotID);
     }
 

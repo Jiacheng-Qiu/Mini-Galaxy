@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
+// Make sample planet on map rotateable
 public class GrabRotate : MonoBehaviour
 {
     private bool onDrag;
     private InterfaceAnimManager appearCheck;
     private Vector2 mousePos;
+    public RectTransform rectTransform;
 
     private void Start()
     {
@@ -16,7 +19,7 @@ public class GrabRotate : MonoBehaviour
 
     private void Update()
     {
-        if (appearCheck.currentState == CSFHIAnimableState.appeared && Input.GetMouseButtonDown(0))
+        if (appearCheck.currentState == CSFHIAnimableState.appeared && Input.GetMouseButtonDown(0) && EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.name == "MouseHoverDetect")
         {
             onDrag = true;
             mousePos = Input.mousePosition;

@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class InventoryButton : MonoBehaviour
+public class InventoryButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private int slotID;
     public bool isSubMenu; // If this object is submenu, it will listen to left clicks and disappear
@@ -9,8 +11,13 @@ public class InventoryButton : MonoBehaviour
     public PlayerMovement player; 
     public InterfaceAnimManager slotAssign; // On submenu side
     public InterfaceAnimManager splitMenu; // On submenu side
-
+    public InterfaceAnimManager specItem; // On main button side
     public InteractionAnimation anim;
+
+    // Record time mouse keep hover over obj
+    private bool onStart;
+    private float startTime;
+
 
     // Setup the slot currently submenu is calling on
     public void SetId(int id)
@@ -24,6 +31,8 @@ public class InventoryButton : MonoBehaviour
         {
             return;
         }
+        onStart = false;
+        specItem.startDisappear();
         // Assign slotid onto submenu
         subSlot.gameObject.SetActive(true);
         subSlot.transform.position = gameObject.transform.position;
@@ -76,5 +85,32 @@ public class InventoryButton : MonoBehaviour
             }
         }
     }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (!isSubMenu)
+        {
+            startTime = Time.time;
+            onStart = true;
+        }
+    }
 
+    private void FixedUpdate()
+    {
+        if (onStart && Time.time > startTime + 1)
+        {
+            specItem.gameObject.SetActive(true);
+            specItem.startAppear();
+            specItem.transform.position = gameObject.transform.position + new Vector3(0.3f, -0.1f, 0);
+            specItem.transform.Find("Name").GetComponent<Text>().text = player.GetComponent<Backpack>().GetItemName(slotID); ;
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (!isSubMenu)
+        {
+            onStart = false;
+            specItem.startDisappear();
+        }
+    }
 }

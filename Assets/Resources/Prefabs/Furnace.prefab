@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5ca31c36fa75f404f9824232e7ae90fc, type: 2}
+  - {fileID: 2100000, guid: 92c7137d792ec034098158544dd07e69, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -132,6 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   machineName: Furnace
+  player: {fileID: 0}
 --- !u!65 &1627639675
 BoxCollider:
   m_ObjectHideFlags: 0

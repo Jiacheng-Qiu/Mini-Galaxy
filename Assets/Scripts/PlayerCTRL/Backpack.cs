@@ -60,6 +60,7 @@ public class Backpack : MonoBehaviour
                 }
                 slots[cur] = Instantiate(slot);
                 slots[cur].name = cur.ToString();
+                slots[cur].GetComponent<InventoryButton>().SetId(cur);
                 slots[cur].transform.SetParent(slotContainer.transform);
                 slots[cur].transform.localPosition = new Vector3(-75 + 37 * j, 75 - 37 * i, 0);
                 slots[cur].transform.localRotation = Quaternion.identity;
@@ -76,6 +77,11 @@ public class Backpack : MonoBehaviour
         {
             uiInteraction.DisplayBag();
         }
+    }
+
+    public String GetItemName(int pos)
+    {
+        return slotItems[pos];
     }
 
     // Return false if inventory up to limit
@@ -110,12 +116,6 @@ public class Backpack : MonoBehaviour
             
             inventory.Add(obj, amount);
 
-            // Add new obj into inventory UI
-            /*GameObject imgIcon = new GameObject("Item");
-            imgIcon.AddComponent<Image>().sprite = Resources.Load<Sprite>("Icons/" + obj);
-            imgIcon.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
-            imgIcon.transform.SetParent(slots[nextEmptySlot].transform, false);
-            imgIcon.transform.localPosition = new Vector3(0, 0, 0);*/
             Transform img = slots[nextEmptySlot].transform.Find("Image");
             img.GetComponent<Image>().sprite = Resources.Load<Sprite>("Icons/" + obj);
             img.gameObject.SetActive(true);
@@ -127,6 +127,16 @@ public class Backpack : MonoBehaviour
             amountCount.SetActive(true);
             
             currentItemCount++;
+
+            // Check if some spot on inventory bar is empty, if so also add to bar
+            for (int i = 0; i < onBar.Length; i++)
+            {
+                if(onBar[i] == -1)
+                {
+                    PutOnBar(nextEmptySlot, i);
+                }
+            }
+
             // Check for the next empty slot
             emptyChecker();
         }

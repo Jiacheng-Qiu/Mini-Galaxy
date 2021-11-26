@@ -10,7 +10,7 @@ public class Missions : MonoBehaviour
     private List<Text> displayMissions;
     public Transform missionFolder;
     public Transform missionIconFolder;
-    public Transform camera;
+    public Transform uiCamera;
     private Transform[] missionIcons;
     private int displayLimit;
     private InteractionAnimation uiAnimation;
@@ -42,6 +42,8 @@ public class Missions : MonoBehaviour
             missionIcons[i].gameObject.SetActive(false);
         }
         planetRadius = 0;
+
+        missionIconFolder.gameObject.SetActive(true);
     }
 
 
@@ -58,12 +60,6 @@ public class Missions : MonoBehaviour
             return onDisplay.Count;
         }
         return -1;
-        /*else
-        {
-            onDisplay.Insert(0, missionPos);
-            RemoveFromDisplay(onDisplay[3]);
-            return 1;
-        }*/
     }
 
     public int RemoveFromDisplay(int missionPos)
@@ -135,8 +131,6 @@ public class Missions : MonoBehaviour
         {
             return;
         }
-        Vector3 euler = transform.localRotation.eulerAngles;
-        missionIconFolder.eulerAngles = new Vector3(-euler.x - transform.Find("Main Camera").localEulerAngles.x, -euler.y, -euler.z);
         for (int i = 0; i < 2; i++)
         {
             if (i >= onDisplay.Count)
@@ -150,8 +144,8 @@ public class Missions : MonoBehaviour
                 int distance = (int)(2 * Mathf.PI * planetRadius * minAngle / 360);
                 missionIcons[i].Find("Distance").GetComponent<Text>().text = distance + "m";
                 missionIcons[i].localPosition = (missionPos - transform.localPosition).normalized * 5;
-                missionIcons[i].rotation = Quaternion.LookRotation(missionIcons[i].position - camera.position);
-                float scale = (distance < 600) ? 0.08f - 0.0001f * distance : 0.02f;
+                missionIcons[i].rotation = Quaternion.LookRotation(missionIcons[i].localPosition);
+                float scale = (distance < 300) ? 0.05f - 0.0001f * distance : 0.02f;
                 missionIcons[i].localScale = new Vector3(scale, scale, scale);
                 missionIcons[i].gameObject.SetActive(true);
             }
