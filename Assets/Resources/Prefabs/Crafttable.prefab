@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1601798383609116393}
   - component: {fileID: 1595472263477252377}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 6921416506067956847}
   - component: {fileID: -4292719594727256217}
   - component: {fileID: 5691554285750231249}
-  m_Layer: 6
+  m_Layer: 13
   m_Name: Crafttable
   m_TagString: Interactable
   m_Icon: {fileID: 0}

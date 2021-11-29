@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InteractionAnimation : MonoBehaviour
+public class InteractionAnimation : UIInformer
 {
     // Contains animations while player status change
     public Camera cam;
@@ -32,6 +32,8 @@ public class InteractionAnimation : MonoBehaviour
     public InterfaceAnimManager craftUI;
     public InterfaceAnimManager mapUI;
     public InterfaceAnimManager missionUI;
+
+    public LoadingBar aimLoad;
 
     private float cachedShieldDmg;
     private bool oxygenWarningEnabled;
@@ -66,7 +68,6 @@ public class InteractionAnimation : MonoBehaviour
         missionActive = false;
         walk = null;
     }
-
     private void FixedUpdate()
     {
         if (onStartup)
@@ -112,6 +113,15 @@ public class InteractionAnimation : MonoBehaviour
             invBar.startAppear();
             onStartup = false;
         }
+    }
+
+    public void StartLoad(float period)
+    {
+        aimLoad.StartLoad(period);
+    }
+    public void StopLoad()
+    {
+        aimLoad.StopLoad();
     }
 
     // color and size change based on current health, amount=percentage
@@ -178,6 +188,7 @@ public class InteractionAnimation : MonoBehaviour
         {
             onHelmetAnimation = true;
         }
+        InformGuide("N", false);
     }
 
     private void HelmetAnim()
@@ -283,21 +294,14 @@ public class InteractionAnimation : MonoBehaviour
     {
         if (!bagActive)
         {
-            if (craftActive)
-            {
-                DisplayCraft();
-            }
-            if (mapActive)
-            {
-                DisplayMap();
-            }
-            if (missionActive)
-            {
-                DisplayMission();
-            }
+            StopCraft();
+            StopMap();
+            StopMission();
             invenUI.gameObject.SetActive(true);
             invenUI.startAppear();
             bagActive = true;
+            movement.StopPlace();
+            movement.StopDismantle();
         }
         else
         {
@@ -305,27 +309,29 @@ public class InteractionAnimation : MonoBehaviour
             bagActive = false;
         }
         movement.ChangeCursorFocus(bagActive);
+        InformGuide("B", bagActive);
+    }
+
+    public void StopBag()
+    {
+        if (bagActive)
+        {
+            DisplayBag();
+        }
     }
 
     public void DisplayCraft()
     {
         if (!craftActive)
         {
-            if (bagActive)
-            {
-                DisplayBag();
-            }
-            if (mapActive)
-            {
-                DisplayMap();
-            }
-            if (missionActive)
-            {
-                DisplayMission();
-            }
+            StopBag();
+            StopMission();
+            StopMap();
             craftUI.gameObject.SetActive(true);
             craftUI.startAppear();
             craftActive = true;
+            movement.StopPlace();
+            movement.StopDismantle();
         }
         else
         {
@@ -333,27 +339,29 @@ public class InteractionAnimation : MonoBehaviour
             craftActive = false;
         }
         movement.ChangeCursorFocus(craftActive);
+        InformGuide("C", craftActive);
+    }
+
+    public void StopCraft()
+    {
+        if (craftActive)
+        {
+            DisplayCraft();
+        }
     }
 
     public void DisplayMap()
     {
         if (!mapActive)
         {
-            if (bagActive)
-            {
-                DisplayBag();
-            }
-            if (craftActive)
-            {
-                DisplayCraft();
-            }
-            if (missionActive)
-            {
-                DisplayMission();
-            }
+            StopBag();
+            StopCraft();
+            StopMission();
             mapUI.gameObject.SetActive(true);
             mapUI.startAppear();
             mapActive = true;
+            movement.StopPlace();
+            movement.StopDismantle();
         }
         else
         {
@@ -361,27 +369,29 @@ public class InteractionAnimation : MonoBehaviour
             mapActive = false;
         }
         movement.ChangeCursorFocus(mapActive);
+        InformGuide("M", mapActive);
     }
-    
+
+    public void StopMap()
+    {
+        if (mapActive)
+        {
+            DisplayMap();
+        }
+    }
+
     public void DisplayMission()
     {
         if (!missionActive)
         {
-            if (bagActive)
-            {
-                DisplayBag();
-            }
-            if (craftActive)
-            {
-                DisplayCraft();
-            }
-            if (mapActive)
-            {
-                DisplayMap();
-            }
+            StopBag();
+            StopCraft();
+            StopMap();
             missionUI.gameObject.SetActive(true);
             missionUI.startAppear();
             missionActive = true;
+            movement.StopPlace();
+            movement.StopDismantle();
         }
         else
         {
@@ -389,6 +399,23 @@ public class InteractionAnimation : MonoBehaviour
             missionActive = false;
         }
         movement.ChangeCursorFocus(missionActive);
+        InformGuide("J", missionActive);
+    }
+
+    public void StopMission()
+    {
+        if (missionActive)
+        {
+            DisplayMission();
+        }
+    }
+
+    public void StopAll()
+    {
+        StopBag();
+        StopCraft();
+        StopMission();
+        StopMap();
     }
 
     public void UISlide(bool isLeft)
@@ -410,6 +437,7 @@ public class InteractionAnimation : MonoBehaviour
             }
             bagActive = !bagActive;
             craftActive = !craftActive;
+            InformGuide(bagActive? "B" : "C", true);
             lastUIAnim = Time.time;
         }
     }

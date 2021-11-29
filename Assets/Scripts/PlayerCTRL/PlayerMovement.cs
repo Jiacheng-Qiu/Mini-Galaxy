@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using Cursor = UnityEngine.Cursor;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : UIInformer
 {
     // GUI telling player this can interact
     public GameObject informer;
@@ -37,8 +37,12 @@ public class PlayerMovement : MonoBehaviour
     public GameObject flashlight;
     private bool flashSwitch;
 
-    private bool onPreview = false; // Assign preview when placing items
+    private bool onPreview; // Assign preview when placing items
+    private bool onDismantle;
+    private GameObject dismantleObject;
     private GameObject previewObject;
+
+    private float dismantleStartTime; // Record when m1 held
 
     private Vector3 marker; // Player marker for marking positions on planet
 
@@ -58,6 +62,13 @@ public class PlayerMovement : MonoBehaviour
         transform.parent = planet.transform;
         inventory = gameObject.GetComponent<PlayerInventory>();
         backpack = gameObject.GetComponent<Backpack>();
+
+        onPreview = false;
+        onDismantle = false;
+        dismantleStartTime = -1;
+
+        flashlight.SetActive(false);
+        flashSwitch = false;
 
         marker = Vector3.zero;
     }
@@ -82,6 +93,8 @@ public class PlayerMovement : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+        // Tell attack script if shooting disabled
+        PlayerStatus.attackDisabled = onFocus;
     }
 
 
@@ -90,24 +103,15 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerStatus.moveDisabled)
             return;
 
-        // Place object on ground in placing
-        // When player tab left mouse button to place, exit preview state
-        if (onPreview && Input.GetMouseButton(0))
-        {
-            onPreview = false;
-            previewObject.GetComponent<MeshRenderer>().material = Resources.Load("Materials/" + previewObject.GetComponent<Machine>().machineName + "Material", typeof(Material)) as Material;
-            previewObject.GetComponent<Machine>().enabled = true;
-            previewObject.transform.parent = transform.parent;
-            previewObject = null;
-        }
-
         // Get input for flashlight
         if (Input.GetKeyUp(KeyCode.L))
         {
-            flashlight.SetActive(flashSwitch);
             flashSwitch = !flashSwitch;
+            flashlight.SetActive(flashSwitch);
+            InformGuide("L", false);
         }
 
+        // REDO
         if (Input.GetKeyUp(KeyCode.LeftBracket))
         {
             Vector3 rayOrigin = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
@@ -120,16 +124,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Open or close helmet
-        if (Input.GetKeyUp(KeyCode.N))
+        /*if (Input.GetKeyUp(KeyCode.N))
         {
             gameObject.GetComponent<InteractionAnimation>().HelmetSwitch();
-        }
-
-        // Tell attack script if shooting disabled
-        PlayerStatus.attackDisabled = onFocus;
-
-        // Ask planet to assign mesh collider, only happen when there is one planet
-        gDirection = transform.position - planet.transform.position;
+        }*/
         if (planet != null && planet.GetComponent<Planet>() != null)
         {
             planet.GetComponent<Planet>().GenerateCollider((transform.position - planet.transform.position).normalized);
@@ -147,11 +145,92 @@ public class PlayerMovement : MonoBehaviour
                     Throw(-1);
                 }
 
-                if (aimObject == null && Input.GetKeyDown(KeyCode.E))
+                // Place Preview interface
+                if (!onPreview)
                 {
-                    Place(-1);
+                    if (Input.GetKeyDown(KeyCode.E))
+                        Place(-1);
+                } else
+                {
+                    // Place object on ground in placing
+                    // When player tab left mouse button to place, exit preview state
+                    if (Input.GetMouseButton(0))
+                    {
+                        previewObject.GetComponent<MeshRenderer>().material = Resources.Load("Materials/" + previewObject.GetComponent<Machine>().machineName + "Material", typeof(Material)) as Material;
+                        previewObject.GetComponent<Machine>().enabled = true;
+                        previewObject.GetComponent<Collider>().enabled = true;
+                        previewObject.transform.parent = transform.parent;
+                        previewObject = null;
+                        onPreview = false;
+                        InformGuide("E", false);
+                    }
+                    else if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        StopPlace();
+                    }
+                }
+
+
+                // Dismantle preview interface
+                if (Input.GetKeyUp(KeyCode.T))
+                {
+                    if (onDismantle)
+                    {
+                        StopDismantle();
+                    } else
+                    {
+                        Dismantle();
+                    }
+                }
+
+                if (Input.GetMouseButtonDown(0) && onDismantle)
+                {
+                    dismantleStartTime = Time.time;
+                    uiAnimation.StartLoad(1);
+                } else if (Input.GetMouseButtonUp(0) && onDismantle)
+                {
+                    dismantleStartTime = -1;
+                    uiAnimation.StopLoad();
                 }
             }
+        }
+    }
+
+    public void Dismantle()
+    {
+        if (onPreview)
+        {
+            StopPlace();
+        }
+        uiAnimation.StopAll();
+        onDismantle = true;
+        PlayerStatus.attackDisabled = true;
+        InformGuide("T", true);
+    }
+
+    public void StopDismantle()
+    {
+        onDismantle = false;
+        dismantleStartTime = -1;
+        uiAnimation.StopLoad();
+        if (dismantleObject != null)
+        {
+            dismantleObject.GetComponent<MeshRenderer>().material = Resources.Load("Materials/" + dismantleObject.GetComponent<Machine>().machineName + "Material", typeof(Material)) as Material;
+        }
+        dismantleObject = null;
+        PlayerStatus.attackDisabled = true;
+        InformGuide("T", false);
+    }
+
+    public void StopPlace()
+    {
+        if (previewObject != null)
+        {
+            backpack.PutIn(previewObject.GetComponent<Machine>().machineName, 1);
+            Destroy(previewObject);
+            previewObject = null;
+            onPreview = false;
+            InformGuide("E", false);
         }
     }
 
@@ -180,12 +259,51 @@ public class PlayerMovement : MonoBehaviour
         uiAnimation.DisplayInformer(false);
         if (onPreview)
             Preview();
+        else if (onDismantle)
+        {
+            Vector3 dmOrig = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+            RaycastHit dmHit;
+            if (Physics.Raycast(dmOrig, cam.transform.forward, out dmHit, 50, LayerMask.GetMask("Artificial")))
+            {
+                if (dismantleObject != null)
+                {
+                    if (!GameObject.ReferenceEquals(dismantleObject, dmHit.transform.gameObject))
+                    {
+                        dismantleObject.GetComponent<MeshRenderer>().material = Resources.Load("Materials/" + dismantleObject.GetComponent<Machine>().machineName + "Material", typeof(Material)) as Material;
+                        dismantleObject = dmHit.transform.gameObject;
+                        dismantleObject.GetComponent<MeshRenderer>().material = Resources.Load("Materials/DismantleMaterial", typeof(Material)) as Material;
+                        dismantleStartTime = -1;
+                        uiAnimation.StopLoad();
+                    }
+                    else if (dismantleStartTime != -1 && Time.time > dismantleStartTime + 1)
+                    {
+                        backpack.PutIn(dismantleObject.GetComponent<Machine>().machineName, 1);
+                        Destroy(dismantleObject);
+                        dismantleObject = null;
+                        dismantleStartTime = -1;
+                        uiAnimation.StopLoad();
+                    }
+                } else
+                {
+                    dismantleObject = dmHit.transform.gameObject;
+                    dismantleObject.GetComponent<MeshRenderer>().material = Resources.Load("Materials/DismantleMaterial", typeof(Material)) as Material;
+                    dismantleStartTime = -1;
+                    uiAnimation.StopLoad();
+                }
+            }
+            else if (dismantleObject != null)
+            {
+                dismantleObject.GetComponent<MeshRenderer>().material = Resources.Load("Materials/" + dismantleObject.GetComponent<Machine>().machineName + "Material", typeof(Material)) as Material;
+                dismantleObject = null;
+                dismantleStartTime = -1;
+                uiAnimation.StopLoad();
+            }
+        }
     }
 
     // Give preview of placing placable items
     private void Preview()
     {
-        // TODO: sometimes machine dissappear??
         if (previewObject == null)
         {
             onPreview = false;
@@ -273,6 +391,8 @@ public class PlayerMovement : MonoBehaviour
     // Make player rotate to gravity
     void Gravitize()
     {
+        // Ask planet to assign mesh collider, only happen when there is one planet
+        gDirection = transform.position - planet.transform.position;
         // Apply gravity
         Vector3 grav = (transform.position - planet.transform.position).normalized;
         rb.AddForce(grav * -9.8f);
@@ -372,7 +492,9 @@ public class PlayerMovement : MonoBehaviour
     // Put placeable items onto ground only when no interactives on aiming
     public void Place(int bagPos)
     {
-        string tag = bagPos == -1 ? inventory.CheckTag() : backpack.CheckTag(bagPos, false);
+        StopDismantle();
+
+        string tag = (bagPos == -1) ? inventory.CheckTag() : backpack.CheckTag(bagPos, false);
         // First check the tag of the output, if it is Interactable or Spaceship, then direct to preview scene
         if (tag != "Interactable" && tag != "Spaceship")
         {
@@ -388,12 +510,12 @@ public class PlayerMovement : MonoBehaviour
         }
         // Assign preview material, and disable scripts
         obj.GetComponent<Machine>().player = gameObject;
-        Debug.Log(Resources.Load("Materials/PreviewMaterial.mat"));
         obj.GetComponent<MeshRenderer>().material = Resources.Load("Materials/PreviewMaterial", typeof(Material)) as Material;
         obj.GetComponent<Machine>().enabled = false;
+        obj.GetComponent<Collider>().enabled = false;
         onPreview = true;
         previewObject = obj;
         previewObject.SetActive(true);
-        
+        InformGuide("E", true);
     }
 }

@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 1627639677}
   - component: {fileID: 1627639678}
   - component: {fileID: 1627639683}
-  m_Layer: 6
+  m_Layer: 13
   m_Name: Furnace
   m_TagString: Interactable
   m_Icon: {fileID: 0}

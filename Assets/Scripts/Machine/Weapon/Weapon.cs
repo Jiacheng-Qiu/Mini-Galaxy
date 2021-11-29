@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Weapon : MonoBehaviour
+public class Weapon : UIInformer
 {
     public GameObject user;
     private GameObject laser;
@@ -74,6 +74,7 @@ public class Weapon : MonoBehaviour
             ammoDisplay.startAppear();
             inspectDisplay.startDisappear();
         }
+        InformGuide("I", onInspect);
     }
 
     // Fire laser and reduce curMag

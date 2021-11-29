@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,13 +11,11 @@ public class Backpack : MonoBehaviour
     public GameObject slotContainer;
     private GameObject[] slots;
     private string[] slotItems; // Save the name of all items in slots
-    private Hashtable inventory;
+    private Dictionary<string, int> inventory;
     private int currentItemCount;
     private int nextEmptySlot;
 
     private int[] onBar; // Record the items reged on inv bar
-
-    private PlayerMovement movement;
     private InteractionAnimation uiInteraction;
     private PlayerInventory invBar;
 
@@ -36,10 +34,9 @@ public class Backpack : MonoBehaviour
         currentItemCount = 0;
         nextEmptySlot = 0;
 
-        inventory = new Hashtable();
+        inventory = new Dictionary<string, int>();
         slotItems = new string[itemLimit];
         //CreateSlots();
-        movement = gameObject.GetComponent<PlayerMovement>();
         invBar = gameObject.GetComponent<PlayerInventory>();
     }
 
@@ -91,7 +88,7 @@ public class Backpack : MonoBehaviour
         // Divided into already existed materials and new materials
         if (inventory.ContainsKey(obj))
         {
-            int total = (int)inventory[obj] + amount;
+            int total = inventory[obj] + amount;
             inventory[obj] = total;
             // Renew the amount count
             int pos;
@@ -149,7 +146,7 @@ public class Backpack : MonoBehaviour
         // Return false if the obj isn't in inventory
         for (int i = 0; i < itemLimit; i++)
         {
-            if (slotItems[i] == obj && (int)inventory[obj] >= amount)
+            if (slotItems[i] == obj && inventory[obj] >= amount)
             {
                 return true;
             }
@@ -179,18 +176,16 @@ public class Backpack : MonoBehaviour
             if (slotItems[i] != null && slotItems[i].Equals(obj))
             {
                 // Examine if the player have required amount
-                if ((int)inventory[obj] == amount)
+                if (inventory[obj] == amount)
                 {
                     // if the count = required amount, run getOut and take out material entirely from slot
                     GetOut(i, false);
                     return true;
                 }
-                else if ((int)inventory[obj] > amount)
+                else if (inventory[obj] > amount)
                 {
-                    Debug.Log(inventory[obj]);
                     // Update amount in display UI and hashtable
-                    inventory[obj] = (int)inventory[obj] - amount;
-                    Debug.Log(inventory[obj]);
+                    inventory[obj] -= amount;
                     slots[i].transform.Find("Amount").GetComponent<Text>().text = inventory[obj].ToString();
                     UpdateAmount(i);
                     return true;
@@ -232,7 +227,7 @@ public class Backpack : MonoBehaviour
         slots[selectedSlot].transform.Find("Amount").gameObject.SetActive(false);
 
         slotItems[selectedSlot] = null;
-        int amount = (int)inventory[item];
+        int amount = inventory[item];
         inventory.Remove(item);
         currentItemCount--;
         UpdateAmount(selectedSlot);
@@ -288,7 +283,7 @@ public class Backpack : MonoBehaviour
             } else
             {
                 // Update the amount on bar
-                invBar.UpdateAmount(barPos, (int)inventory[item]);
+                invBar.UpdateAmount(barPos, inventory[item]);
             }
         }
     }
@@ -328,7 +323,7 @@ public class Backpack : MonoBehaviour
         {
             return;
         }
-        int amount = (int)inventory[item];
+        int amount = inventory[item];
 
         int orig = onBar[index];
         // If the pos on bar is previously assigned, unassign it.
