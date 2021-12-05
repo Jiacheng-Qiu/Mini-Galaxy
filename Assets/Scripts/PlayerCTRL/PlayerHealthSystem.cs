@@ -12,7 +12,7 @@ public class PlayerHealthSystem : HealthSystem
     public float runCD;
     private bool isRun;
     private bool isWalk;
-    private int heartrate;
+    public int heartrate;
     private float lastRunHeart;
     private int cachedHeart;
     private float lastHeartUpdate;
@@ -22,18 +22,27 @@ public class PlayerHealthSystem : HealthSystem
     private float recoverTimeAfterHit;
     private InteractionAnimation uiAnimation;
 
-
     private void Start()
     {
         heartrate = 60;
         rb = gameObject.GetComponent<Rigidbody>();
         uiAnimation = gameObject.GetComponent<InteractionAnimation>();
-        currentHealth = maxHealth;
-        currentShield = maxShield;
         oxygenProvided = false;
         isRun = false;
         isWalk = false;
         recoverTimeAfterHit = 3;
+    }
+
+    public void LoadStatus(SaveFormat save)
+    {
+        this.currentHealth = save.hp;
+        this.maxHealth = save.maxHp;
+        this.currentShield = save.shield;
+        this.maxShield = save.maxShield;
+        this.currentOxygen = save.oxygen;
+        this.maxOxygen = save.maxOxygen;
+        this.armor = save.armor;
+        this.heartrate = save.heartrate;
     }
 
     void FixedUpdate()

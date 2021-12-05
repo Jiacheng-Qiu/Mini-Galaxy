@@ -2405,7 +2405,64 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
-  m_WarningMessage: 
+  m_WarningMessage: '
+
+    Transform ''ORG-f_index_03_R'' has been deleted
+
+    Transform
+    ''ORG-f_index_02_R'' has been deleted
+
+    Transform ''ORG-f_index_01_R'' has
+    been deleted
+
+    Transform ''ORG-thumb_03_R'' has been deleted
+
+    Transform
+    ''ORG-thumb_02_R'' has been deleted
+
+    Transform ''ORG-thumb_01_R'' has been
+    deleted
+
+    Transform ''ORG-palm_01_R'' has been deleted
+
+    Transform ''ORG-f_middle_03_R''
+    has been deleted
+
+    Transform ''ORG-f_middle_02_R'' has been deleted
+
+    Transform
+    ''ORG-f_middle_01_R'' has been deleted
+
+    Transform ''ORG-palm_02_R'' has been
+    deleted
+
+    Transform ''ORG-f_ring_03_R'' has been deleted
+
+    Transform ''ORG-f_ring_02_R''
+    has been deleted
+
+    Transform ''ORG-f_ring_01_R'' has been deleted
+
+    Transform
+    ''ORG-palm_03_R'' has been deleted
+
+    Transform ''ORG-f_pinky_03_R'' has been
+    deleted
+
+    Transform ''ORG-f_pinky_02_R'' has been deleted
+
+    Transform ''ORG-f_pinky_01_R''
+    has been deleted
+
+    Transform ''ORG-palm_04_R'' has been deleted
+
+    Transform
+    ''ORG-hand_R'' has been deleted
+
+    Transform ''ORG-forearm_R'' has been deleted
+
+    Transform
+    ''ORG-upper_arm_R'' has been deleted'
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0

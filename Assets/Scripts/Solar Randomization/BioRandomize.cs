@@ -16,7 +16,6 @@ public class BioRandomize : MonoBehaviour
     private TerrainFace[] faces;
     private void Start()
     {
-        Random.InitState(SeedSettings.seed);
         script = gameObject.GetComponent<Planet>();
         faces = script.getTerrainFaces();
 

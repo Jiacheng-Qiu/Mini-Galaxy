@@ -6,11 +6,13 @@ public class PlayerMovement : UIInformer
 {
     // GUI telling player this can interact
     public GameObject informer;
+    private GameSettings settings;
+
     // Mouse sensitivity
-    public float sensX;
-    public float sensY;
+    private float sensX;
+    private float sensY;
     // Cam view init
-    private float viewX;
+    public float viewX;
     private float viewY;
     // POV wont move if on menu focus
     public bool onFocus;
@@ -39,6 +41,7 @@ public class PlayerMovement : UIInformer
 
     private bool onPreview; // Assign preview when placing items
     private bool onDismantle;
+    private float previewRotate;
     private GameObject dismantleObject;
     private GameObject previewObject;
 
@@ -48,14 +51,9 @@ public class PlayerMovement : UIInformer
 
     void Start()
     {
-        /*// Read settings from json file
-        Settings set = JsonUtility.FromJson<Settings>(settings.text);
-        sensX = set.VerticalSensitivity;
-        sensY = set.HorizontalSensitivity;*/
         uiAnimation = gameObject.GetComponent<InteractionAnimation>();
         informer.SetActive(true);
         uiAnimation.DisplayInformer(false);
-        // TODO: code dependency
         // GameObject.Find("ShipConsole").GetComponent<Canvas>().enabled = false;
         ChangeCursorFocus(false);
         //hit = new RaycastHit();
@@ -71,6 +69,29 @@ public class PlayerMovement : UIInformer
         flashSwitch = false;
 
         marker = Vector3.zero;
+
+        // settings = GameObject.Find("DataTransfer").GetComponent<GameSettings>();
+        // ChangeSettings();
+        sensX = 1;
+        sensY = 1;
+    }
+
+    public void LoadStatus(SaveFormat data)
+    {
+        this.speed = data.speed;
+        this.runSpeed = data.runSpeed;
+        this.jump = data.jump;
+        transform.position = new Vector3(data.posX, data.posY, data.posZ);
+        transform.eulerAngles = new Vector3(data.rotationX, data.rotationY, data.rotationZ);
+        this.viewX = data.camViewX;
+    }
+
+    public void ChangeSettings()
+    {
+        sensX = settings.sensx;
+        sensY = settings.sensy;
+
+        cam.GetComponent<Camera>().fieldOfView = settings.fov;
     }
 
     public Vector3 GetMarker()
@@ -135,16 +156,18 @@ public class PlayerMovement : UIInformer
         // Can't do anything if is on Interfaces
         if (!onFocus)
         {
-            Interact();
             Move();
             if (!onShip)
             {
                 Jump();
-                if (Input.GetKeyDown(KeyCode.G))
+                if (!onPreview && !onDismantle)
                 {
-                    Throw(-1);
+                    Interact();
+                    if (Input.GetKeyDown(KeyCode.G))
+                    {
+                        Throw(-1);
+                    }
                 }
-
                 // Place Preview interface
                 if (!onPreview)
                 {
@@ -152,21 +175,28 @@ public class PlayerMovement : UIInformer
                         Place(-1);
                 } else
                 {
+                    float rotation = Input.GetAxis("Mouse ScrollWheel");
                     // Place object on ground in placing
                     // When player tab left mouse button to place, exit preview state
-                    if (Input.GetMouseButton(0))
+                    if (Input.GetMouseButtonUp(0))
                     {
                         previewObject.GetComponent<MeshRenderer>().material = Resources.Load("Materials/" + previewObject.GetComponent<Machine>().machineName + "Material", typeof(Material)) as Material;
                         previewObject.GetComponent<Machine>().enabled = true;
                         previewObject.GetComponent<Collider>().enabled = true;
                         previewObject.transform.parent = transform.parent;
                         previewObject = null;
+                        previewRotate = 0;
                         onPreview = false;
                         InformGuide("E", false);
+                        PlayerStatus.attackDisabled = false;
                     }
                     else if (Input.GetKeyDown(KeyCode.E))
                     {
                         StopPlace();
+                    } 
+                    else if(rotation != 0)
+                    {
+                        previewRotate += rotation * 5;
                     }
                 }
 
@@ -218,7 +248,7 @@ public class PlayerMovement : UIInformer
             dismantleObject.GetComponent<MeshRenderer>().material = Resources.Load("Materials/" + dismantleObject.GetComponent<Machine>().machineName + "Material", typeof(Material)) as Material;
         }
         dismantleObject = null;
-        PlayerStatus.attackDisabled = true;
+        PlayerStatus.attackDisabled = false;
         InformGuide("T", false);
     }
 
@@ -229,8 +259,10 @@ public class PlayerMovement : UIInformer
             backpack.PutIn(previewObject.GetComponent<Machine>().machineName, 1);
             Destroy(previewObject);
             previewObject = null;
+            previewRotate = 0;
             onPreview = false;
             InformGuide("E", false);
+            PlayerStatus.attackDisabled = false;
         }
     }
 
@@ -238,25 +270,29 @@ public class PlayerMovement : UIInformer
     {
         Gravitize();
 
-        Vector3 rayOrigin = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
-        RaycastHit hit;
-        // TODO: add interactable in the following
-        if (Physics.Raycast(rayOrigin, cam.transform.forward, out hit, interactRange, LayerMask.GetMask("Material")))
+        if (!onPreview && !onDismantle)
         {
-            if (!hit.collider.isTrigger && hit.collider.tag == "Material" || hit.collider.tag == "Interactable" || hit.collider.tag == "Spaceship")
+            Vector3 rayOrigin = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+            RaycastHit hit;
+            // TODO: add interactable in the following
+            if (Physics.Raycast(rayOrigin, cam.transform.forward, out hit, interactRange, (1 << LayerMask.NameToLayer("Material") | (1 << LayerMask.NameToLayer("Artificial")))))
             {
-                aimObject = hit.collider;
-                // Also display the name on UI, delete clone text
-
-                informer.transform.Find("Item name").GetComponent<Text>().text = hit.collider.name.Replace("(Clone)", "");
-                uiAnimation.DisplayInformer(true);
-                return;
+                if (!hit.collider.isTrigger)
+                {
+                    aimObject = hit.collider;
+                    informer.transform.Find("Item name").GetComponent<Text>().text = hit.collider.name.Replace("(Clone)", "");
+                    uiAnimation.DisplayInformer(true);
+                }
+            } else
+            {
+                uiAnimation.DisplayInformer(false);
+                aimObject = null;
             }
+        } else
+        {
+            uiAnimation.DisplayInformer(false);
         }
 
-        // If above didn't match, then there is no aimObj
-        aimObject = null;
-        uiAnimation.DisplayInformer(false);
         if (onPreview)
             Preview();
         else if (onDismantle)
@@ -314,7 +350,8 @@ public class PlayerMovement : UIInformer
         if (Physics.Raycast(rayOrigin, cam.transform.forward, out hit, 30, LayerMask.GetMask("Terrain")))
         {
             previewObject.transform.position = hit.point;
-            previewObject.transform.LookAt(transform);
+            previewObject.transform.eulerAngles = transform.eulerAngles;
+            previewObject.transform.RotateAroundLocal(transform.up, previewRotate);
         }
     }
 
@@ -347,12 +384,12 @@ public class PlayerMovement : UIInformer
     void Interact()
     {
         // Can't jump off ship when in space mode
-        if (Input.GetKey(KeyCode.Escape) && onShip && !onShip.GetComponent<Control>().isFly())
+        if (Input.GetKeyDown(KeyCode.Escape) && onShip && !onShip.GetComponent<Control>().isFly())
         {
             transform.parent = planet.transform;
             onShip = null;
         }
-        else if (!onShip && Input.GetKey(KeyCode.F))
+        else if (!onShip && Input.GetKeyDown(KeyCode.F))
         {
             // First check if the obj to interact with is destroyed already or not
             if (aimObject == null)
@@ -380,12 +417,16 @@ public class PlayerMovement : UIInformer
                     break;
                 // All machines can be taken back into backpack
                 case "Interactable":
-                    backpack.PutIn(aimObject.GetComponent<Machine>().machineName, 1);
-                    Destroy(aimObject.gameObject);
+                    // Open corresponding UI, TODO add more if necessary
+                    switch (aimObject.GetComponent<Machine>().machineName)
+                    {
+                        case "Crafttable":
+                            uiAnimation.DisplayCraft();
+                            break;
+                    }
                     break;
             }
         }
-
     }
 
     // Make player rotate to gravity
@@ -447,7 +488,6 @@ public class PlayerMovement : UIInformer
         }
         else
         {
-            uiAnimation.DisplayInformer(false);
             onShip.GetComponent<Control>().SpaceshipMove();
             gameObject.transform.position = onShip.transform.position;
             // TODO: Temporary setup for posiution
@@ -493,7 +533,6 @@ public class PlayerMovement : UIInformer
     public void Place(int bagPos)
     {
         StopDismantle();
-
         string tag = (bagPos == -1) ? inventory.CheckTag() : backpack.CheckTag(bagPos, false);
         // First check the tag of the output, if it is Interactable or Spaceship, then direct to preview scene
         if (tag != "Interactable" && tag != "Spaceship")
@@ -517,5 +556,6 @@ public class PlayerMovement : UIInformer
         previewObject = obj;
         previewObject.SetActive(true);
         InformGuide("E", true);
+        PlayerStatus.attackDisabled = true;
     }
 }

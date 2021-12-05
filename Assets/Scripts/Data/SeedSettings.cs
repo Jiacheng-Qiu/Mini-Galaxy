@@ -1,7 +1,7 @@
 using UnityEngine;
 
-public static class SeedSettings
+public class SeedSettings : MonoBehaviour
 {
-    public static int seed = 0;
-    public static int gameMode = 0; // 0 for survival, 1 for creative
+    public int seed;
+    public bool onLoad; // false if new game
 }

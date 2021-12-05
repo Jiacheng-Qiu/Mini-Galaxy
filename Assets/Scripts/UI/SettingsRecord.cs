@@ -6,28 +6,34 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class SettingsRecord : MonoBehaviour
 {
-    public PlayerMovement player;
     private Color darkGrey;
     public Transform volFolder;
+    public GameSettings gameSettings;
 
     private void Start()
     {
         darkGrey = new Color(0.196f, 0.196f, 0.196f);
         volFolder = GameObject.Find("Settings").transform.Find("Vol ctr");
+        if (gameSettings == null)
+        {
+            gameSettings = GameObject.Find("DataTransfer").GetComponent<GameSettings>();
+        }
         LoadSettings();
+
+        Screen.fullScreen = gameSettings.isFullScreen;
     }
 
     public void SaveSettings()
     {
         BinaryFormatter format = new BinaryFormatter();
-        string path = Application.persistentDataPath + "/settings";
-        FileStream stream = new FileStream(path, FileMode.Create);
+        string path = Application.persistentDataPath + "/settings.dat";
+        FileStream stream = new FileStream(path, FileMode.OpenOrCreate);
         SettingsFormat data = new SettingsFormat();
-        data.volume = GameSettings.volume;
-        data.sensX = GameSettings.sensx;
-        data.sensY = GameSettings.sensy;
-        data.fullScreen = GameSettings.isFullScreen;
-        data.resolution = 1920;
+        data.volume = gameSettings.volume;
+        data.sensX = gameSettings.sensx;
+        data.sensY = gameSettings.sensy;
+        data.fullScreen = gameSettings.isFullScreen;
+        data.fov = gameSettings.fov;
 
         format.Serialize(stream, data);
         stream.Close();
@@ -37,68 +43,74 @@ public class SettingsRecord : MonoBehaviour
     public void LoadSettings()
     {
         BinaryFormatter format = new BinaryFormatter();
-        string path = Application.persistentDataPath + "/settings";
+        string path = Application.persistentDataPath + "/settings.dat";
+        FileStream stream = null;
         try
         {
-            FileStream stream = new FileStream(path, FileMode.Open);
+            stream = new FileStream(path, FileMode.Open);
             stream.Position = 0;
             SettingsFormat data = format.Deserialize(stream) as SettingsFormat;
-            Setup(data.volume, data.fullScreen, data.sensX, data.sensY);
+            Setup(data.volume, data.fullScreen, data.sensX, data.sensY, data.fov);
             stream.Close();
         }
         catch (Exception e)
         {
+            if (stream != null)
+                stream.Close();
             // In case of loading failure, could be due to no settings file existing, create a new one
             SaveSettings();
         }
     }
 
-    public void Setup(int vol, bool isFull, float sx, float sy)
+    public void Setup(int vol, bool isFull, float sx, float sy, int fov)
     {
-        GameSettings.volume = 0;
+        gameSettings.volume = 0;
         while (vol > 0)
         {
             VolUp();
             vol--;
         }
-        GameSettings.sensx = sx;
-        GameObject.Find("Settings").transform.Find("SensitivityX").Find("InputField").GetComponent<InputField>().text = sx.ToString();
-        GameSettings.sensy = sy;
-        GameObject.Find("Settings").transform.Find("SensitivityY").Find("InputField").GetComponent<InputField>().text = sy.ToString();
-        GameSettings.isFullScreen = isFull;
-        GameObject.Find("Settings").transform.Find("FS toggle").GetComponent<Toggle>().isOn = isFull;
+        gameSettings.sensx = sx;
+        volFolder.parent.Find("sensXInput").GetComponent<InputField>().text = sx.ToString();
+        gameSettings.sensy = sy;
+        volFolder.parent.Find("sensYInput").GetComponent<InputField>().text = sy.ToString();
+        gameSettings.isFullScreen = isFull;
+        volFolder.parent.Find("FS toggle").GetComponent<Toggle>().isOn = isFull;
+        gameSettings.fov = fov;
+        volFolder.parent.Find("Fov slider").GetComponent<Slider>().value = fov;
     }
 
     public void VolDown()
     {
-        if (GameSettings.volume > 0)
+        if (gameSettings.volume > 0)
         {
-            GameSettings.volume--;
+            gameSettings.volume--;
             // Adjust the color of pictures
-            volFolder.Find("vol" + GameSettings.volume).GetComponent<Image>().color = darkGrey;
+            volFolder.Find("vol" + gameSettings.volume).GetComponent<Image>().color = darkGrey;
         }
     }
 
     public void VolUp()
     {
-        if (GameSettings.volume < 7)
+        if (gameSettings.volume < 7)
         {
             // Adjust the color of pictures
-            volFolder.Find("vol" + GameSettings.volume).GetComponent<Image>().color = Color.white;
-            GameSettings.volume++;
+            volFolder.Find("vol" + gameSettings.volume).GetComponent<Image>().color = Color.white;
+            gameSettings.volume++;
         }
     }
 
     public void SetFullScreen()
     {
-        GameSettings.isFullScreen = !GameSettings.isFullScreen;
+        gameSettings.isFullScreen = !gameSettings.isFullScreen;
+        Screen.fullScreen = gameSettings.isFullScreen;
     }
 
     public void SetSenX()
     {
         try
         {
-            GameSettings.sensx = float.Parse(GameObject.Find("Settings").transform.Find("SensitivityX").Find("InputField").GetComponent<InputField>().text);
+            gameSettings.sensx = float.Parse(volFolder.parent.Find("sensXInput").GetComponent<InputField>().text);
         }
         catch(Exception e) {
             Debug.Log("None num received, not accepted" + e);
@@ -109,11 +121,16 @@ public class SettingsRecord : MonoBehaviour
     {
         try
         {
-            GameSettings.sensy = float.Parse(GameObject.Find("Settings").transform.Find("SensitivityY").Find("InputField").GetComponent<InputField>().text);
+            gameSettings.sensy = float.Parse(volFolder.parent.Find("sensYInput").GetComponent<InputField>().text);
         }
         catch (Exception e)
         {
             Debug.Log("None num received, not accepted" + e);
         };
+    }
+
+    public void SetFoV()
+    {
+        gameSettings.fov = (int)volFolder.parent.Find("Fov slider").GetComponent<Slider>().value;
     }
 }

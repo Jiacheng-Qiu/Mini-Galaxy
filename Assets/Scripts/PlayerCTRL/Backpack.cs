@@ -246,7 +246,6 @@ public class Backpack : MonoBehaviour
         }
         catch
         {
-            Debug.LogError("Output failure");
             // If generation failed, this means the stuff generated is Interactable instead of material
             return new GameObject();
         }

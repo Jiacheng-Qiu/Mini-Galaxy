@@ -54,13 +54,13 @@ public class PlayerGuiding : MonoBehaviour
 
         instructions.Add(new Instruction("E", "Place Item", false, false));
         instructions[6].specialInst.Add(new Instruction("M1", "Place", false, true));
+        instructions[6].specialInst.Add(new Instruction("M3", "Rotate", false, true));
         instructions[6].specialInst.Add(new Instruction("E", "Cancel Place", false, true));
+        
 
         instructions.Add(new Instruction("T", "Dismantle", false, false));
         instructions[7].specialInst.Add(new Instruction("M1", "Dismantle", false, true));
         instructions[7].specialInst.Add(new Instruction("T", "Cancel", false, true));
-
-        instructions.Add(new Instruction("K", "Scan nearby", false, true));
 
         instructions.Add(new Instruction("F", "Interact", false, true));
         instructions.Add(new Instruction("G", "Throw", false, true));
@@ -75,6 +75,8 @@ public class PlayerGuiding : MonoBehaviour
         if (state)
         {
             int index = FindInstructionIndex(key);
+            if (index == -1)
+                return;
             for (int i = 0; i < instructions[index].specialInst.Count; i++)
             {
                 foreach (Transform child in instObj[i].transform)

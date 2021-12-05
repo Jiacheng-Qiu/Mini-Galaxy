@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GamePause : MonoBehaviour
@@ -8,8 +6,8 @@ public class GamePause : MonoBehaviour
     private bool isActive = false;
     private void FixedUpdate()
     {
-        // Constantly checking for ` button, if pressed enter pause menu and pause game
-        if(!isActive && Input.GetKeyUp(KeyCode.Tab))
+        // Constantly checking for esc button, if pressed enter pause menu and pause game
+        if(!isActive && Input.GetKeyUp(KeyCode.Escape))
         {
             PauseGame();
         }
@@ -35,5 +33,7 @@ public class GamePause : MonoBehaviour
         Time.timeScale = 1;
         pauseMenu.enabled = false;
         isActive = false;
+
+        gameObject.GetComponent<PlayerMovement>().ChangeSettings();
     }
 }

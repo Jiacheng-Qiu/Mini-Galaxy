@@ -1,13 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public static class GameSettings
+public class GameSettings : MonoBehaviour
 {
-    // Default value
-    public static int volume = 0;
-    public static bool isFullScreen = true;
-    public static float sensx = 1;
-    public static float sensy = 1;
-    public static int resolution = 1920;
+    public int volume;
+    public bool isFullScreen;
+    public float sensx;
+    public float sensy;
+    public int fov;
+
+    void Awake()
+    {
+        // Making data persistant throughout scenes
+        DontDestroyOnLoad(transform.gameObject);
+        volume = 0;
+        isFullScreen = true;
+        sensx = 1;
+        sensy = 1;
+        fov = 60;
+    }
 }

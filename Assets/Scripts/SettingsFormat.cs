@@ -4,7 +4,7 @@ using UnityEngine;
 public class SettingsFormat
 {
     public int volume;
-    public int resolution;
+    public int fov;
     public bool fullScreen;
     public float sensX;
     public float sensY;

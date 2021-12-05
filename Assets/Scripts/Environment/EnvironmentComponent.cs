@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnvironmentComponent : MonoBehaviour
 {
     public float durability = 100; // Health
-    public string name = ""; // The name of this object, used to help creatures distinguish food
+    public new string name = ""; // The name of this object, used to help creatures distinguish food
     public string generalType;
 
     public string productName;

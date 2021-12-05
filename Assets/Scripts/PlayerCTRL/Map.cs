@@ -22,7 +22,7 @@ public class Map : MonoBehaviour
         mapPlanet.gameObject.SetActive(false);
         mission = transform.GetComponent<Missions>();
         planet = null;
-        shape = new ShapeSettings();
+        shape = ScriptableObject.CreateInstance<ShapeSettings>();
         mapUsable = false;
     }
 
