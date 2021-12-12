@@ -1,4 +1,4 @@
-using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class SaveFormat
@@ -24,6 +24,9 @@ public class SaveFormat
     public float rotationY;
     public float rotationZ;
     public float camViewX;
+
+    public Dictionary<string, int> items;
+    public int[] onBar;
 
     public string planetName;
     public float planetPosX;

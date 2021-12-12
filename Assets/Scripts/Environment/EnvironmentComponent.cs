@@ -24,9 +24,10 @@ public class EnvironmentComponent : MonoBehaviour
     }
 
     // Used only on non kinematic gameobjects (trees, rocks)
-    public void Hit(float amount)
+    public bool Hit(float amount)
     {
         durability -= amount;
+        return durability <= 0;
     }
 
     // While explode, destroy self, and generate random amount of product with upward force

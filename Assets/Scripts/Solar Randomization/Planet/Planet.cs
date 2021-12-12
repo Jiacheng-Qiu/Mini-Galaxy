@@ -3,61 +3,38 @@
 public class Planet : MonoBehaviour
 {
     // Enum for choosing which face to render
-    public enum FaceRenderMask {Top, Bottom, Left, Right, Front, Back, All};
-    public FaceRenderMask faceRenderMask;
-    // Won't add limit onto it
-    public int resolution = 16;
     public ShapeSettings shapeSetting;
     public ColorSettings colorSetting;
+    /*private int curI;
+    private int curJ;*/
 
-    ShapeGenerator shapeGenerator = new ShapeGenerator();
-    ColorGenerator colorGenerator = new ColorGenerator();
+    private ShapeGenerator shapeGenerator;
+    private ColorGenerator colorGenerator;
+    private Vector3[] directions;
 
-    [SerializeField, HideInInspector]
-    MeshFilter[] meshFilters;
-    TerrainFace[] terrainFaces;
+    MeshFilter[,] meshFilters;
+    TerrainFace[,] terrainFaces;
 
-    private void OnValidate()
+    private void Awake()
     {
+        directions = new Vector3[] { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
+        shapeGenerator = new ShapeGenerator();
+        colorGenerator = new ColorGenerator();
+        terrainFaces = new TerrainFace[6, 16];
+        meshFilters = new MeshFilter[6, 16];
         GeneratePlanet();
     }
 
-    private void Initialize()
+    public void GenerateMapPlanet()
     {
-        shapeGenerator.UpdateSettings(shapeSetting);
-        colorGenerator.UpdateSettings(colorSetting);
-        terrainFaces = new TerrainFace[6];
-
-        if (meshFilters == null || meshFilters.Length == 0)
-        {
-            meshFilters = new MeshFilter[6];
-        }
-        // Directions of the cube faces
-        Vector3[] directions = { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
-
-        for (int i = 0; i < meshFilters.Length; i++)
-        {
-            if (meshFilters[i] == null)
-            {
-                GameObject meshObj = new GameObject("mesh" + i);
-                meshObj.transform.parent = transform;
-                // Using standard shader as renderer
-                meshObj.AddComponent<MeshRenderer>();
-                meshFilters[i] = meshObj.AddComponent<MeshFilter>();
-            }
-            if (meshFilters[i].sharedMesh == null)
-            {
-                meshFilters[i].sharedMesh = new Mesh();
-            }
-            // Ensure that material is attached
-            meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = colorSetting.planetMaterial;
-            // Only faces choosen will be rendered with high resolution, other faces will be of default low resolution
-            bool highRender = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask == i;
-            int currentRes = (highRender) ? resolution : 64;
-            terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, currentRes, directions[i]);
-            // Can also disable rendering of other facing when stepping on planet
-            // meshFilters[i].gameObject.SetActive(highRender && player.onPlanet)
-        }
+        directions = new Vector3[] { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
+        shapeGenerator = new ShapeGenerator();
+        colorGenerator = new ColorGenerator();
+        terrainFaces = new TerrainFace[6, 16];
+        meshFilters = new MeshFilter[6, 16];
+        Initialize();
+        GenerateMesh();
+        GenerateColor();
     }
 
     // Call to generate everything
@@ -68,29 +45,82 @@ public class Planet : MonoBehaviour
             Initialize();
             GenerateMesh();
             GenerateColor();
+            GenerateCollider();
         }
     }
 
-    // When shape update, just update the mesh
-    public void OnShapeSettingUpdated()
+    private void Initialize()
     {
-        Initialize();
-        GenerateMesh();
+        shapeGenerator.UpdateSettings(shapeSetting);
+        colorGenerator.UpdateSettings(colorSetting);
+
+        // Directions of the cube faces
+        for (int i = 0; i < meshFilters.GetLength(0); i++)
+        {
+            Transform meshFolder = transform.Find("meshFolder" + i);
+            if (meshFolder == null)
+            {
+                meshFolder = (new GameObject("meshFolder" + i)).transform;
+                meshFolder.SetParent(transform);
+                meshFolder.localPosition = Vector3.zero;
+                meshFolder.localRotation = Quaternion.identity;
+            }
+            for (int j = 0; j < meshFilters.GetLength(1); j++)
+            {
+                if (meshFolder.Find("mesh" + j) == null)
+                {
+                    GameObject meshObj = new GameObject("mesh" + j);
+                    meshObj.transform.parent = meshFolder;
+                    meshObj.transform.localPosition = Vector3.zero;
+                    meshObj.transform.localRotation = Quaternion.identity;
+                    meshObj.tag = "Ground";
+                    meshObj.layer = LayerMask.NameToLayer("Terrain");
+                    // Using standard shader as renderer
+                    meshObj.AddComponent<MeshRenderer>().enabled = false;
+                    meshObj.AddComponent<MeshCollider>().enabled = false;
+                    meshFilters[i, j] = meshObj.AddComponent<MeshFilter>();
+                    meshFilters[i, j].sharedMesh = new Mesh();
+                }
+                // Ensure that material is attached
+                meshFilters[i, j].GetComponent<MeshRenderer>().sharedMaterial = colorSetting.planetMaterial;
+                Vector3 direct = Vector3.zero;
+                // The angle between direction[] and faces is given in 2d (alpha, beta). Use that to calculate the vector of all faces
+                float alpha = (float)(Mathf.PI * (2 * (j / 4) - 3) * 12.5 / 180f);
+                float beta = (float)(Mathf.PI * (2 * (j % 4) - 3) * 12.5 / 180f);
+                float prev = Mathf.Sin(alpha);
+                float cur = Mathf.Cos(alpha);
+                float next = -Mathf.Cos(alpha) * Mathf.Tan(beta);
+
+                if (directions[i].x != 0)
+                {
+                    direct = directions[i].x * new Vector3(cur, next, prev).normalized;
+                } 
+                else if (directions[i].y != 0)
+                {
+                    direct = directions[i].y * new Vector3(prev, cur, next).normalized;
+                } 
+                else
+                {
+                    direct = directions[i].z * new Vector3(next, prev, cur).normalized;
+                }
+                terrainFaces[i, j] = new TerrainFace(shapeGenerator, meshFilters[i, j].sharedMesh, 64, direct, directions[i], j/4, j%4);
+                // Can also disable rendering of other facing when stepping on planet
+                // meshFilters[i].gameObject.SetActive(highRender && player.onPlanet)
+            }
+        }
     }
 
-    public void OnColorSettingUpdated()
-    {
-        Initialize();
-        GenerateColor();
-    }
     void GenerateMesh()
     {
         for (int i = 0; i < 6; i ++)
         {
-            // Only construct mesh if it's activated
-            if (meshFilters[i].gameObject.activeSelf)
+            for (int j = 0; j < 16; j++) 
             {
-                terrainFaces[i].ConstructMesh();
+                // Only construct mesh if it's activated
+                if (meshFilters[i, j].gameObject.activeSelf)
+                {
+                    terrainFaces[i, j].ConstructMesh();
+                }
             }
         }
         // Update the elevation of ground after shape is updated
@@ -103,40 +133,77 @@ public class Planet : MonoBehaviour
         colorGenerator.UpdateColors();
         for (int i = 0; i < 6; i++)
         {
-            if (meshFilters[i].gameObject.activeSelf)
+            for (int j = 0; j < 16; j++)
             {
-                terrainFaces[i].UpdateUVs(colorGenerator);
+                if (meshFilters[i, j].gameObject.activeSelf)
+                {
+                    terrainFaces[i, j].UpdateUVs(colorGenerator);
+                }
             }
         }
     }
 
-    // Method designed to assign the mesh collider of planet from player g direction, the face with the smallest angle is the one
-    public void GenerateCollider(Vector3 playerY)
+    // TODO: Method designed to assign the mesh collider of planet from player g direction, the face with the smallest angle is the one
+    public void GenerateCollider()
     {
-        MeshCollider groundCollider = this.transform.Find("Ground").gameObject.GetComponent<MeshCollider>();
-        // Generate one collider if its not inited
-        if (groundCollider == null)
+        for (int i = 0; i < 6; i++)
         {
-            groundCollider = this.transform.Find("Ground").gameObject.AddComponent<MeshCollider>();
-        }
-        // Find out the mesh that has smallest y angle with the player, and assign it onto collider
-        float minAngle = 360;
-        Mesh curMesh = null;
-        for (int i = 0; i < terrainFaces.Length; i++)
-        {
-            float angle = Mathf.Abs(Vector3.Angle(terrainFaces[i].axisY, playerY));
-            if (angle < minAngle)
+            for (int j = 0; j < 16; j++)
             {
-                minAngle = angle;
-                curMesh = terrainFaces[i].mesh;
+                meshFilters[i, j].GetComponent<MeshCollider>().sharedMesh = meshFilters[i, j].sharedMesh;
+                meshFilters[i, j].GetComponent<MeshCollider>().enabled = true;
             }
         }
-        if (groundCollider.sharedMaterial != curMesh)
-            groundCollider.sharedMesh = curMesh;
+        /*// Find out the mesh that has smallest y angle with the player, and assign it onto collider
+        float minAngle = 360;
+        int minI = -1;
+        int minJ1 = -1;
+        int minJ2 = -1;
+        for (int i = 0; i < 6; i++)
+        {
+            float angle = Mathf.Abs(Vector3.Angle(directions[i], playerY));
+            if (angle <= minAngle)
+            {
+                minAngle = angle;
+                minI = i;
+            }
+        }
+        minAngle = 360;
+        // Based on the face currently standing on, find the subface from 4 cols
+        for (int j = 0; j < 4; j++)
+        {
+            float angle = Mathf.Abs(Vector3.Angle(terrainFaces[minI, j * 4].axisY, playerY));
+            if (angle <= minAngle)
+            {
+                minAngle = angle;
+                minJ1 = j * 4;
+            }
+        }
+        // find the subface from 4 rows
+        minAngle = 360;
+        for (int k = 0; k < 4; k++)
+        {
+            float angle = Mathf.Abs(Vector3.Angle(terrainFaces[minI, minJ1 + k].axisY, playerY));
+            if (angle <= minAngle)
+            {
+                minAngle = angle;
+                minJ2 = k;
+            }
+        }
+        if (curI == minI && curJ == minJ1 + minJ2)
+        {
+            return;
+        }
+        curI = minI;
+        curJ = minJ1 + minJ2;
+        transform.Find("Ground").GetComponent<MeshCollider>().sharedMesh = meshFilters[minI, minJ1 + minJ2].sharedMesh;
+        // A easy way to get through nearest mesh: Increase collider size by frame until 9 closest mesh found
+        */
     }
 
     public TerrainFace[] getTerrainFaces()
     {
-        return terrainFaces;
+        //return terrainFaces;
+        return null;
     }
 }

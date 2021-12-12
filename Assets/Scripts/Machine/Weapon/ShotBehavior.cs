@@ -1,28 +1,49 @@
 ﻿using UnityEngine;
+using System.Collections;
+using VolumetricLines;
 
 public class ShotBehavior : MonoBehaviour
 {
-	public float damage = 30;
-	public GameObject player;
-	public float speed = 150;
-	void Update()
+	public float speed;
+	public bool isBullet;
+	void FixedUpdate()
 	{
-		transform.position += transform.forward * Time.deltaTime * speed;
+		if (isBullet)
+			transform.position += transform.forward * Time.deltaTime * speed;
 	}
 
-	// On collision, damage hit object and delete self.
-	private void OnCollisionEnter(Collision collision)
-	{
-		GameObject other = collision.gameObject;
-		if (other.tag == "Animal")
-		{
-			other.GetComponent<HealthSystem>().Hurt(player, damage);
-			Destroy(gameObject);
-		}
-		else if (other.tag == "Environment")
-		{
-			other.GetComponent<EnvironmentComponent>().Hit(damage);
-			Destroy(gameObject);
-		}
-	}
+	public void StartExtend(float length)
+    {
+		if (!isBullet)
+			StartCoroutine(LaserStretch(length, gameObject.GetComponent<VolumetricLineBehavior>()));
+    }
+
+	public void EndExtend(float length)
+    {
+		if (!isBullet)
+			StartCoroutine(LaserStretch(-length, gameObject.GetComponent<VolumetricLineBehavior>()));
+    }
+
+	private IEnumerator LaserStretch(float length, VolumetricLineBehavior laser)
+    {
+		float elapsed = 0;
+		while(elapsed <= 0.2f)
+        {
+			if (length < 0)
+            {
+				laser.StartPos = new Vector3(0, 0, -elapsed / 0.2f * length);
+            } else
+            {
+				laser.EndPos = new Vector3(0, 0, elapsed / 0.2f * length);
+			}
+			elapsed += Time.deltaTime;
+			yield return null;
+        }
+		if (length < 0)
+        {
+			laser.StartPos = Vector3.zero;
+			laser.EndPos = Vector3.zero;
+			gameObject.SetActive(false);
+        }
+    }
 }

@@ -56,12 +56,12 @@ public class PlayerGuiding : MonoBehaviour
         instructions[6].specialInst.Add(new Instruction("M1", "Place", false, true));
         instructions[6].specialInst.Add(new Instruction("M3", "Rotate", false, true));
         instructions[6].specialInst.Add(new Instruction("E", "Cancel Place", false, true));
-        
 
         instructions.Add(new Instruction("T", "Dismantle", false, false));
         instructions[7].specialInst.Add(new Instruction("M1", "Dismantle", false, true));
         instructions[7].specialInst.Add(new Instruction("T", "Cancel", false, true));
 
+        instructions.Add(new Instruction("Q", "Switch Tool", false, true));
         instructions.Add(new Instruction("F", "Interact", false, true));
         instructions.Add(new Instruction("G", "Throw", false, true));
 

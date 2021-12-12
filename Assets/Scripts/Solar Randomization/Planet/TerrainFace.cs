@@ -6,21 +6,32 @@ public class TerrainFace
     public Mesh mesh;
     // Modificable planet resolution
     public int resolution;
-    // This vector determines the top that terrain is facing. (y axis)
+    // This vector determines the top that terrain is facing
     public Vector3 axisY;
     Vector3 axisX;
     Vector3 axisZ;
+    Vector3 generalAxisY;
+    Vector3 generalAxisX;
+    Vector3 generalAxisZ;
+    int faceX;
+    int faceY;
 
-    public TerrainFace(ShapeGenerator shapeGenerator, Mesh mesh, int resolution, Vector3 axisY)
+    public TerrainFace(ShapeGenerator shapeGenerator, Mesh mesh, int resolution, Vector3 axisY, Vector3 generalAxis, int faceX, int faceY)
     {
         this.shapeGenerator = shapeGenerator;
         this.mesh = mesh;
         this.resolution = resolution;
         this.axisY = axisY;
+        this.generalAxisY = generalAxis;
+        this.faceX = faceX;
+        this.faceY = faceY;
 
         axisX = new Vector3(axisY.y, axisY.z, axisY.x);
         // Third can be found as perpendicular to both vector
         axisZ = Vector3.Cross(axisY, axisX);
+
+        generalAxisX = new Vector3(generalAxisY.y, generalAxisY.z, generalAxisY.x);
+        generalAxisZ = Vector3.Cross(generalAxisY, generalAxisX);
     }
 
     public void ConstructMesh()
@@ -38,7 +49,7 @@ public class TerrainFace
             for (int x = 0; x < resolution; x ++)
             {
                 Vector2 percent = new Vector2(x, y) / (resolution - 1);
-                Vector3 posOnCube = axisY + (percent.x - 0.5f) * 2 * axisX + (percent.y - 0.5f) * 2 * axisZ;
+                Vector3 posOnCube = generalAxisY + (faceX / 2f - 1 + percent.x / 2) * generalAxisX + (faceY / 2f - 1 + percent.y / 2) * generalAxisZ;
                 Vector3 position = posOnCube.normalized;
                 float unscaled = shapeGenerator.UnscaledElevation(position);
                 // Create points on surface with noise layers applied
@@ -73,7 +84,7 @@ public class TerrainFace
             for (int x = 0; x < resolution; x++)
             {
                 Vector2 percent = new Vector2(x, y) / (resolution - 1);
-                Vector3 posOnCube = axisY + (percent.x - 0.5f) * 2 * axisX + (percent.y - 0.5f) * 2 * axisZ;
+                Vector3 posOnCube = generalAxisY + (faceX / 2f - 1 + percent.x / 2) * generalAxisX + (faceY / 2f - 1 + percent.y / 2) * generalAxisZ;
                 Vector3 position = posOnCube.normalized;
 
                 uv[x + y * resolution].x = colorGenerator.BiomePercentFromPoint(position);

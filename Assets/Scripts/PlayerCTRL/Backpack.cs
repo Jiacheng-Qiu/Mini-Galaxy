@@ -17,9 +17,9 @@ public class Backpack : MonoBehaviour
 
     private int[] onBar; // Record the items reged on inv bar
     private InteractionAnimation uiInteraction;
-    private PlayerInventory invBar;
+    public PlayerInventory invBar;
 
-    void Start()
+    void Awake()
     {
         // Create slots before interface enabled
         slots = new GameObject[itemLimit];
@@ -36,8 +36,29 @@ public class Backpack : MonoBehaviour
 
         inventory = new Dictionary<string, int>();
         slotItems = new string[itemLimit];
-        //CreateSlots();
-        invBar = gameObject.GetComponent<PlayerInventory>();
+    }
+
+    public void LoadItems(SaveFormat save)
+    {
+        foreach(string itemName in save.items.Keys){
+            PutIn(itemName, save.items[itemName]);
+        }
+        for (int i = 0; i < save.onBar.Count(); i++)
+        {
+            if (save.onBar[i] != -1)
+                PutOnBar(i, save.onBar[i]);
+        }
+    }
+
+
+    public Dictionary<string, int> getInventory()
+    {
+        return inventory;
+    }
+
+    public int[] invBarPref()
+    {
+        return onBar;
     }
 
     // Generate slots based on amount on the UI
@@ -74,6 +95,27 @@ public class Backpack : MonoBehaviour
         {
             uiInteraction.DisplayBag();
         }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            invBar.AssignFocus(0);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            invBar.AssignFocus(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            invBar.AssignFocus(2);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            invBar.AssignFocus(3);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            invBar.AssignFocus(4);
+        }
+        
     }
 
     public String GetItemName(int pos)

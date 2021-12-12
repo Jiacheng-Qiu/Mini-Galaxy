@@ -13,7 +13,6 @@ public class Map : MonoBehaviour
     private Missions mission;
     private Planet planet;
     private bool mapUsable;
-    //private float updatePeriod;
 
     private void Start()
     {
@@ -46,11 +45,8 @@ public class Map : MonoBehaviour
             shape.noiseLayers = planet.shapeSetting.noiseLayers;
             shape.planetRadius = planet.shapeSetting.planetRadius / 100;
             mapPlanet.colorSetting = planet.colorSetting;
-            mapPlanet.GeneratePlanet();
-            shape = ScriptableObject.CreateInstance<ShapeSettings>();
-            mapPlanet.faceRenderMask = Planet.FaceRenderMask.All;
-            mapPlanet.resolution = 16;
             mapPlanet.shapeSetting = shape;
+            mapPlanet.GenerateMapPlanet();
             mapPlanet.gameObject.SetActive(true);
             mapUsable = true;
         }

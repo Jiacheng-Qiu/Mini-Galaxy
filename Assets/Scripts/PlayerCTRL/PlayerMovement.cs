@@ -25,7 +25,7 @@ public class PlayerMovement : UIInformer
 
     public bool isGround = true;
 
-    private PlayerInventory inventory;
+    public PlayerInventory inventory;
     private Backpack backpack;
     public Camera cam;
     private InteractionAnimation uiAnimation;
@@ -49,7 +49,7 @@ public class PlayerMovement : UIInformer
 
     private Vector3 marker; // Player marker for marking positions on planet
 
-    void Start()
+    void Awake()
     {
         uiAnimation = gameObject.GetComponent<InteractionAnimation>();
         informer.SetActive(true);
@@ -58,7 +58,6 @@ public class PlayerMovement : UIInformer
         ChangeCursorFocus(false);
         //hit = new RaycastHit();
         transform.parent = planet.transform;
-        inventory = gameObject.GetComponent<PlayerInventory>();
         backpack = gameObject.GetComponent<Backpack>();
 
         onPreview = false;
@@ -67,14 +66,17 @@ public class PlayerMovement : UIInformer
 
         flashlight.SetActive(false);
         flashSwitch = false;
-
         marker = Vector3.zero;
 
-        // settings = GameObject.Find("DataTransfer").GetComponent<GameSettings>();
-        // ChangeSettings();
         sensX = 1;
         sensY = 1;
     }
+
+    /*private void Start()
+    {
+        settings = GameObject.Find("DataTransfer").GetComponent<GameSettings>();
+        ChangeSettings();
+    }*/
 
     public void LoadStatus(SaveFormat data)
     {
@@ -118,7 +120,6 @@ public class PlayerMovement : UIInformer
         PlayerStatus.attackDisabled = onFocus;
     }
 
-
     void Update()
     {
         if (PlayerStatus.moveDisabled)
@@ -149,10 +150,6 @@ public class PlayerMovement : UIInformer
         {
             gameObject.GetComponent<InteractionAnimation>().HelmetSwitch();
         }*/
-        if (planet != null && planet.GetComponent<Planet>() != null)
-        {
-            planet.GetComponent<Planet>().GenerateCollider((transform.position - planet.transform.position).normalized);
-        }
         // Can't do anything if is on Interfaces
         if (!onFocus)
         {
@@ -269,6 +266,11 @@ public class PlayerMovement : UIInformer
     private void FixedUpdate()
     {
         Gravitize();
+
+        if (planet != null && planet.GetComponent<Planet>() != null)
+        {
+            
+        }
 
         if (!onPreview && !onDismantle)
         {

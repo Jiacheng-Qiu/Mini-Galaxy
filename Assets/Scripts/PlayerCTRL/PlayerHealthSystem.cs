@@ -22,7 +22,7 @@ public class PlayerHealthSystem : HealthSystem
     private float recoverTimeAfterHit;
     private InteractionAnimation uiAnimation;
 
-    private void Start()
+    private void Awake()
     {
         heartrate = 60;
         rb = gameObject.GetComponent<Rigidbody>();

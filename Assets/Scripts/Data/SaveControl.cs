@@ -21,8 +21,14 @@ public class SaveControl : MonoBehaviour
             // Set player stats based on data
         }
 
-        Debug.Log(seedSetting.seed);
         Random.InitState(seedSetting.seed);
+    }
+
+    private void Start()
+    {
+        player.GetComponent<PlayerMovement>().LoadStatus(data);
+        player.GetComponent<PlayerHealthSystem>().LoadStatus(data);
+        player.GetComponent<Backpack>().LoadItems(data);
     }
 
     // Called when new game is started, initialize save file
@@ -53,6 +59,9 @@ public class SaveControl : MonoBehaviour
         data.rotationY = player.transform.rotation.eulerAngles.y;
         data.rotationZ = player.transform.rotation.eulerAngles.z;
         data.camViewX = move.viewX;
+        Backpack backpack = player.GetComponent<Backpack>();
+        data.items = backpack.getInventory();
+        data.onBar = backpack.invBarPref();
 
         data.planetName = move.planet.name;
         data.planetPosX = move.planet.transform.position.x;
@@ -80,8 +89,6 @@ public class SaveControl : MonoBehaviour
             stream.Close();
 
             seedSetting.seed = data.seed;
-            player.GetComponent<PlayerHealthSystem>().LoadStatus(data);
-            player.GetComponent<PlayerMovement>().LoadStatus(data);
             Transform planet = GameObject.Find(data.planetName).transform;
             planet.position = new Vector3(data.planetPosX, data.planetPosY, data.planetPosZ);
             planet.eulerAngles = new Vector3(data.planetRotationX, data.planetRotationY, data.planetRotationZ);

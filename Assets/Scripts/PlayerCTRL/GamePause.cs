@@ -3,6 +3,7 @@ using UnityEngine;
 public class GamePause : MonoBehaviour
 {
     public Canvas pauseMenu;
+    public GameObject player;
     private bool isActive = false;
     private void FixedUpdate()
     {
@@ -34,6 +35,6 @@ public class GamePause : MonoBehaviour
         pauseMenu.enabled = false;
         isActive = false;
 
-        gameObject.GetComponent<PlayerMovement>().ChangeSettings();
+        player.GetComponent<PlayerMovement>().ChangeSettings();
     }
 }

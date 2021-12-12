@@ -52,8 +52,6 @@ public class PlanetGeneration : MonoBehaviour
 
             // Add terrain generation code
             Planet script = planet.AddComponent<Planet>();
-            script.faceRenderMask = Planet.FaceRenderMask.All;
-            script.resolution = 64;
             
             ShapeSettings shape = ScriptableObject.CreateInstance<ShapeSettings>();
             ColorSettings color = ScriptableObject.CreateInstance<ColorSettings>();
