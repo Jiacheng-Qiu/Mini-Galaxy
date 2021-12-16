@@ -13,7 +13,7 @@ public class BioRandomize : MonoBehaviour
     private Object[] grass;
     private Object[] rocks;
     private Planet script;
-    private TerrainFace[] faces;
+    private TerrainFace[,] faces;
     private void Start()
     {
         script = gameObject.GetComponent<Planet>();
@@ -67,13 +67,13 @@ public class BioRandomize : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             int onFace = (int)(i * 6f / amount);
-            int vertAmount = faces[onFace].resolution * faces[onFace].resolution - 1;
+            int vertAmount = faces[onFace, 0].resolution * faces[onFace, 0].resolution - 1;
             // TODO: avoid duplicated selected vertices
-            Vector3 position = faces[onFace].mesh.vertices[Random.Range(0, vertAmount)] + transform.position;
+            Vector3 position = faces[onFace, 0].mesh.vertices[Random.Range(0, vertAmount)] + transform.position;
             // Avoid choosing vertices on lakes or sea level
             while (Vector3.Distance(position, transform.position) <= (script.shapeSetting.planetRadius + 1))
             {
-                position = faces[onFace].mesh.vertices[Random.Range(0, vertAmount)] + transform.position;
+                position = faces[onFace, 0].mesh.vertices[Random.Range(0, vertAmount)] + transform.position;
             }
             for (int j = 0; j < Random.Range(groupSize.x, groupSize.y); j++)
             {

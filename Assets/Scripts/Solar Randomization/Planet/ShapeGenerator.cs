@@ -53,7 +53,8 @@ public class ShapeGenerator
 
     public float ScaledElevation(float unscaled)
     {
-        float elevation = Mathf.Max(0, unscaled); // Works for terrain instead of sea
+        // float elevation = Mathf.Max(0, unscaled); // Works for terrain instead of sea
+        float elevation = unscaled; // Now takes everything
         elevation = setting.planetRadius * (1 + elevation);
         return elevation;
     }

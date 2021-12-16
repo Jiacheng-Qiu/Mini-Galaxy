@@ -18,7 +18,7 @@ MonoBehaviour:
     useMask: 0
     noiseSettings:
       filterType: 0
-      strength: 0.1
+      strength: 0.12
       roughness: 2.2
       baseRoughness: 1
       center: {x: 3.99, y: 0, z: 0}

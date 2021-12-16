@@ -190,7 +190,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.9565541, b: 0.6462264, a: 1}
-  m_Intensity: 0.05
+  m_Intensity: 0.01
   m_Range: 1e+10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1951,6 +1951,88 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seedSetting: {fileID: 1253161871}
+--- !u!1 &473270946
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 473270947}
+  - component: {fileID: 473270949}
+  - component: {fileID: 473270948}
+  m_Layer: 0
+  m_Name: Water
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &473270947
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473270946}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 710, y: 710, z: 710}
+  m_Children: []
+  m_Father: {fileID: 1872693759}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &473270948
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473270946}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 5955ae6a3fed79e479bae0106f813d4a, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &473270949
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473270946}
+  m_Mesh: {fileID: -6031053561024216859, guid: f2e35481badc8c64c9ffc8438b67f681, type: 3}
 --- !u!1 &483611248
 GameObject:
   m_ObjectHideFlags: 0
@@ -3537,6 +3619,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 870769299}
   m_Mesh: {fileID: 4300076, guid: d4361227c8e50b741afdb88f7534ffdd, type: 3}
+--- !u!1 &872004943
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 872004944}
+  m_Layer: 0
+  m_Name: Cloud
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &872004944
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872004943}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1872693759}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &886532981
 GameObject:
   m_ObjectHideFlags: 0
@@ -4439,6 +4551,7 @@ GameObject:
   - component: {fileID: 1105718218}
   - component: {fileID: 1105718222}
   - component: {fileID: 1105718221}
+  - component: {fileID: 1105718223}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4552,6 +4665,20 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &1105718223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105718217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b69cfac68d97362418a7472a751cc295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xRange: 3
+  yRange: 3
 --- !u!1 &1139195962
 GameObject:
   m_ObjectHideFlags: 0
@@ -8088,6 +8215,7 @@ GameObject:
   - component: {fileID: 1872693759}
   - component: {fileID: 1872693758}
   - component: {fileID: 1872693757}
+  - component: {fileID: 1872693760}
   m_Layer: 0
   m_Name: Planet
   m_TagString: Untagged
@@ -8123,6 +8251,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shapeSetting: {fileID: 11400000, guid: 466cbb55170ad8743810963bd75ed02a, type: 2}
   colorSetting: {fileID: 11400000, guid: 724ad2426e6ebac4c890d6eb0097b25f, type: 2}
+  onPreview: 1
+  globalResolution: 32
 --- !u!4 &1872693759
 Transform:
   m_ObjectHideFlags: 0
@@ -8133,10 +8263,28 @@ Transform:
   m_LocalRotation: {x: -0.25824997, y: 0.017152935, z: 0.064015634, w: 0.9638022}
   m_LocalPosition: {x: 1750, y: -450, z: 800}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 872004944}
+  - {fileID: 473270947}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: -30, y: 0, z: 7.6}
+--- !u!114 &1872693760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872693756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17042eb8be783d8478849bf1328cd638, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stackAmount: 40
+  stackOffset: 0.5
+  cloudFolder: {fileID: 872004944}
+  cloudObject: {fileID: 763263516305103751, guid: b2b15c7d68dda824ca7ae5dc5f2a95de, type: 3}
 --- !u!1 &1879164320
 GameObject:
   m_ObjectHideFlags: 0

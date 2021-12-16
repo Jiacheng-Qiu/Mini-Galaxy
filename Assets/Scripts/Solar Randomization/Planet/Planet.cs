@@ -5,8 +5,8 @@ public class Planet : MonoBehaviour
     // Enum for choosing which face to render
     public ShapeSettings shapeSetting;
     public ColorSettings colorSetting;
-    /*private int curI;
-    private int curJ;*/
+    public bool onPreview; // SHow all terrain if planet on preview
+    public int globalResolution;
 
     private ShapeGenerator shapeGenerator;
     private ColorGenerator colorGenerator;
@@ -17,6 +17,10 @@ public class Planet : MonoBehaviour
 
     private void Awake()
     {
+        if (globalResolution == 0)
+        {
+            globalResolution = 16;
+        }
         directions = new Vector3[] { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
         shapeGenerator = new ShapeGenerator();
         colorGenerator = new ColorGenerator();
@@ -27,6 +31,7 @@ public class Planet : MonoBehaviour
 
     public void GenerateMapPlanet()
     {
+        onPreview = true;
         directions = new Vector3[] { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
         shapeGenerator = new ShapeGenerator();
         colorGenerator = new ColorGenerator();
@@ -54,6 +59,9 @@ public class Planet : MonoBehaviour
         shapeGenerator.UpdateSettings(shapeSetting);
         colorGenerator.UpdateSettings(colorSetting);
 
+        // Create water sphere
+        transform.Find("Water").localScale = new Vector3(shapeSetting.planetRadius + 2, shapeSetting.planetRadius + 2, shapeSetting.planetRadius + 2);
+
         // Directions of the cube faces
         for (int i = 0; i < meshFilters.GetLength(0); i++)
         {
@@ -76,7 +84,7 @@ public class Planet : MonoBehaviour
                     meshObj.tag = "Ground";
                     meshObj.layer = LayerMask.NameToLayer("Terrain");
                     // Using standard shader as renderer
-                    meshObj.AddComponent<MeshRenderer>().enabled = false;
+                    meshObj.AddComponent<MeshRenderer>().enabled = onPreview;
                     meshObj.AddComponent<MeshCollider>().enabled = false;
                     meshFilters[i, j] = meshObj.AddComponent<MeshFilter>();
                     meshFilters[i, j].sharedMesh = new Mesh();
@@ -103,10 +111,21 @@ public class Planet : MonoBehaviour
                 {
                     direct = directions[i].z * new Vector3(next, prev, cur).normalized;
                 }
-                terrainFaces[i, j] = new TerrainFace(shapeGenerator, meshFilters[i, j].sharedMesh, 64, direct, directions[i], j/4, j%4);
+                terrainFaces[i, j] = new TerrainFace(shapeGenerator, meshFilters[i, j].sharedMesh, globalResolution, direct, directions[i], j/4, j%4);
                 // Can also disable rendering of other facing when stepping on planet
                 // meshFilters[i].gameObject.SetActive(highRender && player.onPlanet)
             }
+        }
+    }
+
+    public void UpgradeResolution(int i, int j, int newRes)
+    {
+        if (terrainFaces[i, j].resolution < newRes)
+        {
+            terrainFaces[i, j].resolution = newRes;
+            terrainFaces[i, j].ConstructMesh();
+            terrainFaces[i, j].UpdateUVs(colorGenerator);
+            meshFilters[i, j].GetComponent<MeshCollider>().sharedMesh = meshFilters[i, j].sharedMesh;
         }
     }
 
@@ -201,9 +220,39 @@ public class Planet : MonoBehaviour
         */
     }
 
-    public TerrainFace[] getTerrainFaces()
+    public TerrainFace[,] getTerrainFaces()
     {
-        //return terrainFaces;
-        return null;
+        return terrainFaces;
+    }
+
+    public void ChangeToPreview(bool preview)
+    {
+        if (onPreview == preview)
+            return;
+        onPreview = preview;
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(!onPreview);
+        }
+        for (int i = 0; i < meshFilters.GetLength(0); i++)
+        {
+            for (int j = 0; j < meshFilters.GetLength(1); j++)
+            {
+                meshFilters[i, j].GetComponent<MeshRenderer>().enabled = onPreview;
+                meshFilters[i, j].GetComponent<MeshCollider>().enabled = !onPreview;
+            }
+        }
+    }
+
+    public void OnShapeSettingUpdated()
+    {
+        Initialize();
+        GenerateMesh();
+    }
+
+    public void OnColorSettingUpdated()
+    {
+        Initialize();
+        GenerateColor();
     }
 }

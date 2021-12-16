@@ -5,7 +5,7 @@ public class TempReaction : MonoBehaviour
 {
     private void Start()
     {
-        gameObject.AddComponent<SphereCollider>().radius = gameObject.GetComponent<Planet>().shapeSetting.planetRadius - 2;
+        gameObject.AddComponent<SphereCollider>().radius = gameObject.GetComponent<Planet>().shapeSetting.planetRadius - 100;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -13,11 +13,11 @@ public class TempReaction : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             // push player upwards
-            collision.gameObject.transform.position += collision.gameObject.transform.up * 30;
+            collision.gameObject.transform.position += collision.gameObject.transform.up * 120;
         }
         else if(collision.gameObject.tag == "Interactable" || collision.gameObject.tag == "Spaceship")
         {
-            collision.gameObject.transform.position += collision.gameObject.transform.up * 20;
+            collision.gameObject.transform.position += collision.gameObject.transform.up * 120;
         }
         else
         {
