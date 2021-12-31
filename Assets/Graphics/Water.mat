@@ -55,8 +55,8 @@ Material:
     - strength: 0.06
     m_Colors:
     - BaseColor: {r: 0.2122642, g: 0.5801948, b: 1, a: 0}
-    - DeepWaterColor: {r: 0.102171585, g: 0.16625129, b: 0.5283019, a: 0.8156863}
+    - DeepWaterColor: {r: 0.53, g: 0.047699984, b: 0.30870932, a: 0.82}
     - RippleColor: {r: 0.6236205, g: 0.7906451, b: 0.9245283, a: 0}
-    - ShallowWaterColor: {r: 0.084549636, g: 0.39024082, b: 0.9433962, a: 0.7294118}
-    - SuperDeepWaterColor: {r: 0.021181917, g: 0.055402957, b: 0.26415092, a: 0.9411765}
+    - ShallowWaterColor: {r: 0.95, g: 0.08549997, b: 0.797441, a: 0.73}
+    - SuperDeepWaterColor: {r: 0.28, g: 0.025199993, b: 0.16309172, a: 0.94}
   m_BuildTextureStacks: []

@@ -72,11 +72,12 @@ public class PlayerMovement : UIInformer
         sensY = 1;
     }
 
-    /*private void Start()
+    // TODO
+    private void Start()
     {
         settings = GameObject.Find("DataTransfer").GetComponent<GameSettings>();
         ChangeSettings();
-    }*/
+    }
 
     public void LoadStatus(SaveFormat data)
     {

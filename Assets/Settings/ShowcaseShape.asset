@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c700a962ce306e408a5985e232df0f8, type: 3}
-  m_Name: Shape
+  m_Name: ShowcaseShape
   m_EditorClassIdentifier: 
   planetRadius: 710
   noiseLayers:
@@ -19,11 +19,11 @@ MonoBehaviour:
     noiseSettings:
       filterType: 0
       strength: 0.12
-      roughness: 2
-      baseRoughness: 1.5
+      roughness: 2.5
+      baseRoughness: 2
       center: {x: 0, y: 0, z: 0}
       numLayers: 4
-      persistence: 0.48
+      persistence: 0.5
       minVal: 0.9
       rigidWeightMultiplier: 1
   - enabled: 1

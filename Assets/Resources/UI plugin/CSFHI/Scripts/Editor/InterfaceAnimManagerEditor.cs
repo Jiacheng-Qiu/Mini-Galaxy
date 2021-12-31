@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 [ExecuteInEditMode]
-
+#endif
 //EXCELSIOR SCRIPT
 
 [CustomEditor(typeof(InterfaceAnimManager)), CanEditMultipleObjects]
@@ -21,12 +21,12 @@ public class InterfaceAnimManagerEditor : Editor {
         _target.UpdateAnimClips();
 
         //for debug purpose only
-        /*
+        *//*
         GUI.color = Color.red;
         if (GUILayout.Button("Reset Element List")) {
             _target.elementsList.Clear();
         }
-        GUI.color = Color.white;*/
+        GUI.color = Color.white;*//*
 
 		if (Application.isPlaying){ //checking if we didn't selected a prefab
 			if (_target.forceUnscaledTime) {
@@ -210,14 +210,14 @@ public class InterfaceAnimManagerEditor : Editor {
                 } else {
                     _element.timeDisappear = EditorGUILayout.Slider(_element.timeDisappear , 0, 1, GUILayout.MaxWidth(140));
                 }
-                /*
+                *//*
 				
                 if (isAppear) {
                    _element.serializedPropertyTimeAppear.floatValue=EditorGUILayout.Slider(_element.serializedPropertyTimeAppear.floatValue,0f, 1f, GUILayout.MaxWidth(140));
                 } else {
                    _element.serializedPropertyTimeDisappear.floatValue=EditorGUILayout.Slider(_element.serializedPropertyTimeDisappear.floatValue,0f, 1f, GUILayout.MaxWidth(140));
                 }
-                */
+                *//*
                 Undo.RecordObject(target, "Change interface delay");
 				
 				//_element.serializedObject.ApplyModifiedProperties();
@@ -230,3 +230,4 @@ public class InterfaceAnimManagerEditor : Editor {
     }
 }
 #endif
+*/

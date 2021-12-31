@@ -29,6 +29,13 @@ public class Planet : MonoBehaviour
         GeneratePlanet();
     }
 
+    public void Regenerate()
+    {
+        Initialize();
+        GenerateMesh();
+        GenerateColor();
+    }
+
     public void GenerateMapPlanet()
     {
         onPreview = true;

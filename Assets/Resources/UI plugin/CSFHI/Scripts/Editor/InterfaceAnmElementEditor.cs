@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 [ExecuteInEditMode]
-
+#endif
 //EXCELSIOR SCRIPT
 
 [CustomEditor(typeof(InterfaceAnmElement)), CanEditMultipleObjects]
@@ -36,4 +36,4 @@ public class InterfaceAnmElementEditor : Editor {
         }
     }
 }
-#endif
+#endif*/

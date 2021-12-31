@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEditor;
 [ExecuteInEditMode]
 #endif
-
 //EXCELSIOR SCRIPT
 //The InterfaceAnimManager will create an InterfaceAnmElement for each child it contains
 
