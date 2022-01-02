@@ -12,18 +12,19 @@ public class MaterialSpawn : MonoBehaviour
     {
         // Set the planet for all thrown out material to be the same as current planet;
         foreach(GameObject material in materials)
-            material.GetComponent<TinyObjGravity>().planet = planet;
+            material.GetComponent<TinyObjGravity>().planet = planet.transform;
 
         //materials[1].GetComponent<MaterialProperty>().materialName = "Copper";
         //materials[0].GetComponent<Transform>().GetComponent<Renderer>().sharedMaterial.color = Color.white;
     }
 
-    public void changePlanet(GameObject planet)
+    public void SetPlanet(GameObject planet)
     {
         this.planet = planet;
         foreach (GameObject material in materials)
-            material.GetComponent<TinyObjGravity>().planet = planet;
+            material.GetComponent<TinyObjGravity>().planet = planet.transform;
     }
+
     void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.N))

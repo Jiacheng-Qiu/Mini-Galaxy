@@ -42,7 +42,11 @@ public class EnvironmentComponent : MonoBehaviour
                 gen.AddComponent<Rigidbody>().useGravity = false;
             }
             // Long as all env comps are within subfolders of the planet, this will work
-            gen.AddComponent<TinyObjGravity>().Init(transform.parent.parent);
+            gen.AddComponent<TinyObjGravity>().enabled = false;
+            TinyObjGravity grav = gen.GetComponent<TinyObjGravity>();
+            grav.planet = transform.parent.parent.parent;
+            grav.enabled = true;
+
             MaterialProperty prop = gen.AddComponent<MaterialProperty>();
             prop.remainInteract = 1;
             prop.materialName = productName;

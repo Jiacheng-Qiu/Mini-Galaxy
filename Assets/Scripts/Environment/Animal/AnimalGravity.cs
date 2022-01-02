@@ -18,7 +18,6 @@ public class AnimalGravity : MonoBehaviour
         if (collision.transform.tag == "Planet")
         {
             planet = collision.transform.gameObject;
-            this.gameObject.transform.parent = planet.transform.Find("Animal").transform;
             /*Physics.Raycast(transform.position, -transform.up, out hit, 10);
             gDirection = hit.normal;*/
         }

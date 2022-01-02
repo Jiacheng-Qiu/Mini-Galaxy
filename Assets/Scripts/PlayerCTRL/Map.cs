@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Map : MonoBehaviour
 {
@@ -47,6 +46,7 @@ public class Map : MonoBehaviour
             mapPlanet.colorSetting = planet.colorSetting;
             mapPlanet.shapeSetting = shape;
             mapPlanet.GenerateMapPlanet();
+            mapPlanet.transform.localScale = Vector3.one;
             mapPlanet.gameObject.SetActive(true);
             mapUsable = true;
         }

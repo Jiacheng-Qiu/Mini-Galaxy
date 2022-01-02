@@ -157,7 +157,7 @@ public class InteractionAnimation : UIInformer
         if (walk == null || !walk.Running)
         {
             walk = new Task(CameraShake(uiCam, 0.6f / speed, new Vector2(0, -0.002f), true, 0));
-            new Task(CameraShake(cam, 0.6f / speed, new Vector2(0, 0.3f), true, 0));
+            new Task(CameraShake(cam, 0.6f / speed, new Vector2(0, 0.1f), true, 0));
         }
     }
 
@@ -265,10 +265,11 @@ public class InteractionAnimation : UIInformer
         {
             txt = "0";
         }
-        else if (txt.Substring(0, 3).Equals("100"))
+        else if (txt.Length >= 3 && txt.Substring(0, 3).Equals("100"))
         {
             txt = "99";
-        } else if (txt.Substring(1, 1).Equals("."))
+        }
+        else if (txt.Substring(1, 1).Equals("."))
         {
             txt = txt.Substring(0, 1);
         } else

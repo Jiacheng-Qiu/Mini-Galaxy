@@ -123,7 +123,7 @@ Light:
   m_InnerSpotAngle: 40
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -446,8 +446,8 @@ MonoBehaviour:
   onFocus: 0
   onShip: {fileID: 0}
   interactRange: 5
-  speed: 10
-  runSpeed: 20
+  speed: 6
+  runSpeed: 10
   jump: 500
   isGround: 1
   inventory: {fileID: 0}
@@ -560,7 +560,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3648729673969551602}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d49d774f9d2b984ba9ef832994d3b88, type: 3}
   m_Name: 

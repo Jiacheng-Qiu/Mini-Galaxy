@@ -38,6 +38,7 @@ public class RandomizePlanetShowcase : MonoBehaviour
         presetColors[5, 1] = new Color32(30, 16, 111, 255);
         presetColors[5, 2] = new Color32(49, 32, 130, 255);
 
+        ResetColors();
     }
 
     public void Pressed()
@@ -62,11 +63,11 @@ public class RandomizePlanetShowcase : MonoBehaviour
         // Water color
         int[] abc = { 30, 50, 165, 200, 220, 240, 260 };
         float randomBaseColor = abc[Random.Range(0, 7)];
-        Color shallow = Color.HSVToRGB(randomBaseColor / 255, 0.91f, 0.95f);
+        Color shallow = Color.HSVToRGB(randomBaseColor / 360, 0.91f, 0.95f);
         shallow.a = 0.73f;
-        Color deep = Color.HSVToRGB((randomBaseColor + 12f) / 255, 0.91f, 0.53f);
+        Color deep = Color.HSVToRGB((randomBaseColor + 12f) / 360, 0.91f, 0.53f);
         deep.a = 0.82f;
-        Color deeper = Color.HSVToRGB((randomBaseColor + 12f) / 255, 0.91f, 0.28f);
+        Color deeper = Color.HSVToRGB((randomBaseColor + 12f) / 360, 0.91f, 0.28f);
         deeper.a = 0.94f;
         water.SetColor("ShallowWaterColor", shallow);
         water.SetColor("DeepWaterColor", deep);
@@ -88,5 +89,29 @@ public class RandomizePlanetShowcase : MonoBehaviour
             keys[i].time = i * 0.3f + Random.Range(0, 0.2f);
         }
         return keys;
+    }
+
+    // Reset color to normal earth
+    public void ResetColors()
+    {
+        GradientColorKey[] pole = GetGradient(0);
+        GradientColorKey[] equator = GetGradient(1);
+        colorSetting.biomeColorSettings.biomes[0].gradient.colorKeys = pole;
+        colorSetting.biomeColorSettings.biomes[1].gradient.colorKeys = equator;
+        colorSetting.biomeColorSettings.biomes[2].gradient.colorKeys = pole;
+
+        Color shallow = Color.HSVToRGB(220f / 360, 0.91f, 0.95f);
+        shallow.a = 0.73f;
+        Color deep = Color.HSVToRGB(232f / 360, 0.91f, 0.53f);
+        deep.a = 0.82f;
+        Color deeper = Color.HSVToRGB(232f / 360, 0.91f, 0.28f);
+        deeper.a = 0.94f;
+        water.SetColor("ShallowWaterColor", shallow);
+        water.SetColor("DeepWaterColor", deep);
+        water.SetColor("SuperDeepWaterColor", deeper);
+
+        Color atmosColor = Color.HSVToRGB(210f / 360, 1, 0.8f);
+        atmosColor.a = 0.8f;
+        atmosphere.color = atmosColor;
     }
 }

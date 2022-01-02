@@ -5,7 +5,7 @@ public class Planet : MonoBehaviour
     // Enum for choosing which face to render
     public ShapeSettings shapeSetting;
     public ColorSettings colorSetting;
-    public bool onPreview; // SHow all terrain if planet on preview
+    public bool onPreview; // Show all terrain if planet on preview
     public int globalResolution;
 
     private ShapeGenerator shapeGenerator;
@@ -15,17 +15,26 @@ public class Planet : MonoBehaviour
     MeshFilter[,] meshFilters;
     TerrainFace[,] terrainFaces;
 
+    // Following for planet display on map only
+
+    public bool isMapPlanet;
+    private bool isInitialized = false;
+
     private void Awake()
     {
-        if (globalResolution == 0)
+        if (isMapPlanet)
         {
-            globalResolution = 16;
+            return;
         }
         directions = new Vector3[] { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
         shapeGenerator = new ShapeGenerator();
         colorGenerator = new ColorGenerator();
         terrainFaces = new TerrainFace[6, 16];
         meshFilters = new MeshFilter[6, 16];
+        if (globalResolution == 0)
+        {
+            globalResolution = 16;
+        }
         GeneratePlanet();
     }
 
@@ -38,15 +47,18 @@ public class Planet : MonoBehaviour
 
     public void GenerateMapPlanet()
     {
-        onPreview = true;
-        directions = new Vector3[] { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
-        shapeGenerator = new ShapeGenerator();
-        colorGenerator = new ColorGenerator();
-        terrainFaces = new TerrainFace[6, 16];
-        meshFilters = new MeshFilter[6, 16];
-        Initialize();
-        GenerateMesh();
-        GenerateColor();
+        if (!isInitialized)
+        {
+            globalResolution = 16;
+            directions = new Vector3[] { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
+            shapeGenerator = new ShapeGenerator();
+            colorGenerator = new ColorGenerator();
+            terrainFaces = new TerrainFace[6, 16];
+            meshFilters = new MeshFilter[6, 16];
+            onPreview = true;
+            isInitialized = true;
+        }
+        Regenerate();
     }
 
     // Call to generate everything
@@ -54,9 +66,7 @@ public class Planet : MonoBehaviour
     {
         if (shapeSetting != null && colorSetting != null)
         {
-            Initialize();
-            GenerateMesh();
-            GenerateColor();
+            Regenerate();
             GenerateCollider();
         }
     }
@@ -67,7 +77,7 @@ public class Planet : MonoBehaviour
         colorGenerator.UpdateSettings(colorSetting);
 
         // Create water sphere
-        transform.Find("Water").localScale = new Vector3(shapeSetting.planetRadius + 2, shapeSetting.planetRadius + 2, shapeSetting.planetRadius + 2);
+        transform.Find("Water").localScale = new Vector3(shapeSetting.planetRadius, shapeSetting.planetRadius, shapeSetting.planetRadius);
 
         // Directions of the cube faces
         for (int i = 0; i < meshFilters.GetLength(0); i++)
@@ -79,20 +89,30 @@ public class Planet : MonoBehaviour
                 meshFolder.SetParent(transform);
                 meshFolder.localPosition = Vector3.zero;
                 meshFolder.localRotation = Quaternion.identity;
+                meshFolder.localScale = Vector3.one;
+                if (isMapPlanet)
+                    meshFolder.gameObject.layer = LayerMask.NameToLayer("3DUI");
             }
             for (int j = 0; j < meshFilters.GetLength(1); j++)
             {
                 if (meshFolder.Find("mesh" + j) == null)
                 {
                     GameObject meshObj = new GameObject("mesh" + j);
+                    if (isMapPlanet)
+                        meshObj.gameObject.layer = LayerMask.NameToLayer("3DUI");
+                    else
+                    {
+                        meshObj.tag = "Ground";
+                        meshObj.layer = LayerMask.NameToLayer("Terrain");
+                        meshObj.AddComponent<MeshCollider>().enabled = false;
+                    }
+
                     meshObj.transform.parent = meshFolder;
                     meshObj.transform.localPosition = Vector3.zero;
                     meshObj.transform.localRotation = Quaternion.identity;
-                    meshObj.tag = "Ground";
-                    meshObj.layer = LayerMask.NameToLayer("Terrain");
+                    meshObj.transform.localScale = Vector3.one;
                     // Using standard shader as renderer
                     meshObj.AddComponent<MeshRenderer>().enabled = onPreview;
-                    meshObj.AddComponent<MeshCollider>().enabled = false;
                     meshFilters[i, j] = meshObj.AddComponent<MeshFilter>();
                     meshFilters[i, j].sharedMesh = new Mesh();
                 }

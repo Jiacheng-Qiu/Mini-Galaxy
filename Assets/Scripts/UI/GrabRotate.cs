@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,7 +7,6 @@ public class GrabRotate : MonoBehaviour
     private bool onDrag;
     private InterfaceAnimManager appearCheck;
     private Vector2 mousePos;
-    public RectTransform rectTransform;
 
     private void Start()
     {

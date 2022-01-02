@@ -26,9 +26,12 @@ public class SaveControl : MonoBehaviour
 
     private void Start()
     {
-        player.GetComponent<PlayerMovement>().LoadStatus(data);
-        player.GetComponent<PlayerHealthSystem>().LoadStatus(data);
-        player.GetComponent<Backpack>().LoadItems(data);
+        if (seedSetting.onLoad)
+        {
+            player.GetComponent<PlayerMovement>().LoadStatus(data);
+            player.GetComponent<PlayerHealthSystem>().LoadStatus(data);
+            player.GetComponent<Backpack>().LoadItems(data);
+        }
     }
 
     // Called when new game is started, initialize save file

@@ -47,8 +47,7 @@ public class StarRandomize : MonoBehaviour
 
         // Run planet generation after generation of star
         this.gameObject.AddComponent<Rotation>();
-        this.gameObject.GetComponent<Rotation>().Init();
-        this.gameObject.GetComponent<PlanetGeneration>().Init(false, Random.Range(4, 7));
+        this.gameObject.GetComponent<PlanetGeneration>().Init(false, 2);
     }
 
     public bool SaveData()

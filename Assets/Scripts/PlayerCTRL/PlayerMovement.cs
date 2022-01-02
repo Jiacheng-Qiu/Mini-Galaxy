@@ -526,7 +526,10 @@ public class PlayerMovement : UIInformer
             obj = backpack.GetOut(pos, false);
         obj.transform.position = cam.transform.position;
         obj.transform.parent = transform.parent.Find("Material");
-        obj.AddComponent<TinyObjGravity>().Init(transform.parent);
+        obj.AddComponent<TinyObjGravity>().enabled = false;
+        TinyObjGravity grav = obj.GetComponent<TinyObjGravity>();
+        grav.planet = transform.parent;
+        grav.enabled = true;
         obj.SetActive(true);
         // Throw in the front direction after activate
         obj.GetComponent<Rigidbody>().AddForce(transform.Find("Main Camera").forward * 500);

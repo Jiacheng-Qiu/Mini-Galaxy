@@ -83,7 +83,10 @@ public class Furnace : Machine
         {
             gen.AddComponent<Rigidbody>().useGravity = false;
         }
-        gen.AddComponent<TinyObjGravity>().Init(transform.parent);
+        gen.AddComponent<TinyObjGravity>().enabled = false;
+        TinyObjGravity grav = gen.GetComponent<TinyObjGravity>();
+        grav.planet = transform.parent;
+        grav.enabled = true;
         MaterialProperty prop = gen.AddComponent<MaterialProperty>();
         prop.remainInteract = 1;
         prop.materialName = name + "Ingot";

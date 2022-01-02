@@ -7,12 +7,11 @@ public class TinyObjGravity : MonoBehaviour
     // Bool to stick material onto ground
     public bool locked = false;
     private Rigidbody rb;
-    public GameObject planet;
-    public void Init(Transform planet)
+    public Transform planet;
+    private void Start()
     {
-        this.planet = planet.gameObject;
-        this.rb = this.gameObject.GetComponent<Rigidbody>();
-        this.gameObject.transform.parent = planet.Find("Orb").transform;
+        this.rb = gameObject.GetComponent<Rigidbody>();
+        transform.SetParent(planet.Find("Material").transform);
     }
 
     void FixedUpdate()
@@ -20,7 +19,7 @@ public class TinyObjGravity : MonoBehaviour
         // updates each frame and change position based on gravity
         if (!locked)
         {
-            Vector3 targetDir = (transform.position - planet.transform.position).normalized;
+            Vector3 targetDir = (transform.position - planet.position).normalized;
             rb.AddForce(targetDir * -9.8f);
         } else if (!rb.freezeRotation)
         {

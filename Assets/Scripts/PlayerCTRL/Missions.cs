@@ -28,9 +28,9 @@ public class Missions : MonoBehaviour
         {
             displayMissions.Add(missionFolder.Find(i.ToString()).GetComponent<Text>());
         }
-        missions.Add(new Mission("Learn to move around with the buttons.", "To survive you need to learn the basics: \n- WASD to move around\n- SHIFT to run\n- B to open inventory\n- [to set marker on planets\n- R to reload\n- E for equipment customization\n-C for crafting", new Vector3(0, 736, 13), 0, 0));
-        missions.Add(new Mission("Try to build a craft table.", "Gather materials by shooting, build and place the craft table on the ground afterwards. Remember that you can pick it up!", new Vector3(0, 0, 740), 1, 0));
-
+        missions.Add(new Mission("Learn to move around with the buttons.", "To survive you need to learn the basics: \n- WASD to move around\n- SHIFT to run\n- B to open inventory\n- R to reload\n And you can check them in controls at Esc menu!", new Vector3(0, 730, 213), 0, 0));
+        missions.Add(new Mission("Build a craft table.", "C to open crafting, build and place the craft table with E. Remember that you can pick it up with T!", new Vector3(0, 730, 225), 1, 0));
+        missions.Add(new Mission("A Furnace.", "Open Crafting and build the furnace. Throw materials into the furnace with G to get ingots.", new Vector3(0, 720,175), 1, 0));
         uiAnimation = gameObject.GetComponent<InteractionAnimation>();
         missionUI = uiAnimation.missionUI.GetComponent<MissionUI>();
         missionUI.CreateButtons(missions);

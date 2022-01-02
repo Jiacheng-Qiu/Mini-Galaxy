@@ -7,6 +7,11 @@ public class SeedController : MonoBehaviour
 {
     public SeedSettings seedSetting;
 
+    public void CreateNewSave()
+    {
+        seedSetting.onLoad = false;
+    }
+
     public void LoadInstead()
     {
         seedSetting.onLoad = true;
