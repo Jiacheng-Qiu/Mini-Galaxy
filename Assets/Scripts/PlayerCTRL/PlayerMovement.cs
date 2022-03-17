@@ -341,6 +341,7 @@ public class PlayerMovement : UIInformer
     }
 
     // Give preview of placing placable items
+    [System.Obsolete]
     private void Preview()
     {
         if (previewObject == null)

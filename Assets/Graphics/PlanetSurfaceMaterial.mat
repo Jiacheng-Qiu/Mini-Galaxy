@@ -151,7 +151,7 @@ Material:
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _terrainElevation: {r: -0.104334176, g: 0.09245742, b: 0, a: 0}
+    - _terrainElevation: {r: -0.10749579, g: 0.11113886, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &3652815292881803091
 MonoBehaviour:

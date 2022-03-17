@@ -1533,7 +1533,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Version 0.1.0
+  m_Text: Version 0.1.1
 --- !u!222 &402067578
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8666,7 +8666,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeed: 15
-  selfStart: 1
 --- !u!114 &1872693758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8683,6 +8682,7 @@ MonoBehaviour:
   colorSetting: {fileID: 11400000, guid: 0f78baac46f9fb544b0dd137c73e3f81, type: 2}
   onPreview: 1
   globalResolution: 32
+  isMapPlanet: 0
 --- !u!4 &1872693759
 Transform:
   m_ObjectHideFlags: 0
