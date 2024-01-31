@@ -72,3 +72,21 @@ The following packages were updated:
   com.unity.test-framework from version 1.1.24 to 1.1.29
   com.unity.textmeshpro from version 3.0.4 to 3.0.6
   com.unity.timeline from version 1.5.4 to 1.5.6
+
+=== Wed Jan 31 13:20:11 2024
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were added:
+  com.unity.ai.navigation@1.1.4
+The following packages were updated:
+  com.unity.cinemachine from version 2.7.8 to 2.9.5
+  com.unity.collab-proxy from version 1.9.0 to 2.0.7
+  com.unity.ide.rider from version 3.0.7 to 3.0.24
+  com.unity.ide.visualstudio from version 2.0.11 to 2.0.18
+  com.unity.ide.vscode from version 1.2.3 to 1.2.5
+  com.unity.postprocessing from version 3.1.1 to 3.2.2
+  com.unity.render-pipelines.universal from version 11.0.0 to 14.0.8
+  com.unity.test-framework from version 1.1.29 to 1.1.33
+  com.unity.timeline from version 1.5.6 to 1.7.5

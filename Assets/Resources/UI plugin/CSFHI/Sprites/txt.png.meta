@@ -446,7 +446,7 @@ TextureImporter:
       213: 21300292
     second: txt_48
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 1
@@ -463,10 +463,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -505,6 +507,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 1
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -516,6 +520,33 @@ TextureImporter:
     crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 1
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 1
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -1560,9 +1591,58 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-  spritePackingTag: 
+    nameFileIdTable:
+      txt_0: 21300196
+      txt_1: 21300198
+      txt_10: 21300216
+      txt_11: 21300218
+      txt_12: 21300220
+      txt_13: 21300222
+      txt_14: 21300224
+      txt_15: 21300226
+      txt_16: 21300228
+      txt_17: 21300230
+      txt_18: 21300232
+      txt_19: 21300234
+      txt_2: 21300200
+      txt_20: 21300236
+      txt_21: 21300238
+      txt_22: 21300240
+      txt_23: 21300242
+      txt_24: 21300244
+      txt_25: 21300246
+      txt_26: 21300248
+      txt_27: 21300250
+      txt_28: 21300252
+      txt_29: 21300254
+      txt_3: 21300202
+      txt_30: 21300256
+      txt_31: 21300258
+      txt_32: 21300260
+      txt_33: 21300262
+      txt_34: 21300264
+      txt_35: 21300266
+      txt_36: 21300268
+      txt_37: 21300270
+      txt_38: 21300272
+      txt_39: 21300274
+      txt_4: 21300204
+      txt_40: 21300276
+      txt_41: 21300278
+      txt_42: 21300280
+      txt_43: 21300282
+      txt_44: 21300284
+      txt_45: 21300286
+      txt_46: 21300288
+      txt_47: 21300290
+      txt_48: 21300292
+      txt_5: 21300206
+      txt_6: 21300208
+      txt_7: 21300210
+      txt_8: 21300212
+      txt_9: 21300214
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: spritesheetsbundle
   assetBundleVariant: 
